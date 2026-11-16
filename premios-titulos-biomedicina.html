@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="light-only">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="estilo.css">
+<script src="site.js" defer></script>
+<title>Prêmios e Títulos — Biomedicina UFMT Araguaia</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#003d7c;--blue2:#0059b3;--gold:#c8960c;
+  --bg:#f4f6fa;--card:#fff;--text:#1a2333;--muted:#5a6a7e;--border:#dde3ec;
+  --sans:var(--font);--serif:var(--font-display);
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh}
+.wrap{max-width:1240px;margin:0 auto;padding:28px 24px 56px}
+h1{font-family:var(--serif);font-size:1.7rem;color:var(--blue);margin-bottom:6px}
+.subtitle{font-size:13.5px;color:var(--muted);margin-bottom:10px;max-width:920px;line-height:1.5}
+.subtitle b{color:var(--text)}
+.pending-note{font-size:12px;color:#8a6d1c;background:#fff8e6;border:1px solid #f0dfa8;border-radius:8px;padding:10px 14px;margin-bottom:18px;max-width:920px;line-height:1.5}
+.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.stat-pill{flex:1;min-width:150px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px 16px}
+.stat-pill .sv{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--blue);line-height:1}
+.stat-pill .sl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:4px;line-height:1.3}
+.ctrl-row{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:18px}
+.ctrl-grp{display:flex;flex-direction:column;gap:4px}
+.ctrl-lbl{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+select,input{font-family:var(--sans);font-size:13px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text)}
+.tbl-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 22px;overflow-x:auto}
+.tbl-card h2{font-family:var(--serif);font-size:14px;color:var(--blue);margin-bottom:4px}
+.tbl-card .sub{font-size:11.5px;color:var(--muted);margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:left;font-size:9.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);padding:6px 8px;border-bottom:2px solid var(--border)}
+td{padding:9px 8px;border-bottom:1px solid #f0f2f6;vertical-align:top}
+tr:hover td{background:#fafbfd}
+td.ano{font-family:var(--serif);color:var(--blue);font-weight:700;white-space:nowrap}
+a.proflink{color:var(--blue);text-decoration:none;font-weight:600}
+a.proflink:hover{text-decoration:underline}
+.empty{padding:30px;text-align:center;color:var(--muted);font-size:13px}
+.pending-list{font-size:11.5px;color:var(--muted);line-height:1.7;margin-top:4px}
+</style>
+<style id="ponte-design">
+/* Ponte entre o CSS antigo da página e o sistema de design (estilo.css). Remover quando a página for redesenhada. */
+:root{--blue:var(--tint);--blue2:var(--tint);--gold:#8a6200;--text:var(--label);--muted:var(--label-3);
+  --card:var(--surface);--border:var(--separator);--bg:#f5f5f7;--sans:var(--font);--serif:var(--font-display)}
+body{font-family:var(--font);background:var(--bg);color:var(--label);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--font-display);letter-spacing:-.01em}
+button,input,select,textarea{font-family:var(--font)}
+@media (max-width:700px){table{display:block;max-width:100%;overflow-x:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Prêmios e Títulos</h1>
+  <p class="subtitle">Distinções, menções honrosas e premiações acadêmicas extraídas da seção <b>"Prêmios e títulos"</b> dos Currículos Lattes do corpo docente do curso.</p>
+
+  <div class="pending-note" id="pending-note"></div>
+
+  <div class="stats-row" id="stats-row"></div>
+
+  <div class="ctrl-row">
+    <div class="ctrl-grp">
+      <span class="ctrl-lbl">Docente</span>
+      <select id="fProf"><option value="">Todos</option></select>
+    </div>
+    <div class="ctrl-grp">
+      <span class="ctrl-lbl">Ordenar</span>
+      <select id="fSort">
+        <option value="ano_desc">Ano (recente)</option>
+        <option value="ano_asc">Ano (mais antigo)</option>
+        <option value="prof">Docente</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="tbl-card">
+    <h2>Prêmios registrados</h2>
+    <p class="sub" id="tbl-sub"></p>
+    <div id="tbl-wrap"></div>
+  </div>
+</div>
+
+<script>
+// ── DADOS ────────────────────────────────────────────────────────────────
+// Cada entrada vem literalmente da seção "Prêmios e títulos" do Lattes do
+// respectivo professor. `PROCESSADOS` lista os professores cujo Lattes já
+// foi conferido nessa seção — os demais ainda não têm essa parte do
+// currículo extraída (não significa que não tenham prêmios: significa que
+// ainda não foi verificado). Por isso a UI nunca mostra "0 prêmios" para
+// quem está fora de PROCESSADOS; esses nomes só aparecem na nota de
+// pendência, não na tabela.
+const PREMIOS = [
+  { professor: "Paulo Roberto da Fonseca Filho", ano: 2026, titulo: "Menção honrosa — 2º lugar na modalidade extensão", evento: "V Simpósio de Integração Farmacêutica (SINTEFARMA), Liga Acadêmica de Ciências Farmacêuticas (LACIFAR)" },
+  { professor: "Paulo Roberto da Fonseca Filho", ano: 2013, titulo: "Melhor trabalho de Iniciação Científica — Ciências Exatas e da Terra", evento: "UNIFEB — Centro Universitário da Fundação Educacional de Barretos (trabalho: \"Quantificação não supervisionada de refluxo gastroesofágico\")" },
+  { professor: "Paulo Roberto da Fonseca Filho", ano: 2011, titulo: "2º melhor trabalho apresentado como painel — \"A new biomagnetic method to evaluate gastrointestinal transit time and gastric emptying in small animal models\"", evento: "V Instrumentation and Medical Imaging Symposium" },
+  { professor: "Paulo Roberto da Fonseca Filho", ano: 2011, titulo: "2º melhor trabalho apresentado como painel — \"Aplicação de contornos deformáveis em imagens mamográficas: um estudo preliminar\"", evento: "I Congresso de Técnicos e Tecnólogos em Radiologia de Botucatu" },
+  { professor: "Paulo Roberto da Fonseca Filho", ano: 2010, titulo: "Menção honrosa para trabalho apresentado na forma de comunicação oral — \"Compression forces on tablets: comparison of AC Biosusceptometry, water uptake and disintegration force\"", evento: "IX Workshop da Pós-Graduação e X Workshop de Genética" },
+  { professor: "Paulo Roberto da Fonseca Filho", ano: 2008, titulo: "Melhor trabalho apresentado como painel — \"Programação linear na otimização de blindagem das paredes em salas de radioterapia\"", evento: "IV Congresso de Física Aplicada à Medicina" },
+  { professor: "Adenilda Honorio-França", ano: 2025, titulo: "Moção de Aplausos 55 anos UFMT", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Adenilda Honorio-França", ano: 2020, titulo: "Portaria de Elogio pelos 15 anos de dedicação à Universidade Federal de Mato Grosso", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Adenilda Honorio-França", ano: 2020, titulo: "Honra ao Mérito, Pró-Reitor do campus Araguaia", evento: "pelos 15 anos de serviços prestados ao Campus Araguaia-UFMT" },
+  { professor: "Adenilda Honorio-França", ano: 2018, titulo: "Prêmio Severino Meirelles - Área de Ciências da Saúde", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Adenilda Honorio-França", ano: 2015, titulo: "Menção honrosa categoria pós-graduação trabalho PARÂMETROS REOLÓGICOS ASSOCIADOS À EVOLUÇÃO DA LEISHMANIOSE VISCERAL CANINA", evento: "II Congresso de Biomedicina do Araguaia - UFMT" },
+  { professor: "Adenilda Honorio-França", ano: 2015, titulo: "Menção Honrosa na categoria graduação - Trabalho \"AVALIAÇÃO DE CONCEITOS BÁSICOS DE FILOSOFIA DA CIÊNCIA ENTRE ALUNOS DO ENSINO MÉDIO E DE NÍVEL UNIVERSITÁRIO\",", evento: "II Congresso de Biomedicina do Araguaia -UFMT" },
+  { professor: "Adenilda Honorio-França", ano: 2015, titulo: "Menção Honrosa na categoria pós-graduação - Trabalho \"USO DE PLANTA MEDICINAL: PERIODO GESTACIONAL E PUERPÉRIO", evento: "II Congresso de Biomedicina do Araguaia - UFMT" },
+  { professor: "Adenilda Honorio-França", ano: 2013, titulo: "Madrinha da I Turma do Curso de Biomedicina", evento: "ICBS/CUA/UFMT" },
+  { professor: "Adenilda Honorio-França", ano: 2013, titulo: "Patronesse da III Turma de Enfermagem", evento: "ICBS/CUA/UFMT" },
+  { professor: "Adenilda Honorio-França", ano: 2012, titulo: "Moção de Aplausos pela Implantação do Doutorado Interinstitucional (DINTER ) em Parasitologia - UFMT/UFMG.", evento: "Câmara Municipal de Barra do Garças-MT" },
+  { professor: "Adenilda Honorio-França", ano: 2011, titulo: "Moção de Aplausos pela Implantação do Mestrado em Imunologia e Parasitologia Básicas e Aplicadas.", evento: "Câmara Municipal de Barra do Garças-MT" },
+  { professor: "Adenilda Honorio-França", ano: 2011, titulo: "Moção de Aplausos pela Implantação do Curso de Mestrado em Ciências de Materiais", evento: "Câmara Municipal de Barra do Garças - MT" },
+  { professor: "Adenilda Honorio-França", ano: 2010, titulo: "Paraninfa da Primeira Turma de Enfermagem do ICBS/CUA/UFMT- Formandos de 2009", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Adenilda Honorio-França", ano: 2010, titulo: "Nome da Primeira Turma do Curso de Enfermagem do ICBS/CUA - Formandos de 2009", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Adenilda Honorio-França", ano: 2010, titulo: "Trabalho Primeiro Lugar Tema Livre - Categoria Apresentação Oral", evento: "15o Congresso Brasileiro Multidisciplinar em Diabetes- ANAD" },
+  { professor: "Adenilda Honorio-França", ano: 2010, titulo: "Menção Honrosa-Apresentação oral do trabalho: Repercussão hiperglicêmica na concentração de anticorpos presentes no sangue materno e no cordão umbilical., Instituto de Biociênias-UNESP, Botucatu", evento: "SP" },
+  { professor: "Adenilda Honorio-França", ano: 2009, titulo: "Professora Homenageada dos Formandos de 2008 do Curso de Farmácia/UFMT.", evento: "UFMT" },
+  { professor: "Adenilda Honorio-França", ano: 2009, titulo: "Trabalho Classificado como Segundo Lugar na Categoria Melhor Apresentação Oral dentre Trabalhos Clínicos, V Encontro de Pós-Graduação da Faculdade de Medicina de Botucatu, UNESP", evento: "SP" },
+  { professor: "Adenilda Honorio-França", ano: 2007, titulo: "Melhor Trabalho Científico apresentado na área de Fisiologia e Farmacologia no III Congresso de Ciências da Saúde.", evento: "UNIARAXÁ" },
+  { professor: "Adenilda Honorio-França", ano: 2007, titulo: "Melhor Trabalho Científico apresentado na área de Ciências Biomédicas no III Congresso de Ciências da Saúde.", evento: "UNIARAXÁ" },
+  { professor: "Adenilda Honorio-França", ano: 2007, titulo: "II Melhor Trabalho Apresentado na forma de Pôster no IX Congresso Nacional de Pediatria.", evento: "Sociedade Brasileira de Pediatria" },
+  { professor: "Adenilda Honorio-França", ano: 2007, titulo: "Melhor Trabalho da Mostra Científica do I SIMFARMA (Simpósio de Farmácia e Análises Clínicas do Médio Araguaia).", evento: "Conselho Regional de Farmácia do Estado de M" },
+  { professor: "Adenilda Honorio-França", ano: 2007, titulo: "Moção de apluasos para o Projeto de Extensão \"Aleitamento Materno - Um gesto que salva milhares de pessoas\"", evento: "Câmara Municipal de Barra do Garças - MT" },
+  { professor: "Adenilda Honorio-França", ano: 2005, titulo: "Melhor trabalho na Área de Aleitamento", evento: "UNIARAXÁ" },
+  { professor: "Adenilda Honorio-França", ano: 2005, titulo: "Melhor trabalho na Área de Ciências Biológicas", evento: "UNIARA`XÁ" },
+  { professor: "Adenilda Honorio-França", ano: 2005, titulo: "Melhor Trabalho na Área de Plantas Medicinais", evento: "UNIARAXÁ" },
+  { professor: "Adenilda Honorio-França", ano: 2005, titulo: "Melhor Trabalho na Área de Diabetes", evento: "UNIARAXÁ" },
+  { professor: "Adenilda Honorio-França", ano: 2005, titulo: "Melhor Trabalho na Área de Cronobiologia", evento: "UNIARAXÁ" },
+  { professor: "Adenilda Honorio-França", ano: 2004, titulo: "Patronesse da I Turma de Ciências Biológicas - Formando de 2004", evento: "UNIARAXÁ" },
+  { professor: "Adenilda Honorio-França", ano: 1994, titulo: "Prêmio Refinações de Milho do Brasil", evento: "Associação Paulista de Medicina" },
+  { professor: "Adenilda Honorio-França", ano: 1992, titulo: "Melhor trabalho inscrito na área de Ciências Biológicas", evento: "UNESP" },
+  { professor: "Adenilda Honorio-França", ano: 1992, titulo: "VI Prêmio Pereira Barreto", evento: "UNIFESP" },
+  { professor: "Adenilda Honorio-França", ano: 1992, titulo: "Prêmio Mario Rubens Guimarães Montenegro", evento: "UNESP" },
+  { professor: "Adenilda Honorio-França", ano: 1992, titulo: "Menção Honrosa de Melhor Trabalho de Acadêmico não Médico", evento: "Faculdade de Medicina -UNESP" },
+  { professor: "Adenilda Honorio-França", ano: 1991, titulo: "Melhor trabalho inscrito na área de Ciências Biológicas", evento: "UNESP" },
+  { professor: "Ana Paula Morbio", ano: 2007, titulo: "\"Encontro São Paulo de Cirurgia Vascular 2007 - 3° Lugar\"", evento: "Sociedade Brasileira de Angiologia e Cirurgia Vascular de São Paulo" },
+  { professor: "Carlos Kusano Bucalen Ferrari", ano: 2011, titulo: "Homenagem da Câmara de Vereadores de Barra do Garças (MT) pela Inauguração do Mestrado em Imunologia e Parasitologia", evento: "Câmara Municipal de Barra do Garças (MT)" },
+  { professor: "Carlos Kusano Bucalen Ferrari", ano: 2006, titulo: "Membro da Sociedade Latinoamericana de Nutrição", evento: "Sociedade Latinoamericana de Nutrição" },
+  { professor: "Carlos Kusano Bucalen Ferrari", ano: 2001, titulo: "Membro da Society for Experimental Biology and Medicine (desde 2001)", evento: "SEBM" },
+  { professor: "Carlos Kusano Bucalen Ferrari", ano: 1999, titulo: "Membro do American Institute of Biological Sciences (desde 1999)", evento: "American Institute of Biological Sciences" },
+  { professor: "Carlos Kusano Bucalen Ferrari", ano: 1998, titulo: "Membro da New York Academy of Sciences (desde 1998)", evento: "New York Academy of Sciences" },
+  { professor: "Carlos Kusano Bucalen Ferrari", ano: 1998, titulo: "Membro da SBBC (desde 1998)", evento: "Sociedade Brasileira de Biologia Celular" },
+  { professor: "Carlos Kusano Bucalen Ferrari", ano: 1989, titulo: "Membro da SBPC, Sociedade Brasileira para o Progresso da Ciência", evento: "" },
+  { professor: "Danny Laura Gomes Fagundes", ano: 2007, titulo: "Primeiro lugar, no prêmio melhores trabalhos da mostra cientifica do SIMFARMA- Simpósio de Farmácia e Analises Clinicas do Médio Araguaia", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Eduardo Luzía França", ano: 2013, titulo: "PATRONO DA PRIMEIRA TURMA DE BIOMEDICINA DA UFMT", evento: "UFMT" },
+  { professor: "Eduardo Luzía França", ano: 2012, titulo: "Moção de Aplausos pela Implantação do Doutorado Interinstitucional (DINTER) em Parsitologia UFMT/UFMG.", evento: "Câmara Municipal de Barra do Garças - MT" },
+  { professor: "Eduardo Luzía França", ano: 2011, titulo: "Moção de Aplausos pela Implantação do Mestrado em Imunologia e Parasitologia Básicas e Aplicadas.", evento: "Câmara Municipal de Barra do Garças-MT" },
+  { professor: "Eduardo Luzía França", ano: 2011, titulo: "Moção de Palusos pela abertura do Mestrado em Ciência de Materiais", evento: "Camara Municipal de Barra do Garças - MT" },
+  { professor: "Eduardo Luzía França", ano: 2010, titulo: "Patrono da I Turma de Enfermagem do ICBS/CUA - Formando de 2009", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Eduardo Luzía França", ano: 2010, titulo: "Nome da I Turma de Enfermagem do ICBS/CUA - Formandos de 2009.", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Eduardo Luzía França", ano: 2010, titulo: "Trabalho Primeiro Lugar Tema Livre Categoria Apresentação Oral", evento: "15o Congresso Brasileiro Multidisciplinar em Diabetes-ANAD" },
+  { professor: "Eduardo Luzía França", ano: 2010, titulo: "Menção Honrosa-Apresentação oral do trabalho: Repercussão hiperglicêmica na concentração de anticorpos presentes no sangue materno e no cordão umbilical., Instituto de Biociênias - UNESP, Botucatu", evento: "SP" },
+  { professor: "Eduardo Luzía França", ano: 2009, titulo: "Patrono dos Formandos de 2008 do Curso de Farmácia/UFMT", evento: "UFMT" },
+  { professor: "Eduardo Luzía França", ano: 2009, titulo: "Trabalho Classificado comoSegundo Lugar na Categoria Melhor Apresentação Oral dentre Trabalhos Clínicos., V Encontro de Pós-Graduação da Faculdade de Medicina de Botucatu, UNESP", evento: "SP" },
+  { professor: "Eduardo Luzía França", ano: 2008, titulo: "Patrono de Turma dos Formandos de 2007 do Curso de Farmácia-UFMT.", evento: "UFMT" },
+  { professor: "Eduardo Luzía França", ano: 2007, titulo: "Melhor Trabalho Científico na área de Ciências Biomédicas apresentado no III Congresso de Ciências da Saúde.", evento: "UNIARAXÁ" },
+  { professor: "Eduardo Luzía França", ano: 2007, titulo: "Melhor Trabalho Científico na área de Fisiologia e Farmacologia apresentado no III Congresso de Ciências da Saúde.", evento: "UNIARAXÁ" },
+  { professor: "Eduardo Luzía França", ano: 2007, titulo: "II Melhor Trabalho apresentado na forma de pôster no IX Congresso Nacional de Pediatria.", evento: "Sociedade Brasileira de Pediatria" },
+  { professor: "Eduardo Luzía França", ano: 2007, titulo: "Moção de Aplausos para o projeto de Extensão \"Aleitamento Materno: Um gesto que salva milhares de pessoas\".", evento: "Câmara Municipal de Barra do Garças - MT" },
+  { professor: "Eduardo Luzía França", ano: 2007, titulo: "Melhor Trabalho Científico do I SINFARMA (Simpósio de Farmácia e Análises Clínicas).", evento: "Conselho Regional de Farmácia de Mato Grosso" },
+  { professor: "Eduardo Luzía França", ano: 2007, titulo: "Prêmio de Melhores Trabalhos do I SIMFARMA - Segundo Lugar", evento: "UFMT" },
+  { professor: "Eduardo Luzía França", ano: 2007, titulo: "Prêmio de Melhores Trabalhos do I SIMFARMA- Quarto Lugar", evento: "UFMT" },
+  { professor: "Eduardo Luzía França", ano: 2006, titulo: "Patrono da IVTurma do Curso de Ciências Biológicas", evento: "UNIARAXÁ" },
+  { professor: "Eduardo Luzía França", ano: 2005, titulo: "Melhor trabalho de Aleitamento", evento: "UNIARAXA" },
+  { professor: "Eduardo Luzía França", ano: 2005, titulo: "Melhor Trabalho Área de Ciências Biológicas", evento: "UNIARAXA" },
+  { professor: "Eduardo Luzía França", ano: 2005, titulo: "Melhor trabalho na área de animais silvestres", evento: "UNIARAXA" },
+  { professor: "Eduardo Luzía França", ano: 2005, titulo: "Melhor Trabalho área de plantas medicinais", evento: "UNIARAXÁ" },
+  { professor: "Eduardo Luzía França", ano: 2005, titulo: "Melhor na área de diabetes", evento: "UNIARAXÁ" },
+  { professor: "Eduardo Luzía França", ano: 2005, titulo: "Melhor Trabalho área de Cronobiologia", evento: "UNIARAXÁ" },
+  { professor: "Eduardo Luzía França", ano: 2005, titulo: "Patrono da II Turma do Curso de Ciências Biológicas", evento: "UNIARAXÁ" },
+  { professor: "Eduardo Luzía França", ano: 2005, titulo: "Patrono da III Turma do Curso de Ciências Biológicas", evento: "UNIARAXÁ" },
+  { professor: "Eduardo Luzía França", ano: 2004, titulo: "Nome da I Turma do Curso de Ciências Biológicas", evento: "UNIARAXA" },
+  { professor: "Eduardo Luzía França", ano: 2002, titulo: "DOUTOR EM CIÊNCIAS-IMUNOLOGIA", evento: "ICB-USP" },
+  { professor: "Eduardo Luzía França", ano: 1997, titulo: "MESTRE EM DOENÇAS TRÓPICAIS COM DISTINÇÃO E LOUVOUR", evento: "Faculdade de Medicina-UNESP" },
+  { professor: "Eduardo Luzía França", ano: 1994, titulo: "Bacharel em Biomedicina", evento: "UNESP" },
+  { professor: "Eduardo Luzía França", ano: 1984, titulo: "Técnico em Mineração", evento: "EMINAS" },
+  { professor: "Eliane Aparecida Suchara", ano: 2023, titulo: "Professora Homenageada - Curso de Farmácia - 2023/2", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Eliane Aparecida Suchara", ano: 2022, titulo: "Professora Homenageada - Curso de Farmácia - 2022/1", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Eliane Aparecida Suchara", ano: 2019, titulo: "Melhor trabalho apresentado no I Seminário PET -SAÙDE Interprofissionalidade : \"PET-SAÚDE interprofissionalidade no assentamento Agrovila ARARA, Zona rural de Pontal do Araguaia\".", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Eliane Aparecida Suchara", ano: 2018, titulo: "Professora Homenageada - Curso de Farmácia - 2018/2", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Eliane Aparecida Suchara", ano: 2018, titulo: "Professora Homenageada - Curso de Biomedicina 2018/2", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Eliane Aparecida Suchara", ano: 2017, titulo: "Professora Homenageada - Curso de Biomedicina 2017/2", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Eliane Aparecida Suchara", ano: 2016, titulo: "Professora Homenageada - Curso de Farmácia - 2016/1", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Eliane Aparecida Suchara", ano: 2016, titulo: "Professora Homenageada - Curso de Biomedicina 2016/2", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Eliane Aparecida Suchara", ano: 2016, titulo: "Homenagem - Curso de Farmácia 2016/2", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Eliane Aparecida Suchara", ano: 2015, titulo: "Honorable Mention Award pelo trabalho \"Exogenous intoxications in occupational environment\"", evento: "Sociedade Brasileira de Toxicologia e IUTOX" },
+  { professor: "Eliane Aparecida Suchara", ano: 2015, titulo: "Professora Homenageada - Curso de Biomedicina 2015/2", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Eliane Aparecida Suchara", ano: 2015, titulo: "Professora Homenageada - Curso de Farmácia 2015/2", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Eliane Aparecida Suchara", ano: 2014, titulo: "Professora Homenageada - Curso de Farmácia - 2014/1", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Eliane Aparecida Suchara", ano: 2011, titulo: "Moção de Aplausos pela implantação do curso de Pós Graduação em Imunologia e Parasitologia Básica e Aplicada", evento: "Câmara Municipal de Barra do Garças" },
+  { professor: "Eliane Aparecida Suchara", ano: 2011, titulo: "Professora Homenageada - Curso de Farmácia - Farmácia generalista", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Eliane Aparecida Suchara", ano: 2011, titulo: "Homenagem - Curso de Farmácia - Farmácia Análises Clínicas", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Flávia Lucia David", ano: 2018, titulo: "DESNUTRIÇÃO INFANTIL EM CRIANÇAS INDÍGENAS E NÃO INDÍEGENAS HOSPITALIZADAS", evento: "II SEMINÁRIO VER-SUS MATO GROSSO" },
+  { professor: "Flávia Lucia David", ano: 2016, titulo: "interações medicamentosas em pacientes de um hospital público de Mato Grosso,", evento: "\"Experiências Exitosas de Farmacêuticos no SUS\" - Conselho Federal de Farmácia (CFF) por suas experi" },
+  { professor: "Flávia Lucia David", ano: 2016, titulo: "interações medicamentosas em pacientes de um hospital público de Mato Grosso", evento: "19 Congresso Brasileiro dos Conselhos de Enfermagem realizado pelo COFEN" },
+  { professor: "Flávia Lucia David", ano: 2016, titulo: "Moção de Aplausos (número 109/2016), Câmara Municipal de Barra do Garças-MT.", evento: "Câmara Municipal de Barra do Garças-MT" },
+  { professor: "Flávia Lucia David", ano: 2010, titulo: "ANTIBIÓTICOTERAPIA DISPENSADAS A CRIANÇAS XAVANTES E NÃO INDÍGENAS INTERNADAS EM UM HOSPITAL EM MT NO PERÍODO DE 207 A 2008", evento: "MINISTÉRIO DA SAÚDE - PREMIO NACIONAL DE INCENTIVO A PROMOÇÃO DO USO RACIONLA DE MEDICAMENTOS" },
+  { professor: "Flávia Lucia David", ano: 2007, titulo: "PRÊMIO MELHORES TRABALHOS DA MOSTRA CIENTÍFICA DO I SIMFARMA", evento: "UFMT" },
+  { professor: "Flávia Lucia David", ano: 2001, titulo: "Merck Sharp and Dohme Young Investigator Award, com o título: \"OVARIAN HORMONES MODULATE ENDOTHELIN-1 (ET-1) VASCULAR REACTIVITY IN DOCA-SALT HYPERTENSIVE RATS.\" XIVth Scientific Meeting of the Intern", evento: "Merck Sharp and Dohme Young Investigator Award" },
+  { professor: "Flávia Lucia David", ano: 2001, titulo: "Prêmio José Ribeiro do Valle - (Lilly), com o título: \"Ovarian hormones modulate endothelin-1 (ET-1) vascular reactivity in DOCA-salt hypertensive rats.\" XVI Reunião Anual da Federação de Sociedade de", evento: "Prêmio José Ribeiro do Valle - (Lilly)," },
+  { professor: "Flávia Lucia David", ano: 2001, titulo: "José Ribeiro do Valle ao Jovem Farmacologista com o título: Ovarian hormones modulate endothelin - 1 (ET - 1) vascular reactivity in DOCA - salt hypertensive rats.", evento: "Sociedade Brasileira de Farmacologia e Terapêutica Experimental" },
+  { professor: "Flávia Lucia David", ano: 2001, titulo: "MÉRITO \"Ovárian hormones modulate ET-1 vascular reactivity in DOCA-salt hypertensive rats\"", evento: "Sociedade Brasileira de Farmacologia e Terapêutica Experimental (SBFTE)" },
+  { professor: "Flávia Lucia David", ano: 2000, titulo: "Young Investigator Award, com o título \"DIFFERENTIAL ET-1 AND ETB-MEDIATED RESPONSES IN MALE AND FEMALE DOCA-SALT HYPERTENSIVE RATS.\" 18th Scientific Meeting of the International Society of Hypertensi", evento: "Young Investigator Award," },
+  { professor: "Gustavo Tadeu Volpato", ano: 2024, titulo: "3° Lugar Categoria Pós-Graduação com o trabalho \"Tratamento com óleo do Caryocar brasiliense durante a prenhez de ratas diabéticas: repercussões maternas\"", evento: "I Simpósio de Ciência e Engenharia de Alimentos - SICEA" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2022, titulo: "Menção honrosa pela apresentação oral no I Congresso DOHaD Brasil, na XXXVI Reunião Anual da FESBE e no LVII Congresso Anual da SBFIS", evento: "Federação de Sociedades de Biologia Experimental" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2022, titulo: "Prêmio Melhor Trabalho em Póster no VIII Workshop do Programa de Imunologia e Parasitologia Básicas e Aplicadas", evento: "Universidade Federal de Mato Grosso" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2020, titulo: "Severino Meirelles de Melhor Trabalho na área de Ciências Biológicas pelo trabalho \"Tratamento com Strychnois pseudoquina na prenhez de ratas: repercussões fetais\"", evento: "XXVIII Seminário de Iniciação Científica 2019/2020 - UFMT" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2019, titulo: "Segundo Melhor Trabalho pelo trabalho \"Repercussões materno-fetais do tratamento com Strychnos pseudoquina A. St. Hil durante a prenhez de ratas\"", evento: "V Workshop do Programa de Imunologia e Parasitologia Básicas e Aplicadas" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2019, titulo: "Melhor Trabalho pelo trabalho \"Efeitos maternos do tratamento de Cecropia pachystachya na prenhez de ratas diabéticas\"", evento: "IX Semana Científica do Campus Universitário do Araguaia" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2018, titulo: "Melhor Trabalho na modalidade Pós-graduação pelo trabalho \"Repercussões materno-fetais do tratamento com Curatella americana durante a prenhez de ratas com diabete moderado\"", evento: "VII Semana Científica do Campus do Araguaia" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2018, titulo: "Segundo Lugar na categoria graduação pelo trabalho \"Avaliação dos parâmetros biológicos na prenhez de ratas com diferentes idades\"", evento: "IV Congresso de Biomedicina do Araguaia" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2018, titulo: "Primeiro Lugar na categoria graduação pelo trabalho \"Repercussões fetais decorrentes da idade na prenhez de ratas\"", evento: "IV Congresso de Biomedicina do Araguaia" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2017, titulo: "Terceiro Lugar na categoria de apresentação Oral pelo trabalho \"Repercussões materno-fetais do tratamento com Curatella americana durante a prenhez de ratas com diabete moderado\"", evento: "III Workshop do Programa de Imunologia e Parasitologia Básicas e Aplicadas e VII Workshop do Program" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2016, titulo: "Segundo Lugar na categoria de apresentação Oral pelo trabalho \"Repercussões imunológicas, reprodutivas e fetais da idade na prenhez de ratas\"", evento: "II Workshop do Programa de Imunologia e Parasitologia Básicas e Aplicadas" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2015, titulo: "Segundo Lugar na categoria de apresentação Painel pelo trabalho \"Imunomodulação de NF-kB em placentas diabéticas via glicosilação por n-acetil glucosamina\"", evento: "I Workshop do Programa de Imunologia e Parasitologia Básicas e Aplicadas" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2015, titulo: "Terceiro Lugar na categoria de apresentação Painel pelo trabalho \"Repercussões maternas de ratas vacinadas com proteína peroxidoxina recombinante de Leishmania braziliensis durante a prenhez\"", evento: "I Workshop do Programa de Imunologia e Parasitologia Básicas e Aplicadas" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2015, titulo: "Terceiro Lugar na categoria de apresentação Painel pelo trabalho \"Exercício físico em ratas prenhes com diabete moderado:", evento: "I Workshop do Programa de Imunologia e Parasitologia Básicas e Aplicadas" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2014, titulo: "Menção Honrosa ao trabalho \"Avaliação de ratos diabéticos tratados com extrato aquoso de folhas de Hancornia speciosa\"", evento: "I Congresso de Biomedicina do Araguaia" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2014, titulo: "Menção Honrosa ao trabalho \"Estudo de parâmetros fisiológicos na gestação de ratas imunossuprimidas pelo tratamento de micofenolato de sódio\"", evento: "I Congresso de Biomedicina do Araguaia" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2014, titulo: "Menção Honrosa ao trabalho \"Efeitos do extrato de Croton urucurana na prenhez de ratas Wistar: Repercussões maternas\"", evento: "I Congresso de Biomedicina do Araguaia" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2014, titulo: "Menção Honrosa ao trabalho \"Efeitos sobre o desempenho reprodutivo materno de ratas com obesidade transgeracional\"", evento: "I Congresso de Biomedicina do Araguaia" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2014, titulo: "Honra ao mérito pelo trabalho \"Avaliação de ratos diabéticos tratados com extrato aquoso de Bauhinia holophylla\"", evento: "XXIII Simpósio de Plantas Medicinais do Brasil" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2012, titulo: "Monção de Aplausos (abertura do 1o. Programa de Doutorado do Campus do Araguaia)", evento: "Câmara Municipal de Barra do Garças" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2011, titulo: "Monção de Aplausos (abertura do Programa de Pós-graduação)", evento: "Câmara Municipal de Barra do Garças" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2008, titulo: "Sessão de autógrafos do livro \"Anomalias Congênitas \" Estudos Experimentais\"", evento: "Encontro Regional de Biomedicina" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2002, titulo: "I Prêmio José Reinaldo Cerqueira Braz", evento: "FMB - Unesp" },
+  { professor: "Gustavo Tadeu Volpato", ano: 2001, titulo: "3º Lugar como melhor trabalho na área de Clínica Médica", evento: "Direção Executiva Nacional dos Estudantes de Medicina" },
+  { professor: "Gustavo Tadeu Volpato", ano: 1999, titulo: "VIII Prêmio Arion Caio Paulino", evento: "FMB - Unesp" },
+  { professor: "Gustavo Tadeu Volpato", ano: 1992, titulo: "Ao Mérito, Ministério do Exército", evento: "" },
+  { professor: "Karina da Silva Chaves", ano: 2023, titulo: "Menção Honrosa no IV Simpósio de Integração Farmacêutica pelo trabalho intitulado:", evento: "Universidade Federal de Mato Grosso - UFMT" },
+  { professor: "Karina da Silva Chaves", ano: 2022, titulo: "Prêmio Severino Meirelles", evento: "Universidade Federal de Mato Grosso - UFMT" },
+  { professor: "Karina da Silva Chaves", ano: 2008, titulo: "Prêmio Leopold Hartmann pelo quinto lugar geral no XXI Congresso Brasileiro de Ciência e Tecnologia com o trabalho Efeito da Ingestão de Leite Humano Carreado de Bifidobacterium sp. na Translocação Ba", evento: "SBCTA" },
+  { professor: "Karina da Silva Chaves", ano: 2006, titulo: "Mensão honrosa como melhor trabalho do Departamento de Tecnologia de Alimentos: \"GELEIFICADO FERMENTADO: UMA ESTRATÉGIA PARA O APROVEITAMENTO DO SORO.\" XV SIMPÓSIO DE INICIAÇÃO CIENTÍFICA.", evento: "Universidade Federal de Viçosa - UFV" },
+  { professor: "Karina da Silva Chaves", ano: 2005, titulo: "Menção Honrosa: \"GRUPOS MICROBIANOS PRESENTES NO LEITE MATERNO E SUA IMPORTÂNCIA EM BANCOS DE LEITE HUMANO\". SIMMA - II SIMPÓSIO MINEIRO DE ALIMENTOS E II FÓRUM DE DEBATES SOBRE VIGILÂNCIA SANITÁRIA.", evento: "Universidade Federal de Viçosa - UFV" },
+  { professor: "Kleber Eduardo de Campos", ano: 2023, titulo: "Melhor Apresentação de Banner", evento: "VI Congresso Regional de Biomedicina do Araguaia - UFMT" },
+  { professor: "Kleber Eduardo de Campos", ano: 2016, titulo: "Terceiro colocado - categoria apresentação oral/projetos", evento: "II Workshop do Programa de Pos-Graduação em Imunologia e Parasitologia Básicas e Aplicadas - UFMT" },
+  { professor: "Kleber Eduardo de Campos", ano: 2015, titulo: "Primeiro clocado - categoria apresentação oral", evento: "I Workshop do Programa de Pos-Graduação em Imunologia e Parasitologia Básicas e Aplicadas - UFMT" },
+  { professor: "Kleber Eduardo de Campos", ano: 2014, titulo: "Professor Homenageado da Turma", evento: "II Turma de Biomedicina da UFMT Campus do Araguaia" },
+  { professor: "Kleber Eduardo de Campos", ano: 2012, titulo: "Valéria Fazan (segundo lugar)", evento: "IX Encontro Mineiro de Biomedicina" },
+  { professor: "Kleber Eduardo de Campos", ano: 2004, titulo: "Honra ao mérito, VI Simpósio de Iniciação Científica - Unimar", evento: "" },
+  { professor: "Kleber Eduardo de Campos", ano: 2002, titulo: "Melhor trabalho do evento", evento: "V Workshop de plantas medicinais de Botucatu" },
+  { professor: "Kleber Eduardo de Campos", ano: 2001, titulo: "Finalista do prêmio Michel Jamra, XVI Reunião Anual da Federação de Sociedades de Biologia Experimental (FeSBE)", evento: "" },
+  { professor: "Luana dos Anjos Ramos", ano: 2023, titulo: "Membro da Associação Brasileira de Pesquisadores/as Negros/as", evento: "ABPN" },
+  { professor: "Luana dos Anjos Ramos", ano: 2008, titulo: "Membro da Sociedade Brasileira de Anatomia", evento: "Sociedade Brasileira de Anatomia" },
+  { professor: "Madileine Francely Américo", ano: 2025, titulo: "Portaria de Elogio da UFMT", evento: "PROPEG Nº 2361" },
+  { professor: "Madileine Francely Américo", ano: 2024, titulo: "Portaria de Elogio da UFMT, PORTARIA PROGEP - UFMT Nº 190", evento: "DE 8 DE FEVEREIRO DE 2024" },
+  { professor: "Madileine Francely Américo", ano: 2023, titulo: "Menção Honrosa", evento: "XXXVII Reunião Anual da FeSBE" },
+  { professor: "Madileine Francely Américo", ano: 2018, titulo: "Melhor trabalho - 3 lugar: \"EFEITOS DO TRATAMENTO COM DECANOATO DE NANDROLONA ASSOCIADO AO EXERCÍCIO FÍSICO MODEADO NO TRÂNSITO INTESTINAL E MASTÓCITOS DE MUCOSA EM RATOS\".", evento: "II Simpósio Nacional em Inflamação gastrintestinal" },
+  { professor: "Madileine Francely Américo", ano: 2015, titulo: "Menção Honrosa do II Congresso Sul Brasileiro de Engenharia de Alimentos-CSBEA", evento: "Universidade Regional de Blumenau" },
+  { professor: "Madileine Francely Américo", ano: 2014, titulo: "Menção Honrosa do I Congresso de Biomedicina do Araguaia", evento: "I Congresso de Biomedicina do Araguaia" },
+  { professor: "Madileine Francely Américo", ano: 2014, titulo: "Poster of Distinction", evento: "World Transplantation Congress" },
+  { professor: "Madileine Francely Américo", ano: 2011, titulo: "Menção de Aplauso pela implementação do programa de pós-graduação em imunologia", evento: "Camara Municipal de Barra do Garças" },
+  { professor: "Madileine Francely Américo", ano: 2007, titulo: "Melhor trabalho da área de instrumentação médica na sessão oral", evento: "III Simpósio de Instrumentação e Imagens Médicas" },
+  { professor: "Madileine Francely Américo", ano: 2002, titulo: "V Prêmio William Saad Hossne - Área Clínica", evento: "XI Congresso Médico Acadêmico de Botucatu" },
+  { professor: "Paula Cristina de Souza Souto", ano: 2002, titulo: "Prêmio Painel/ Melhor trabalho apresentado", evento: "VIII Encontro Internacional sobre Paracoccidioidomicose" },
+  { professor: "Renan dos Santos Araújo", ano: 2025, titulo: "Melhor pôster do VIII Congresso Regional de Biomedicina: categoria extensão", evento: "UFMT/CUA" },
+  { professor: "Thais Leal Silva", ano: 2022, titulo: "Melhor Tese defendida no ano de 2021 do Programa de Pós-Graduação em Ciências da Saúde: Infectologia e Medicina Tropical- UFMG", evento: "Programa de Pós-Graduação em Ciências da Saúde: Infectologia e Medicina Tropical" },
+  { professor: "Thais Leal Silva", ano: 2021, titulo: "Prêmio de Melhor Trabalho Científico (eixo temático Helmintologia)", evento: "XXVII Congresso da Sociedade Brasileira de Parasitologia" },
+  { professor: "Thais Leal Silva", ano: 2019, titulo: "1st place on Poster Presentation in PhD degree category", evento: "The 5th International Annual Meeting of The Postgraduate Program in health Sciences: Infections Dise" },
+  { professor: "Thais Leal Silva", ano: 2016, titulo: "Segundo Lugar na categoria de apresentação Oral", evento: "II Workshop do Programa de Imunologia e Parasitologia Básicas e Aplicadas" },
+];
+
+// Professores cujo Lattes já foi conferido na seção "Prêmios e títulos"
+// (mesmo que o resultado tenha sido "nenhum prêmio encontrado").
+const PROCESSADOS = ["Adenilda Honorio-França", "Ana Paula Morbio", "Carlos Kusano Bucalen Ferrari", "Danny Laura Gomes Fagundes", "Eduardo Luzía França", "Eliane Aparecida Suchara", "Fabiana Morandi Jordão", "Flávia Lucia David", "Gustavo Tadeu Volpato", "Karina da Silva Chaves", "Kleber Eduardo de Campos", "Luana dos Anjos Ramos", "Ludier Kesser Santos Silva", "Madileine Francely Américo", "Maria Fernanda Spegiorin Salla Brune", "Maximilian Wilhelm Brune", "Paula Cristina de Souza Souto", "Paulo Roberto da Fonseca Filho", "Renan dos Santos Araújo", "Thais Leal Silva", "Satie Katagiri"];
+
+// Lista completa dos 21 docentes do curso, para saber quem falta processar.
+const TODOS_PROFESSORES = [
+  "Adenilda Honorio-França", "Ana Paula Morbio", "Carlos Kusano Bucalen Ferrari",
+  "Danny Laura Gomes Fagundes", "Eduardo Luzía França", "Eliane Aparecida Suchara",
+  "Fabiana Morandi Jordão", "Flávia Lucia David", "Gustavo Tadeu Volpato",
+  "Karina da Silva Chaves", "Kleber Eduardo de Campos", "Luana dos Anjos Ramos",
+  "Ludier Kesser Santos Silva", "Madileine Francely Américo",
+  "Maria Fernanda Spegiorin Salla Brune", "Maximilian Wilhelm Brune",
+  "Paula Cristina de Souza Souto", "Paulo Roberto da Fonseca Filho",
+  "Renan dos Santos Araújo", "Thais Leal Silva", "Satie Katagiri",
+];
+
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function _nt(s){return (s||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/\s+/g,' ').trim();}
+var GRUPOS = (function(){
+  var m = {};
+  PREMIOS.forEach(function(p){
+    var k = _nt(p.titulo) + '||' + (p.ano || '');
+    if(!m[k]) m[k] = {ano:p.ano, titulo:p.titulo, evento:p.evento, professores:[]};
+    if(m[k].professores.indexOf(p.professor) < 0) m[k].professores.push(p.professor);
+  });
+  return Object.keys(m).map(function(k){return m[k];});
+})();
+function getFiltered() {
+  const prof = document.getElementById('fProf').value;
+  const sort = document.getElementById('fSort').value;
+  let res = GRUPOS.filter(function(g){return !prof || g.professores.indexOf(prof)>=0;});
+  if (sort === 'ano_desc') res.sort((a,b) => (b.ano||0)-(a.ano||0));
+  else if (sort === 'ano_asc') res.sort((a,b) => (a.ano||0)-(b.ano||0));
+  else if (sort === 'prof') res.sort((a,b) => a.professores[0].localeCompare(b.professores[0],'pt-BR') || (b.ano||0)-(a.ano||0));
+  return res;
+}
+
+function renderStats() {
+  const pendentes = TODOS_PROFESSORES.filter(p => !PROCESSADOS.includes(p));
+  var profsComPremio = {}; GRUPOS.forEach(function(g){g.professores.forEach(function(p){profsComPremio[p]=1;});});
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-pill"><div class="sv">${GRUPOS.length}</div><div class="sl">Prêmios catalogados</div></div>
+    <div class="stat-pill"><div class="sv">${Object.keys(profsComPremio).length}</div><div class="sl">Docentes com prêmio registrado</div></div>
+    <div class="stat-pill"><div class="sv">${PROCESSADOS.length}/${TODOS_PROFESSORES.length}</div><div class="sl">Currículos já conferidos nesta seção</div></div>
+  `;
+  const note = document.getElementById('pending-note');
+  if (pendentes.length) {
+    note.innerHTML = `⏳ A seção "Prêmios e títulos" do Lattes ainda não foi conferida para <b>${pendentes.length}</b> docente${pendentes.length!==1?'s':''}. Isso não significa que não tenham prêmios — apenas que essa parte do currículo ainda não foi extraída.
+      <div class="pending-list">${pendentes.map(esc).join(' · ')}</div>`;
+  } else {
+    note.style.display = 'none';
+  }
+}
+
+function profLinks(list){
+  return list.map(function(p){return '<a class="proflink" href="professores-biomedicina-ufmt.html">'+esc(p)+'</a>';}).join(', ');
+}
+function renderTable() {
+  const filtered = getFiltered();
+  const wrap = document.getElementById('tbl-wrap');
+  document.getElementById('tbl-sub').textContent =
+    `${filtered.length} prêmio${filtered.length!==1?'s':''} registrado${filtered.length!==1?'s':''}${document.getElementById('fProf').value ? '' : ' (todos os docentes já conferidos)'}`;
+  if (!filtered.length) {
+    wrap.innerHTML = '<div class="empty">Nenhum prêmio encontrado para este filtro.</div>';
+    return;
+  }
+  wrap.innerHTML = `<table>
+    <thead><tr><th style="width:70px">Ano</th><th>Prêmio / Título</th><th>Evento / Instituição</th><th style="width:220px">Docente</th></tr></thead>
+    <tbody>
+      ${filtered.map(g => `<tr>
+        <td class="ano">${g.ano || '—'}</td>
+        <td>${esc(g.titulo)}</td>
+        <td>${esc(g.evento)}</td>
+        <td>${profLinks(g.professores)}</td>
+      </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+function renderAll() {
+  renderStats();
+  renderTable();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const profSel = document.getElementById('fProf');
+  [...new Set([].concat.apply([], GRUPOS.map(function(g){return g.professores;})))].sort((a,b)=>a.localeCompare(b,'pt-BR')).forEach(nome => {
+    const o = document.createElement('option'); o.value = nome; o.textContent = nome; profSel.appendChild(o);
+  });
+  document.getElementById('fProf').addEventListener('change', renderAll);
+  document.getElementById('fSort').addEventListener('change', renderAll);
+  renderAll();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="light-only">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="estilo.css">
+<script src="site.js" defer></script>
+<title>Satie Katagiri — Perfil do Docente — Biomedicina UFMT Araguaia</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#003d7c;--blue2:#0059b3;--gold:#c8960c;
+  --bg:#f4f6fa;--card:#fff;--text:#1a2333;--muted:#5a6a7e;--border:#dde3ec;
+  --sans:var(--font);--serif:var(--font-display);
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh}
+.wrap{max-width:980px;margin:0 auto;padding:28px 24px 56px}
+.profile-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;display:flex;gap:22px;margin-bottom:22px;box-shadow:0 1px 4px rgba(0,61,124,.05);flex-wrap:wrap}
+.profile-photo{width:104px;height:104px;border-radius:50%;object-fit:cover;flex-shrink:0;border:3px solid #fff;box-shadow:0 0 0 2px var(--border);background:#e8edf4}
+.profile-photo-err{width:104px;height:104px;border-radius:50%;flex-shrink:0;display:none;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--blue),var(--blue2));font-family:var(--serif);font-size:28px;font-weight:700;color:rgba(255,255,255,.92);box-shadow:0 0 0 2px var(--border)}
+.profile-main{flex:1;min-width:240px}
+.profile-name{font-family:var(--serif);font-size:1.5rem;font-weight:700;color:var(--blue);line-height:1.25}
+.profile-role{font-size:13px;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-top:4px}
+.profile-area{font-size:12.5px;color:var(--muted);margin-top:6px}
+.profile-aliases{margin-top:10px;font-size:11.5px;color:var(--muted);line-height:1.7}
+.profile-aliases b{color:#7a8fa8;font-weight:600;text-transform:uppercase;font-size:9.5px;letter-spacing:.06em;display:block;margin-bottom:4px}
+.alias-chip{display:inline-block;background:#f7f9fc;border:1px solid #e4eaf3;border-radius:5px;padding:1px 7px;margin:0 4px 4px 0;font-size:11px;color:#5a6a7e}
+.clinks{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.lico{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:7px;border:1px solid #e4eaf3;background:#f7f9fc;text-decoration:none;cursor:pointer;flex-shrink:0;position:relative;transition:all .15s}
+.lico:hover{background:var(--blue);border-color:var(--blue);transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,61,124,.2)}
+.lico:hover .si{stroke:#fff} .lico:hover .fi{fill:#fff} .lico:hover .ti{fill:#fff}
+.lico.off{opacity:.2;pointer-events:none}
+.lico svg{width:16px;height:16px}
+.lico::after{content:attr(title);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1a2333;color:#fff;font-size:10px;padding:3px 8px;border-radius:4px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;z-index:10}
+.lico:hover::after{opacity:1}
+.meta-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.meta-pill{flex:1;min-width:120px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 16px;
+  display:block;text-decoration:none;color:inherit;transition:border-color .15s,box-shadow .15s,transform .1s;position:relative}
+.meta-pill:hover{border-color:var(--blue);box-shadow:0 3px 10px rgba(0,61,124,.1);transform:translateY(-1px)}
+.meta-pill::after{content:'→';position:absolute;top:10px;right:12px;font-size:11px;color:var(--border);transition:color .15s}
+.meta-pill:hover::after{color:var(--blue)}
+.meta-pill .mv{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--blue);line-height:1}
+.meta-pill .ml{font-size:10.5px;color:var(--muted);margin-top:4px}
+.sec{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:18px}
+.sec-title{font-family:var(--serif);font-size:13.5px;font-weight:700;color:var(--blue);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.sec-title::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--border),transparent)}
+#chart-wrap{width:100%;height:230px;position:relative}
+#prodChart{width:100%;height:100%;display:block}
+.chart-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:11px;color:var(--muted)}
+.chart-legend span{display:flex;align-items:center;gap:5px}
+.chart-legend i{width:9px;height:9px;border-radius:2px;display:inline-block}
+.areas-list{display:flex;flex-wrap:wrap;gap:8px}
+.area-chip{background:#eef3fb;color:var(--blue);border:1px solid #d3e3f7;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:500}
+.coauthor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.coauthor-row{display:flex;justify-content:space-between;align-items:center;background:#fafbfd;border:1px solid var(--border);border-radius:7px;padding:7px 12px;font-size:12px}
+.coauthor-name{color:var(--text);font-weight:500}
+.coauthor-count{font-size:10.5px;background:var(--blue);color:#fff;border-radius:10px;padding:1px 8px;font-weight:600}
+.coauth-flex{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
+.coauth-list-col{flex:1 1 320px;min-width:280px}
+.coauth-graph-col{flex:1 1 280px;min-width:260px}
+#egoGraphWrap{width:100%;height:280px;position:relative;border:1px solid var(--border);border-radius:9px;background:#fafbfd}
+#egoGraph{width:100%;height:100%;display:block;cursor:default}
+.ego-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;font-size:10px;color:var(--muted)}
+.ego-legend span{display:flex;align-items:center;gap:4px}
+.ego-legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.ego-tooltip{position:absolute;background:#1a2333;color:#fff;font-size:11px;padding:4px 9px;border-radius:5px;
+  pointer-events:none;opacity:0;transition:opacity .1s;white-space:nowrap;transform:translate(-50%,-130%);z-index:5}
+.orient-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.orient-pill{flex:1;min-width:110px;background:#fafbfd;border:1px solid var(--border);border-radius:10px;padding:10px 14px;text-align:center}
+.orient-pill .ov{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--text)}
+.orient-pill .ol{font-size:9.5px;color:var(--muted);margin-top:2px;line-height:1.3}
+#orientChart-wrap{width:100%;height:200px;position:relative;margin-top:6px}
+#orientChart{width:100%;height:100%;display:block}
+.note{font-size:11px;color:#9aaab8;margin-top:6px;font-style:italic}
+.empty-note{font-size:13px;color:var(--muted);padding:10px 0}
+.proj-list{display:flex;flex-direction:column;gap:10px}
+.proj-item{border:1px solid var(--border);border-radius:9px;padding:12px 14px;background:#fafbfd}
+.proj-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.proj-title{font-weight:600;font-size:13px;color:var(--text);line-height:1.4;flex:1;min-width:200px}
+.proj-period{font-size:11px;color:var(--muted);white-space:nowrap;font-family:var(--serif)}
+.proj-badges{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap}
+.proj-badge{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;padding:2px 8px;border-radius:10px}
+.pb-pesquisa{background:#eef3fb;color:var(--blue)}
+.pb-extensao{background:#fdf3e3;color:#9a6a0a}
+.pb-andamento{background:#e8f5ee;color:#1a6640}
+.pb-concluido{background:#eef0f3;color:#5a6a7e}
+.pb-outro{background:#f4eaf7;color:#7a3a9a}
+.proj-desc{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.55}
+@media(max-width:600px){.profile-card{flex-direction:column;align-items:center;text-align:center}}
+</style>
+<style id="ponte-design">
+/* Ponte entre o CSS antigo da página e o sistema de design (estilo.css). Remover quando a página for redesenhada. */
+:root{--blue:var(--tint);--blue2:var(--tint);--gold:#8a6200;--text:var(--label);--muted:var(--label-3);
+  --card:var(--surface);--border:var(--separator);--bg:#f5f5f7;--sans:var(--font);--serif:var(--font-display)}
+body{font-family:var(--font);background:var(--bg);color:var(--label);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--font-display);letter-spacing:-.01em}
+button,input,select,textarea{font-family:var(--font)}
+@media (max-width:700px){table{display:block;max-width:100%;overflow-x:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="profile-card">
+    <div>
+      <img class="profile-photo" src="http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&amp;id=K4758689P3" alt="Dra. Satie Katagiri" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="profile-photo-err">SK</div>
+    </div>
+    <div class="profile-main">
+      <div class="profile-name">Dra. Satie Katagiri</div>
+      <div class="profile-role">Professora Associada</div>
+      <div class="profile-area">Parasitologia Veterinária</div>
+      <div class="clinks"><a class="lico" href="https://plataforma-acacia.org/profile/satie-katagiri/" target="_blank" rel="noopener" title="Plataforma Acácia — genealogia acadêmica"><svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#2e7d46" class="fi"/><text x="10" y="13.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="7.5" font-weight="700" fill="#fff" class="ti">Ac</text></svg></a><a class="lico" href="http://lattes.cnpq.br/0449243259487450" target="_blank" rel="noopener" title="Currículo Lattes"><svg viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="16" height="16" rx="3" fill="#003d7c" class="fi"/><text x="10" y="14.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#fff" class="ti">L</text></svg></a><a class="lico" href="mailto:satievet@gmail.com" target="_blank" rel="noopener" title="E-mail"><svg viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2" stroke="#5a6a7e" stroke-width="1.4" class="si" fill="none"/><path d="M2 7l8 5 8-5" stroke="#5a6a7e" stroke-width="1.4" class="si"/></svg></a><a class="lico off"  title="Google Acadêmico"><svg viewBox="0 0 20 20"><path d="M4.5 11.5L1 9 10 3l9 6-4.5 3C13.2 9.7 11.7 9 10 9s-3.2.7-4.5 2.5z" fill="#4285F4" class="fi"/><circle cx="10" cy="14.5" r="3.5" fill="#4285F4" class="fi"/></svg></a><a class="lico off"  title="ResearchGate"><svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#00CCBB" class="fi"/><text x="5.5" y="14" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#fff" class="ti">RG</text></svg></a><a class="lico off"  title="Academia.edu"><svg viewBox="0 0 20 20"><path d="M10 1.5L1.5 7v7l8.5 4.5L18.5 14V7L10 1.5zm0 2.8l3 5.5h-1.4l-.5-1H8.9l-.5 1H7L10 4.3zm0 1.9l-.9 2h1.8L10 6.2z" fill="#222" class="fi"/></svg></a><a class="lico off"  title="Publons"><svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#336699" class="fi"/><text x="10" y="14" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#fff" class="ti">P</text></svg></a><a class="lico" href="https://orcid.org/0000-0002-7812-2396" target="_blank" rel="noopener" title="ORCID"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#A6CE39" class="fi"/><text x="10" y="8.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="4.5" font-weight="700" fill="#fff" class="ti">ORCID</text><text x="10" y="14" text-anchor="middle" font-family="Arial,sans-serif" font-size="5.5" fill="#fff" class="ti">iD</text></svg></a><a class="lico off"  title="SciProfiles (MDPI)"><svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#10a5a0" class="fi"/><text x="10" y="13.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="7.5" font-weight="700" fill="#fff" class="ti">Sci</text></svg></a><a class="lico off"  title="ResearcherID / Web of Science"><svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#C1272D" class="fi"/><text x="10" y="9" text-anchor="middle" font-family="Arial,sans-serif" font-size="5" font-weight="700" fill="#fff" class="ti">Web of</text><text x="10" y="15" text-anchor="middle" font-family="Arial,sans-serif" font-size="5" font-weight="700" fill="#fff" class="ti">Science</text></svg></a><a class="lico off"  title="LinkedIn"><svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#0A66C2" class="fi"/><rect x="4" y="8" width="2.5" height="7" fill="#fff" class="fi"/><circle cx="5.25" cy="5.5" r="1.4" fill="#fff" class="fi"/><path d="M9 8h2.5v1.2c.4-.7 1.3-1.4 2.5-1.4 2.2 0 3 1.5 3 3.5V15h-2.5v-3.3c0-1-.3-1.7-1.2-1.7-.9 0-1.3.7-1.3 1.7V15H9V8z" fill="#fff" class="fi"/></svg></a></div>
+      <div class="profile-aliases"><b>Nomes de cita&ccedil;&atilde;o observados</b><span class="alias-chip">KATAGIRI, SATIE</span></div>
+    </div>
+  </div>
+
+  <div class="meta-row"><a class="meta-pill" href="producoes-biomedicina-ufmt.html?prof=Satie%20Katagiri&tab=producoes"><div class="mv">76</div><div class="ml">Produções totais</div></a><a class="meta-pill" href="producoes-biomedicina-ufmt.html?prof=Satie%20Katagiri&tab=producoes"><div class="mv">30</div><div class="ml">Artigos em periódicos</div></a><a class="meta-pill" href="producoes-biomedicina-ufmt.html?prof=Satie%20Katagiri&tab=producoes"><div class="mv">42</div><div class="ml">Trabalhos em anais</div></a><a class="meta-pill" href="producoes-biomedicina-ufmt.html?prof=Satie%20Katagiri&tab=producoes"><div class="mv">4</div><div class="ml">Livros e capítulos</div></a><a class="meta-pill" href="producoes-biomedicina-ufmt.html?prof=Satie%20Katagiri&tab=producoes"><div class="mv">24%</div><div class="ml">com DOI identificado</div></a><a class="meta-pill" href="producoes-biomedicina-ufmt.html?prof=Satie%20Katagiri&tab=producoes"><div class="mv">19</div><div class="ml">Anos de atividade</div></a><a class="meta-pill" href="producoes-biomedicina-ufmt.html?prof=Satie%20Katagiri&tab=projetos"><div class="mv">9</div><div class="ml">Projetos de pesquisa</div></a><a class="meta-pill" href="producoes-biomedicina-ufmt.html?prof=Satie%20Katagiri&tab=projetos"><div class="mv">9</div><div class="ml">Projetos de extensão</div></a></div>
+
+  <div class="sec">
+    <div class="sec-title">Produ&ccedil;&atilde;o bibliogr&aacute;fica por ano</div>
+    <div id="chart-wrap"><canvas id="prodChart"></canvas></div>
+    <div class="chart-legend"><span><i style="background:#003d7c"></i>Artigos em periódicos</span><span><i style="background:#c8960c"></i>Trabalhos em anais</span><span><i style="background:#4a9e8e"></i>Capítulos de livro</span><span><i style="background:#8a5fb0"></i>Livros</span></div>
+    <div class="note">Fonte: base de produ&ccedil;&otilde;es do projeto (cruzamento de Lattes). Clique nas caixas de m&eacute;tricas acima para ver a lista completa.</div>
+  </div>
+
+  <div class="sec"><div class="sec-title">Orientações e supervisões (9)</div><div class="orient-row"><div class="orient-pill"><div class="ov">9</div><div class="ol">Trabalho de conclusão de curso</div></div></div><div id="orientChart-wrap"><canvas id="orientChart"></canvas></div><div class="chart-legend"><span><i style="background:#0d7a6c"></i>Trabalho de conclusão de curso</span></div><div class="note">Fonte: Currículo Lattes.</div></div>
+
+  <div class="sec"><div class="sec-title">Disciplinas</div><div class="areas-list"><span class="area-chip">Saúde e Ambiente: Doenças Infecciosas Emergentes (opt.)</span></div></div>
+
+  <div class="sec">
+    <div class="sec-title">Coautores e rede de colabora&ccedil;&atilde;o</div>
+    <div class="coauth-flex">
+      <div class="coauth-list-col"><div class="coauthor-grid"><div class="coauthor-row"><span class="coauthor-name">RIBEIRO, CLAUDIA DE MELLO</span><span class="coauthor-count">24</span></div><div class="coauthor-row"><span class="coauthor-name">ROCHA, IZABELLA CHRYSTINA</span><span class="coauthor-count">14</span></div><div class="coauthor-row"><span class="coauthor-name">DA SILVA, PRISCILLA NICÁCIO</span><span class="coauthor-count">14</span></div><div class="coauthor-row"><span class="coauthor-name">BARBOSA, L.</span><span class="coauthor-count">15</span></div><div class="coauthor-row"><span class="coauthor-name">Silva, P. N.</span><span class="coauthor-count">10</span></div><div class="coauthor-row"><span class="coauthor-name">OLIVEIRA-SEQUEIRA, T. C. G.</span><span class="coauthor-count">11</span></div><div class="coauthor-row"><span class="coauthor-name">MARTINS, M. F.</span><span class="coauthor-count">5</span></div><div class="coauthor-row"><span class="coauthor-name">LEITE, JOÃO BATISTA ARAUJO</span><span class="coauthor-count">4</span></div><div class="coauthor-row"><span class="coauthor-name">MORAES, S. C.</span><span class="coauthor-count">5</span></div><div class="coauthor-row"><span class="coauthor-name">ROCHA, I. C.</span><span class="coauthor-count">4</span></div><div class="coauthor-row"><span class="coauthor-name">SILVA, M. M. R.</span><span class="coauthor-count">3</span></div><div class="coauthor-row"><span class="coauthor-name">BASTOS, PAULA ANDREA DE SANTIS</span><span class="coauthor-count">4</span></div><div class="coauthor-row"><span class="coauthor-name">DAVID, E. B.</span><span class="coauthor-count">6</span></div><div class="coauthor-row"><span class="coauthor-name">MORAES, SINARA CRISTINA DE</span><span class="coauthor-count">4</span></div><div class="coauthor-row"><span class="coauthor-name">ARAUJO, KARINA CONCEICAO GOMES MACHADO</span><span class="coauthor-count">6</span></div><div class="coauthor-row"><span class="coauthor-name">DUARTE, JOAO VITOR SILVA</span><span class="coauthor-count">3</span></div></div></div>
+      <div class="coauth-graph-col">
+        <div id="egoGraphWrap"><canvas id="egoGraph"></canvas><div class="ego-tooltip" id="egoTooltip"></div></div>
+        <div class="ego-legend"><span><i style="background:#0288d1"></i>Aluno em formação</span><span><i style="background:#c9960c"></i>Egresso</span><span><i style="background:#2e7d32"></i>Pesquisador externo</span><span><i style="background:#558b2f"></i>Professor UNESP</span><span><i style="background:#00897b"></i>Professor do ICBS</span><span><i style="background:#003d7c"></i>Professor do curso</span><span><i style="background:#2e7d32"></i>Professor externo</span></div>
+        <div class="note">Quanto mais próximo do centro e mais espessa a linha, maior a colaboração com Satie. Linhas cinzas entre os pontos: colaboração entre os próprios coautores. São exibidos os 16 coautores classificados mais fortes (de 16 listados ao lado). A força de colaboração valoriza parcerias recentes (decaimento com meia-vida de 7 anos) e duradouras (bônus por anos ativos); os pendentes não aparecem no grafo.</div>
+      </div>
+    </div>
+  </div>
+<!--OCRA_SANKEY_START-->
+<div class="sec"><div class="sec-title">Fluxo de colabora&ccedil;&atilde;o: docente &rarr; trabalhos &rarr; colaboradores &rarr; institui&ccedil;&otilde;es</div><div style="width:100%;overflow-x:auto"><svg width="100%" style="height:auto;display:block" viewBox="0 0 1000 424" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,Segoe UI,sans-serif">
+<rect width="1000" height="424" fill="#fafbfd"/>
+<path d="M20.0,85.0 C160.0,85.0 160.0,35.5 300.0,35.5 L300.0,40.4 C160.0,40.4 160.0,89.9 20.0,89.9 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,89.9 C160.0,89.9 160.0,43.4 300.0,43.4 L300.0,48.3 C160.0,48.3 160.0,94.8 20.0,94.8 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,94.8 C160.0,94.8 160.0,51.3 300.0,51.3 L300.0,56.2 C160.0,56.2 160.0,99.7 20.0,99.7 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,99.7 C160.0,99.7 160.0,59.2 300.0,59.2 L300.0,69.1 C160.0,69.1 160.0,109.6 20.0,109.6 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,109.6 C160.0,109.6 160.0,72.1 300.0,72.1 L300.0,81.9 C160.0,81.9 160.0,119.4 20.0,119.4 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,119.4 C160.0,119.4 160.0,84.9 300.0,84.9 L300.0,94.7 C160.0,94.7 160.0,129.2 20.0,129.2 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,129.2 C160.0,129.2 160.0,97.7 300.0,97.7 L300.0,107.5 C160.0,107.5 160.0,139.0 20.0,139.0 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,139.0 C160.0,139.0 160.0,110.5 300.0,110.5 L300.0,120.4 C160.0,120.4 160.0,148.9 20.0,148.9 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,148.9 C160.0,148.9 160.0,123.4 300.0,123.4 L300.0,133.2 C160.0,133.2 160.0,158.7 20.0,158.7 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,158.7 C160.0,158.7 160.0,136.2 300.0,136.2 L300.0,146.0 C160.0,146.0 160.0,168.5 20.0,168.5 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,168.5 C160.0,168.5 160.0,149.0 300.0,149.0 L300.0,158.8 C160.0,158.8 160.0,178.3 20.0,178.3 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,178.3 C160.0,178.3 160.0,161.8 300.0,161.8 L300.0,171.7 C160.0,171.7 160.0,188.2 20.0,188.2 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,188.2 C160.0,188.2 160.0,174.7 300.0,174.7 L300.0,184.5 C160.0,184.5 160.0,198.0 20.0,198.0 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,198.0 C160.0,198.0 160.0,187.5 300.0,187.5 L300.0,192.4 C160.0,192.4 160.0,202.9 20.0,202.9 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,202.9 C160.0,202.9 160.0,195.4 300.0,195.4 L300.0,200.3 C160.0,200.3 160.0,207.8 20.0,207.8 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,207.8 C160.0,207.8 160.0,203.3 300.0,203.3 L300.0,208.2 C160.0,208.2 160.0,212.7 20.0,212.7 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,212.7 C160.0,212.7 160.0,211.2 300.0,211.2 L300.0,216.1 C160.0,216.1 160.0,217.6 20.0,217.6 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,217.6 C160.0,217.6 160.0,219.1 300.0,219.1 L300.0,224.0 C160.0,224.0 160.0,222.5 20.0,222.5 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,222.5 C160.0,222.5 160.0,227.0 300.0,227.0 L300.0,232.0 C160.0,232.0 160.0,227.5 20.0,227.5 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,227.5 C160.0,227.5 160.0,235.0 300.0,235.0 L300.0,239.9 C160.0,239.9 160.0,232.4 20.0,232.4 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,232.4 C160.0,232.4 160.0,242.9 300.0,242.9 L300.0,247.8 C160.0,247.8 160.0,237.3 20.0,237.3 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,237.3 C160.0,237.3 160.0,250.8 300.0,250.8 L300.0,260.6 C160.0,260.6 160.0,247.1 20.0,247.1 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,247.1 C160.0,247.1 160.0,263.6 300.0,263.6 L300.0,273.4 C160.0,273.4 160.0,256.9 20.0,256.9 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,256.9 C160.0,256.9 160.0,276.4 300.0,276.4 L300.0,281.3 C160.0,281.3 160.0,261.8 20.0,261.8 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,261.8 C160.0,261.8 160.0,284.3 300.0,284.3 L300.0,299.1 C160.0,299.1 160.0,276.6 20.0,276.6 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,276.6 C160.0,276.6 160.0,302.1 300.0,302.1 L300.0,311.9 C160.0,311.9 160.0,286.4 20.0,286.4 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,286.4 C160.0,286.4 160.0,314.9 300.0,314.9 L300.0,324.7 C160.0,324.7 160.0,296.2 20.0,296.2 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,296.2 C160.0,296.2 160.0,327.7 300.0,327.7 L300.0,337.6 C160.0,337.6 160.0,306.1 20.0,306.1 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,306.1 C160.0,306.1 160.0,340.6 300.0,340.6 L300.0,345.5 C160.0,345.5 160.0,311.0 20.0,311.0 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,311.0 C160.0,311.0 160.0,348.5 300.0,348.5 L300.0,353.4 C160.0,353.4 160.0,315.9 20.0,315.9 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,315.9 C160.0,315.9 160.0,356.4 300.0,356.4 L300.0,361.3 C160.0,361.3 160.0,320.8 20.0,320.8 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,320.8 C160.0,320.8 160.0,364.3 300.0,364.3 L300.0,379.0 C160.0,379.0 160.0,335.5 20.0,335.5 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,335.5 C160.0,335.5 160.0,382.0 300.0,382.0 L300.0,391.9 C160.0,391.9 160.0,345.4 20.0,345.4 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,345.4 C160.0,345.4 160.0,394.9 300.0,394.9 L300.0,414.5 C160.0,414.5 160.0,365.0 20.0,365.0 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M312.0,35.5 C466.0,35.5 466.0,33.0 620.0,33.0 L620.0,37.9 C466.0,37.9 466.0,40.4 312.0,40.4 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,43.4 C466.0,43.4 466.0,37.9 620.0,37.9 L620.0,42.8 C466.0,42.8 466.0,48.3 312.0,48.3 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,51.3 C466.0,51.3 466.0,42.8 620.0,42.8 L620.0,47.7 C466.0,47.7 466.0,56.2 312.0,56.2 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,59.2 C466.0,59.2 466.0,47.7 620.0,47.7 L620.0,52.6 C466.0,52.6 466.0,64.1 312.0,64.1 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,64.1 C466.0,64.1 466.0,109.8 620.0,109.8 L620.0,114.7 C466.0,114.7 466.0,69.1 312.0,69.1 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,72.1 C466.0,72.1 466.0,52.6 620.0,52.6 L620.0,57.6 C466.0,57.6 466.0,77.0 312.0,77.0 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,77.0 C466.0,77.0 466.0,114.7 620.0,114.7 L620.0,119.6 C466.0,119.6 466.0,81.9 312.0,81.9 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,84.9 C466.0,84.9 466.0,57.6 620.0,57.6 L620.0,62.5 C466.0,62.5 466.0,89.8 312.0,89.8 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,89.8 C466.0,89.8 466.0,119.6 620.0,119.6 L620.0,124.5 C466.0,124.5 466.0,94.7 312.0,94.7 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,97.7 C466.0,97.7 466.0,62.5 620.0,62.5 L620.0,67.4 C466.0,67.4 466.0,102.6 312.0,102.6 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,102.6 C466.0,102.6 466.0,124.5 620.0,124.5 L620.0,129.4 C466.0,129.4 466.0,107.5 312.0,107.5 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,110.5 C466.0,110.5 466.0,67.4 620.0,67.4 L620.0,72.3 C466.0,72.3 466.0,115.4 312.0,115.4 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,115.4 C466.0,115.4 466.0,129.4 620.0,129.4 L620.0,134.3 C466.0,134.3 466.0,120.4 312.0,120.4 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,123.4 C466.0,123.4 466.0,72.3 620.0,72.3 L620.0,77.2 C466.0,77.2 466.0,128.3 312.0,128.3 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,128.3 C466.0,128.3 466.0,134.3 620.0,134.3 L620.0,139.2 C466.0,139.2 466.0,133.2 312.0,133.2 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,136.2 C466.0,136.2 466.0,77.2 620.0,77.2 L620.0,82.1 C466.0,82.1 466.0,141.1 312.0,141.1 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,141.1 C466.0,141.1 466.0,139.2 620.0,139.2 L620.0,144.2 C466.0,144.2 466.0,146.0 312.0,146.0 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,149.0 C466.0,149.0 466.0,82.1 620.0,82.1 L620.0,87.0 C466.0,87.0 466.0,153.9 312.0,153.9 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,153.9 C466.0,153.9 466.0,144.2 620.0,144.2 L620.0,149.1 C466.0,149.1 466.0,158.8 312.0,158.8 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,161.8 C466.0,161.8 466.0,87.0 620.0,87.0 L620.0,91.9 C466.0,91.9 466.0,166.7 312.0,166.7 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,166.7 C466.0,166.7 466.0,149.1 620.0,149.1 L620.0,154.0 C466.0,154.0 466.0,171.7 312.0,171.7 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,174.7 C466.0,174.7 466.0,91.9 620.0,91.9 L620.0,96.9 C466.0,96.9 466.0,179.6 312.0,179.6 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,179.6 C466.0,179.6 466.0,154.0 620.0,154.0 L620.0,158.9 C466.0,158.9 466.0,184.5 312.0,184.5 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,187.5 C466.0,187.5 466.0,158.9 620.0,158.9 L620.0,163.8 C466.0,163.8 466.0,192.4 312.0,192.4 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,195.4 C466.0,195.4 466.0,163.8 620.0,163.8 L620.0,168.7 C466.0,168.7 466.0,200.3 312.0,200.3 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,203.3 C466.0,203.3 466.0,186.5 620.0,186.5 L620.0,191.5 C466.0,191.5 466.0,208.2 312.0,208.2 Z" fill="#2e7d32" fill-opacity="0.3"/>
+<path d="M312.0,211.2 C466.0,211.2 466.0,191.5 620.0,191.5 L620.0,196.4 C466.0,196.4 466.0,216.1 312.0,216.1 Z" fill="#2e7d32" fill-opacity="0.3"/>
+<path d="M312.0,219.1 C466.0,219.1 466.0,196.4 620.0,196.4 L620.0,201.3 C466.0,201.3 466.0,224.0 312.0,224.0 Z" fill="#2e7d32" fill-opacity="0.3"/>
+<path d="M312.0,227.0 C466.0,227.0 466.0,201.3 620.0,201.3 L620.0,206.2 C466.0,206.2 466.0,232.0 312.0,232.0 Z" fill="#2e7d32" fill-opacity="0.3"/>
+<path d="M312.0,235.0 C466.0,235.0 466.0,206.2 620.0,206.2 L620.0,211.1 C466.0,211.1 466.0,239.9 312.0,239.9 Z" fill="#2e7d32" fill-opacity="0.3"/>
+<path d="M312.0,242.9 C466.0,242.9 466.0,211.1 620.0,211.1 L620.0,216.0 C466.0,216.0 466.0,247.8 312.0,247.8 Z" fill="#2e7d32" fill-opacity="0.3"/>
+<path d="M312.0,250.8 C466.0,250.8 466.0,216.0 620.0,216.0 L620.0,220.9 C466.0,220.9 466.0,255.7 312.0,255.7 Z" fill="#2e7d32" fill-opacity="0.3"/>
+<path d="M312.0,255.7 C466.0,255.7 466.0,238.8 620.0,238.8 L620.0,243.7 C466.0,243.7 466.0,260.6 312.0,260.6 Z" fill="#2e7d32" fill-opacity="0.3"/>
+<path d="M312.0,263.6 C466.0,263.6 466.0,220.9 620.0,220.9 L620.0,225.8 C466.0,225.8 466.0,268.5 312.0,268.5 Z" fill="#2e7d32" fill-opacity="0.3"/>
+<path d="M312.0,268.5 C466.0,268.5 466.0,266.4 620.0,266.4 L620.0,271.3 C466.0,271.3 466.0,273.4 312.0,273.4 Z" fill="#c9960c" fill-opacity="0.3"/>
+<path d="M312.0,276.4 C466.0,276.4 466.0,243.7 620.0,243.7 L620.0,248.6 C466.0,248.6 466.0,281.3 312.0,281.3 Z" fill="#2e7d32" fill-opacity="0.3"/>
+<path d="M312.0,284.3 C466.0,284.3 466.0,96.9 620.0,96.9 L620.0,101.8 C466.0,101.8 466.0,289.3 312.0,289.3 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,289.3 C466.0,289.3 466.0,168.7 620.0,168.7 L620.0,173.6 C466.0,173.6 466.0,294.2 312.0,294.2 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,294.2 C466.0,294.2 466.0,363.5 620.0,363.5 L620.0,368.4 C466.0,368.4 466.0,299.1 312.0,299.1 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,302.1 C466.0,302.1 466.0,271.3 620.0,271.3 L620.0,276.2 C466.0,276.2 466.0,307.0 312.0,307.0 Z" fill="#c9960c" fill-opacity="0.3"/>
+<path d="M312.0,307.0 C466.0,307.0 466.0,289.1 620.0,289.1 L620.0,294.1 C466.0,294.1 466.0,311.9 312.0,311.9 Z" fill="#c9960c" fill-opacity="0.3"/>
+<path d="M312.0,314.9 C466.0,314.9 466.0,173.6 620.0,173.6 L620.0,178.5 C466.0,178.5 466.0,319.8 312.0,319.8 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,319.8 C466.0,319.8 466.0,350.6 620.0,350.6 L620.0,355.5 C466.0,355.5 466.0,324.7 312.0,324.7 Z" fill="#c9960c" fill-opacity="0.3"/>
+<path d="M312.0,327.7 C466.0,327.7 466.0,225.8 620.0,225.8 L620.0,230.8 C466.0,230.8 466.0,332.6 312.0,332.6 Z" fill="#2e7d32" fill-opacity="0.3"/>
+<path d="M312.0,332.6 C466.0,332.6 466.0,337.7 620.0,337.7 L620.0,342.6 C466.0,342.6 466.0,337.6 312.0,337.6 Z" fill="#c9960c" fill-opacity="0.3"/>
+<path d="M312.0,340.6 C466.0,340.6 466.0,294.1 620.0,294.1 L620.0,299.0 C466.0,299.0 466.0,345.5 312.0,345.5 Z" fill="#c9960c" fill-opacity="0.3"/>
+<path d="M312.0,348.5 C466.0,348.5 466.0,307.0 620.0,307.0 L620.0,311.9 C466.0,311.9 466.0,353.4 312.0,353.4 Z" fill="#c9960c" fill-opacity="0.3"/>
+<path d="M312.0,356.4 C466.0,356.4 466.0,311.9 620.0,311.9 L620.0,316.8 C466.0,316.8 466.0,361.3 312.0,361.3 Z" fill="#c9960c" fill-opacity="0.3"/>
+<path d="M312.0,364.3 C466.0,364.3 466.0,248.6 620.0,248.6 L620.0,253.5 C466.0,253.5 466.0,369.2 312.0,369.2 Z" fill="#2e7d32" fill-opacity="0.3"/>
+<path d="M312.0,369.2 C466.0,369.2 466.0,324.8 620.0,324.8 L620.0,329.7 C466.0,329.7 466.0,374.1 312.0,374.1 Z" fill="#c9960c" fill-opacity="0.3"/>
+<path d="M312.0,374.1 C466.0,374.1 466.0,407.2 620.0,407.2 L620.0,412.1 C466.0,412.1 466.0,379.0 312.0,379.0 Z" fill="#558b2f" fill-opacity="0.3"/>
+<path d="M312.0,382.0 C466.0,382.0 466.0,253.5 620.0,253.5 L620.0,258.4 C466.0,258.4 466.0,386.9 312.0,386.9 Z" fill="#2e7d32" fill-opacity="0.3"/>
+<path d="M312.0,386.9 C466.0,386.9 466.0,412.1 620.0,412.1 L620.0,417.0 C466.0,417.0 466.0,391.9 312.0,391.9 Z" fill="#558b2f" fill-opacity="0.3"/>
+<path d="M312.0,394.9 C466.0,394.9 466.0,276.2 620.0,276.2 L620.0,281.1 C466.0,281.1 466.0,399.8 312.0,399.8 Z" fill="#c9960c" fill-opacity="0.3"/>
+<path d="M312.0,399.8 C466.0,399.8 466.0,368.4 620.0,368.4 L620.0,373.4 C466.0,373.4 466.0,404.7 312.0,404.7 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,404.7 C466.0,404.7 466.0,381.4 620.0,381.4 L620.0,386.3 C466.0,386.3 466.0,409.6 312.0,409.6 Z" fill="#0288d1" fill-opacity="0.3"/>
+<path d="M312.0,409.6 C466.0,409.6 466.0,394.3 620.0,394.3 L620.0,399.2 C466.0,399.2 466.0,414.5 312.0,414.5 Z" fill="#0288d1" fill-opacity="0.3"/>
+<path d="M632.0,33.0 C806.0,33.0 806.0,67.0 980.0,67.0 L980.0,135.8 C806.0,135.8 806.0,101.8 632.0,101.8 Z" fill="#00897b" fill-opacity="0.4"/>
+<path d="M632.0,109.8 C806.0,109.8 806.0,135.8 980.0,135.8 L980.0,204.5 C806.0,204.5 806.0,178.5 632.0,178.5 Z" fill="#00897b" fill-opacity="0.4"/>
+<path d="M632.0,186.5 C806.0,186.5 806.0,216.5 980.0,216.5 L980.0,260.8 C806.0,260.8 806.0,230.8 632.0,230.8 Z" fill="#2e7d32" fill-opacity="0.4"/>
+<path d="M632.0,238.8 C806.0,238.8 806.0,260.8 980.0,260.8 L980.0,280.4 C806.0,280.4 806.0,258.4 632.0,258.4 Z" fill="#2e7d32" fill-opacity="0.4"/>
+<path d="M632.0,266.4 C806.0,266.4 806.0,280.4 980.0,280.4 L980.0,295.1 C806.0,295.1 806.0,281.1 632.0,281.1 Z" fill="#c9960c" fill-opacity="0.4"/>
+<path d="M632.0,289.1 C806.0,289.1 806.0,295.1 980.0,295.1 L980.0,305.0 C806.0,305.0 806.0,299.0 632.0,299.0 Z" fill="#c9960c" fill-opacity="0.4"/>
+<path d="M632.0,307.0 C806.0,307.0 806.0,305.0 980.0,305.0 L980.0,314.8 C806.0,314.8 806.0,316.8 632.0,316.8 Z" fill="#c9960c" fill-opacity="0.4"/>
+<path d="M632.0,324.8 C806.0,324.8 806.0,314.8 980.0,314.8 L980.0,319.7 C806.0,319.7 806.0,329.7 632.0,329.7 Z" fill="#c9960c" fill-opacity="0.4"/>
+<path d="M632.0,337.7 C806.0,337.7 806.0,319.7 980.0,319.7 L980.0,324.6 C806.0,324.6 806.0,342.6 632.0,342.6 Z" fill="#c9960c" fill-opacity="0.4"/>
+<path d="M632.0,350.6 C806.0,350.6 806.0,324.6 980.0,324.6 L980.0,329.5 C806.0,329.5 806.0,355.5 632.0,355.5 Z" fill="#c9960c" fill-opacity="0.4"/>
+<path d="M632.0,363.5 C806.0,363.5 806.0,341.5 980.0,341.5 L980.0,351.4 C806.0,351.4 806.0,373.4 632.0,373.4 Z" fill="#003d7c" fill-opacity="0.4"/>
+<path d="M632.0,381.4 C806.0,381.4 806.0,351.4 980.0,351.4 L980.0,356.3 C806.0,356.3 806.0,386.3 632.0,386.3 Z" fill="#0288d1" fill-opacity="0.4"/>
+<path d="M632.0,394.3 C806.0,394.3 806.0,356.3 980.0,356.3 L980.0,361.2 C806.0,361.2 806.0,399.2 632.0,399.2 Z" fill="#0288d1" fill-opacity="0.4"/>
+<path d="M632.0,407.2 C806.0,407.2 806.0,373.2 980.0,373.2 L980.0,383.0 C806.0,383.0 806.0,417.0 632.0,417.0 Z" fill="#558b2f" fill-opacity="0.4"/>
+<rect x="8" y="85.0" width="12" height="280.0" rx="2" fill="#003d7c"><title>Satie Katagiri</title></rect>
+<text x="8" y="81.0" font-size="11" font-weight="700" fill="#003d7c">Satie</text>
+<rect x="300.0" y="35.5" width="12" height="4.9" rx="1.5" fill="#c2cad6"><title>OCORRÊNCIA E DIAGNÓSTICO DO CÂNCER DE COLO DO ÚTERO EM BARRA DO GARÇAS - MT (2020)</title></rect>
+<rect x="300.0" y="43.4" width="12" height="4.9" rx="1.5" fill="#c2cad6"><title>Quedas em idosos institucionalizados: ocorrência e consequências / Falls in institutionalized elderly: occurrence and consequences (2020)</title></rect>
+<rect x="300.0" y="51.3" width="12" height="4.9" rx="1.5" fill="#c2cad6"><title>Zoonoses e Educação em Saúde: Conhecer, Compartilhar e Multiplicar / Zoonoses and Health Education: Know, Share and Multiply (2020)</title></rect>
+<rect x="300.0" y="59.2" width="12" height="9.8" rx="1.5" fill="#c2cad6"><title>Atenção à saúde de casos de leishmaniose tegumentar em unidade de pronto atendimento na região do médio-Araguaia (2025)</title></rect>
+<rect x="300.0" y="72.1" width="12" height="9.8" rx="1.5" fill="#c2cad6"><title>Saúde Única e Vigilância em Saúde: ações de prevenção de zoonoses negligenciadas (2025)</title></rect>
+<rect x="300.0" y="84.9" width="12" height="9.8" rx="1.5" fill="#c2cad6"><title>Autoavaliação da saúde e prática de exercício físico: uma abordagem de idosos frequentadores de academias (2025)</title></rect>
+<rect x="300.0" y="97.7" width="12" height="9.8" rx="1.5" fill="#c2cad6"><title>AVALIAÇÃO DA FERIDA: DESCREVENDO O CONHECIMENTO DOS PROFISSIONAIS DA ATENÇÃO PRIMÁRIA À SAÚDE ACERCA DO LEITO E EXSUDATO LESÃO (2025)</title></rect>
+<rect x="300.0" y="110.5" width="12" height="9.8" rx="1.5" fill="#c2cad6"><title>Vivências durante a Pandemia de ações de educação permanente em saúde em uma unidade de Pronto Atendimento (UPA) / Experiences during the Pandemic of continuing education actions in health in an Emergency Care Unit (UPA) (2024)</title></rect>
+<rect x="300.0" y="123.4" width="12" height="9.8" rx="1.5" fill="#c2cad6"><title>Saúde única no contexto da contaminação ambiental por parasitas intestinais de cães com potencial zoonótico (2024)</title></rect>
+<rect x="300.0" y="136.2" width="12" height="9.8" rx="1.5" fill="#c2cad6"><title>Conhecimento e reflex--es sobre estomias de elimina---o: uma abordagem em grupo com enfermeiras (2021)</title></rect>
+<rect x="300.0" y="149.0" width="12" height="9.8" rx="1.5" fill="#c2cad6"><title>Percepção de enfermeiros sobre estomias de eliminação: reflexões para o cuidado qualificado (2021)</title></rect>
+<rect x="300.0" y="161.8" width="12" height="9.8" rx="1.5" fill="#c2cad6"><title>Perfil de medicamentos utilizados por idosos institucionalizados da regiÃ£o MÃ©dio-Araguaia/AragarÃ§as-GO (2020)</title></rect>
+<rect x="300.0" y="174.7" width="12" height="9.8" rx="1.5" fill="#c2cad6"><title>AutopercepÃ§Ã£o do estresse ocupacional na equipe de enfermagem de um serviÃ§o de emergÃªncia (2020)</title></rect>
+<rect x="300.0" y="187.5" width="12" height="4.9" rx="1.5" fill="#c2cad6"><title>COMPLICAÇÕES LIMITANTES EM IDOSOS RESIDENTES EM INSTITUIÇÃO DE LONGA PERMANÊNCIA (2021)</title></rect>
+<rect x="300.0" y="195.4" width="12" height="4.9" rx="1.5" fill="#c2cad6"><title>INTERAÇÃO MEDICAMENTOSA EM IDOSOS INSTITUCIONALIZADOS: ANTI-HIPERTENSIVOS E DIURÉTICOS (2021)</title></rect>
+<rect x="300.0" y="203.3" width="12" height="4.9" rx="1.5" fill="#c2cad6"><title>Prevalence of Rickettsia rickettsii in Ticks: Systematic Review and Meta-Analysis (2022)</title></rect>
+<rect x="300.0" y="211.2" width="12" height="4.9" rx="1.5" fill="#c2cad6"><title>Brazilian spotted fever: A spatial analysis of human cases and vectors in the state of São Paulo, Brazil (2020)</title></rect>
+<rect x="300.0" y="219.1" width="12" height="4.9" rx="1.5" fill="#c2cad6"><title>Spatial and temporal trend analysis of bovine brucellosis in Brazil, 2014 to 2018 (2020)</title></rect>
+<rect x="300.0" y="227.0" width="12" height="4.9" rx="1.5" fill="#c2cad6"><title>Meta-analysis of the prevalence and risk factors associated with bovine neosporosis (2019)</title></rect>
+<rect x="300.0" y="235.0" width="12" height="4.9" rx="1.5" fill="#c2cad6"><title>Levantamento Etnobotânico e Abordagem Popular em Tratamentos Alternativos de Enteroparasitoses no Município de Aracaju-Sergipe (2017)</title></rect>
+<rect x="300.0" y="242.9" width="12" height="4.9" rx="1.5" fill="#c2cad6"><title>Avaliação da Contaminação Ambiental e Análise de Fatores de Risco Envolvidos na Transmissão de Larva Migrans Cutânea em Aracaju ? Sergipe (2017)</title></rect>
+<rect x="300.0" y="250.8" width="12" height="9.8" rx="1.5" fill="#c2cad6"><title>Effect of Bifidobacterium animalis on mice infected with Strongyloides venezuelensis (2015)</title></rect>
+<rect x="300.0" y="263.6" width="12" height="9.8" rx="1.5" fill="#c2cad6"><title>PARASITISM BY Dioctophyme renale (GOEZE, 1782) IN MANED WOLF (Chrysocyon brachyurus), BRAZIL (2013)</title></rect>
+<rect x="300.0" y="276.4" width="12" height="4.9" rx="1.5" fill="#c2cad6"><title>Molecular identification of Ancylostoma species from dogs and an assessment of zoonotic risk in low-income households, São Paulo State, Brazil (2019)</title></rect>
+<rect x="300.0" y="284.3" width="12" height="14.7" rx="1.5" fill="#c2cad6"><title>CONTAMINAÇÃO POR PARASITAS DE POTENCIAL ZOONÓTICO EM ÁREAS DE LAZER PÚBLICAS: UMA ABORDAGEM SOB A PERSPECTIVA DA SAÚDE ÚNICA (2026)</title></rect>
+<rect x="300.0" y="302.1" width="12" height="9.8" rx="1.5" fill="#c2cad6"><title>IMAGINA AÇÃO e SAÚDE ÚNICA: LUDICIDADE NO ENSINO (2024)</title></rect>
+<rect x="300.0" y="314.9" width="12" height="9.8" rx="1.5" fill="#c2cad6"><title>OCORRÊNCIA INFECÇÕES PARASITÁRIAS EM RESIDENTES DE UMA ILPI EM ARAGARÇAS - GO (2024)</title></rect>
+<rect x="300.0" y="327.7" width="12" height="9.8" rx="1.5" fill="#c2cad6"><title>Frequência de Parasitoses Intestinais e Ações de Educação Sanitária em Comunidade de Assentamento Rural (MST) no Agreste Sergipano (2017)</title></rect>
+<rect x="300.0" y="340.6" width="12" height="4.9" rx="1.5" fill="#c2cad6"><title>Saúde Única e educação permanente na atenção básica (2024)</title></rect>
+<rect x="300.0" y="348.5" width="12" height="4.9" rx="1.5" fill="#c2cad6"><title>Abordagem lúdica em ações de educação sanitária para controle e profilaxia de parasitoses em escolares do município de Barra do Garças ? MT (2021)</title></rect>
+<rect x="300.0" y="356.4" width="12" height="4.9" rx="1.5" fill="#c2cad6"><title>Conhecimento dos profissionais da rede pública de ensino infantil sobre parasitoses no município de Barra do Garças ? MT (2021)</title></rect>
+<rect x="300.0" y="364.3" width="12" height="14.7" rx="1.5" fill="#c2cad6"><title>Frequency of children and dogs intestinal parasites in the city of Pratânia, São Paulo State, Brazil (2008)</title></rect>
+<rect x="300.0" y="382.0" width="12" height="9.8" rx="1.5" fill="#c2cad6"><title>Diagnosis of Giardia infections by PCR-based methods in children living in an endemic area (2013)</title></rect>
+<rect x="300.0" y="394.9" width="12" height="19.6" rx="1.5" fill="#c2cad6"><title>Histologia em Cena: popularizando o conhecimento microscópico (2025)</title></rect>
+<rect x="620.0" y="33.0" width="12" height="68.8" rx="1.5" fill="#00897b"><title>DA SILVA, PRISCILLA NICÁCIO — 14 trabalho(s) · Professor do ICBS</title></rect>
+<text x="616.0" y="70.4" font-size="9.5" text-anchor="end" fill="#33475b">Da Silva</text>
+<rect x="620.0" y="109.8" width="12" height="68.8" rx="1.5" fill="#00897b"><title>ROCHA, IZABELLA CHRYSTINA — 14 trabalho(s) · Professor do ICBS</title></rect>
+<text x="616.0" y="147.2" font-size="9.5" text-anchor="end" fill="#33475b">Rocha</text>
+<rect x="620.0" y="186.5" width="12" height="44.2" rx="1.5" fill="#2e7d32"><title>RIBEIRO, CLAUDIA DE MELLO — 9 trabalho(s) · Professor externo</title></rect>
+<text x="616.0" y="211.6" font-size="9.5" text-anchor="end" fill="#33475b">Ribeiro</text>
+<rect x="620.0" y="238.8" width="12" height="19.6" rx="1.5" fill="#2e7d32"><title>GUIMARÃES, SIMONE ELIZA FACIONI — 4 trabalho(s) · Pesquisador externo</title></rect>
+<text x="616.0" y="251.6" font-size="9.5" text-anchor="end" fill="#33475b">Guimarães</text>
+<rect x="620.0" y="266.4" width="12" height="14.7" rx="1.5" fill="#c9960c"><title>DUARTE, JOAO VITOR SILVA — 3 trabalho(s) · Egresso</title></rect>
+<text x="616.0" y="276.8" font-size="9.5" text-anchor="end" fill="#33475b">Duarte</text>
+<rect x="620.0" y="289.1" width="12" height="9.8" rx="1.5" fill="#c9960c"><title>NERES, ADRYAN JHEFERSON DA SILVA — 2 trabalho(s) · Egresso</title></rect>
+<text x="616.0" y="297.1" font-size="9.5" text-anchor="end" fill="#33475b">Neres</text>
+<rect x="620.0" y="307.0" width="12" height="9.8" rx="1.5" fill="#c9960c"><title>SOUSA, WAYNNER OLIVEIRA DE — 2 trabalho(s) · Egresso</title></rect>
+<text x="616.0" y="314.9" font-size="9.5" text-anchor="end" fill="#33475b">Sousa</text>
+<rect x="620.0" y="324.8" width="12" height="4.9" rx="1.5" fill="#c9960c"><title>CAMPOS, OLIVIA MARIA LEHNEN DE — 1 trabalho(s) · Egresso</title></rect>
+<text x="616.0" y="330.2" font-size="9.5" text-anchor="end" fill="#33475b">Campos</text>
+<rect x="620.0" y="337.7" width="12" height="4.9" rx="1.5" fill="#c9960c"><title>DOS SANTOS RODRIGUES, GABRIEL FELLYPE — 1 trabalho(s) · Egresso</title></rect>
+<text x="616.0" y="343.2" font-size="9.5" text-anchor="end" fill="#33475b">Dos Santos Rodrigues</text>
+<rect x="620.0" y="350.6" width="12" height="4.9" rx="1.5" fill="#c9960c"><title>FIGUEIREDO, ANNA JÚLIA FERNANDES — 1 trabalho(s) · Egresso</title></rect>
+<text x="616.0" y="356.1" font-size="9.5" text-anchor="end" fill="#33475b">Figueiredo</text>
+<rect x="620.0" y="363.5" width="12" height="9.8" rx="1.5" fill="#003d7c"><title>Paulo Roberto da Fonseca Filho — 2 trabalho(s) · Professor do curso</title></rect>
+<text x="616.0" y="371.4" font-size="9.5" text-anchor="end" fill="#33475b">Paulo</text>
+<rect x="620.0" y="381.4" width="12" height="4.9" rx="1.5" fill="#0288d1"><title>FRANCO, KARYNE ABREU PEREIRA — 1 trabalho(s) · Aluno em formação</title></rect>
+<text x="616.0" y="386.8" font-size="9.5" text-anchor="end" fill="#33475b">Franco</text>
+<rect x="620.0" y="394.3" width="12" height="4.9" rx="1.5" fill="#0288d1"><title>GALDIOLI, GIOVANNA DIAS — 1 trabalho(s) · Aluno em formação</title></rect>
+<text x="616.0" y="399.7" font-size="9.5" text-anchor="end" fill="#33475b">Galdioli</text>
+<rect x="620.0" y="407.2" width="12" height="9.8" rx="1.5" fill="#558b2f"><title>RIBOLLA, PAULO — 2 trabalho(s) · Professor UNESP</title></rect>
+<text x="616.0" y="415.1" font-size="9.5" text-anchor="end" fill="#33475b">Ribolla</text>
+<rect x="980.0" y="67.0" width="12" height="137.5" rx="1.5" fill="#455a64"><title>UFMT — 28</title></rect>
+<text x="976.0" y="138.8" font-size="9.5" font-weight="600" text-anchor="end" fill="#33475b">UFMT</text>
+<rect x="980.0" y="216.5" width="12" height="113.0" rx="1.5" fill="#b0bcc9"><title>Externo (sem vínculo) — 23</title></rect>
+<text x="976.0" y="276.0" font-size="9.5" font-weight="600" text-anchor="end" fill="#33475b">Externo (sem vínculo)</text>
+<rect x="980.0" y="341.5" width="12" height="19.6" rx="1.5" fill="#003d7c"><title>Biomedicina (UFMT Araguaia) — 4</title></rect>
+<text x="976.0" y="354.4" font-size="9.5" font-weight="600" text-anchor="end" fill="#33475b">Biomedicina (UFMT Araguaia)</text>
+<rect x="980.0" y="373.2" width="12" height="9.8" rx="1.5" fill="#558b2f"><title>UNESP — 2</title></rect>
+<text x="976.0" y="381.1" font-size="9.5" font-weight="600" text-anchor="end" fill="#33475b">UNESP</text>
+<text x="8" y="14" font-size="9.5" font-weight="700" fill="#7a8794">DOCENTE</text>
+<text x="300" y="14" font-size="9.5" font-weight="700" fill="#7a8794">TRABALHOS</text>
+<text x="620" y="14" font-size="9.5" font-weight="700" fill="#7a8794" text-anchor="middle">COLABORADORES</text>
+<text x="992" y="14" font-size="9.5" font-weight="700" fill="#7a8794" text-anchor="end">INSTITUIÇÕES</text>
+</svg></div><div class="ego-legend"><b style="color:#33475b;font-weight:600">Colaboradores:</b><span><i style="background:#0288d1"></i>Aluno em formação</span><span><i style="background:#c9960c"></i>Egresso</span><span><i style="background:#2e7d32"></i>Pesquisador externo</span><span><i style="background:#558b2f"></i>Professor UNESP</span><span><i style="background:#00897b"></i>Professor do ICBS</span><span><i style="background:#003d7c"></i>Professor do curso</span><span><i style="background:#2e7d32"></i>Professor externo</span></div><div class="ego-legend" style="margin-top:5px"><b style="color:#33475b;font-weight:600">Instituições:</b><span><i style="background:#455a64;border-radius:2px"></i>UFMT</span><span><i style="background:#b0bcc9;border-radius:2px"></i>Externo (sem vínculo)</span><span><i style="background:#003d7c;border-radius:2px"></i>Biomedicina (UFMT Araguaia)</span><span><i style="background:#558b2f;border-radius:2px"></i>UNESP</span></div><div class="note">Fluxo da esquerda para a direita: o docente, os trabalhos, os principais colaboradores e as instituições de origem deles. Cada faixa vale 1 coautoria (trabalho×colaborador). São exibidos os 14 principais colaboradores (por nº de trabalhos com o docente) e os 34 trabalhos que mais os conectam. “Externo (sem vínculo)” reúne colaboradores sem instituição cadastrada. Passe o mouse sobre as barras para ver nomes e títulos.</div></div>
+<!--OCRA_SANKEY_END-->
+</div>
+<script>
+
+const CHART_DATA = {"years": [2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2019, 2020, 2021, 2022, 2024, 2025, 2026], "by_year": {"2008": {"periodico": 1, "anais": 3}, "2010": {"periodico": 2, "anais": 3}, "2011": {"anais": 5}, "2012": {"anais": 4}, "2013": {"periodico": 4, "anais": 6}, "2014": {"periodico": 2, "livro": 3, "capitulo": 1}, "2015": {"periodico": 1}, "2016": {"periodico": 1}, "2017": {"anais": 5}, "2019": {"periodico": 2}, "2020": {"periodico": 7}, "2021": {"periodico": 3, "anais": 9}, "2022": {"periodico": 1}, "2024": {"periodico": 3, "anais": 3}, "2025": {"periodico": 2, "anais": 4}, "2026": {"periodico": 1}}};
+const TYPE_COLORS = {"periodico": "#003d7c", "anais": "#c8960c", "capitulo": "#4a9e8e", "livro": "#8a5fb0"};
+function drawChart(){
+  const canvas = document.getElementById('prodChart');
+  const wrap = document.getElementById('chart-wrap');
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const years = CHART_DATA.years;
+  const padL = 30, padB = 24, padT = 10, padR = 10;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const maxV = Math.max(...years.map(y => Object.values(CHART_DATA.by_year[y]).reduce((a,b)=>a+b,0)), 1);
+  const bw = plotW / years.length;
+  ctx.strokeStyle = '#eef1f6'; ctx.lineWidth = 1; ctx.font = '9px system-ui'; ctx.fillStyle = '#9aaab8';
+  for (let g = 0; g <= 4; g++) {
+    const yy = padT + plotH - (g/4)*plotH;
+    ctx.beginPath(); ctx.moveTo(padL, yy); ctx.lineTo(W-padR, yy); ctx.stroke();
+    ctx.fillText(Math.round(maxV*g/4), 2, yy+3);
+  }
+  years.forEach((y, i) => {
+    const d = CHART_DATA.by_year[y];
+    const x = padL + i*bw + bw*0.15;
+    const w = bw*0.7;
+    let yBase = padT + plotH;
+    ['periodico','anais','capitulo','livro'].forEach(key => {
+      const v = d[key] || 0;
+      const h = (v/maxV)*plotH;
+      ctx.fillStyle = TYPE_COLORS[key];
+      ctx.fillRect(x, yBase-h, w, h);
+      yBase -= h;
+    });
+    if (years.length <= 24 || i % 2 === 0) {
+      ctx.save();
+      ctx.fillStyle = '#7a8fa8'; ctx.font = '8.5px system-ui'; ctx.textAlign='center';
+      ctx.translate(x+w/2, H-6); ctx.fillText(y, 0, 0);
+      ctx.restore();
+    }
+  });
+}
+drawChart();
+window.addEventListener('resize', drawChart);
+
+const ORIENT_DATA = {"years": ["2013", "2014", "2019", "2020", "2022", "2023", "2024"], "by_year": {"2013": {"tcc": 1}, "2014": {"tcc": 3}, "2019": {"tcc": 1}, "2020": {"tcc": 1}, "2022": {"tcc": 1}, "2023": {"tcc": 1}, "2024": {"tcc": 1}}};
+const ORIENT_COLORS = {"posdoc": "#5a3825", "doutorado": "#c0392b", "mestrado": "#d68a1f", "ic": "#5b4ea3", "extensao": "#2e8b57", "tcc": "#0d7a6c", "monitoria": "#1c8fc0", "outro": "#9e9e9e"};
+const ORIENT_ORDER = ["posdoc", "doutorado", "mestrado", "ic", "extensao", "tcc", "monitoria", "outro"];
+function drawOrientChart(){
+  const canvas = document.getElementById('orientChart');
+  if (!canvas) return;
+  const wrap = document.getElementById('orientChart-wrap');
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const years = ORIENT_DATA.years;
+  const padL = 26, padB = 22, padT = 8, padR = 8;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const maxV = Math.max(...years.map(y => Object.values(ORIENT_DATA.by_year[y]).reduce((a,b)=>a+b,0)), 1);
+  const bw = plotW / years.length;
+  ctx.strokeStyle = '#eef1f6'; ctx.lineWidth = 1; ctx.font = '9px system-ui'; ctx.fillStyle = '#9aaab8';
+  for (let g = 0; g <= 4; g++) {
+    const yy = padT + plotH - (g/4)*plotH;
+    ctx.beginPath(); ctx.moveTo(padL, yy); ctx.lineTo(W-padR, yy); ctx.stroke();
+    ctx.fillText(Math.round(maxV*g/4), 2, yy+3);
+  }
+  years.forEach((y, i) => {
+    const d = ORIENT_DATA.by_year[y];
+    const x = padL + i*bw + bw*0.15;
+    const w = bw*0.7;
+    let yBase = padT + plotH;
+    ORIENT_ORDER.forEach(key => {
+      const v = d[key] || 0;
+      const h = (v/maxV)*plotH;
+      ctx.fillStyle = ORIENT_COLORS[key];
+      ctx.fillRect(x, yBase-h, w, h);
+      yBase -= h;
+    });
+    if (years.length <= 24 || i % 2 === 0) {
+      ctx.save();
+      ctx.fillStyle = '#7a8fa8'; ctx.font = '8.5px system-ui'; ctx.textAlign='center';
+      ctx.translate(x+w/2, H-6); ctx.fillText(y, 0, 0);
+      ctx.restore();
+    }
+  });
+}
+drawOrientChart();
+window.addEventListener('resize', drawOrientChart);
+
+const EGO_DATA = {"name": "Satie Katagiri", "nodes": [{"name": "RIBEIRO, CLAUDIA DE MELLO", "count": 24, "w": 22.56, "cat": "professor_externo"}, {"name": "ROCHA, IZABELLA CHRYSTINA", "count": 14, "w": 19.13, "cat": "professor_icbs"}, {"name": "DA SILVA, PRISCILLA NICÁCIO", "count": 14, "w": 18.44, "cat": "professor_icbs"}, {"name": "DUARTE, JOAO VITOR SILVA", "count": 3, "w": 2.8, "cat": "egresso"}, {"name": "Paulo Roberto da Fonseca Filho", "count": 2, "w": 2.29, "cat": "professor_curso"}, {"name": "GUIMARÃES, SIMONE ELIZA FACIONI", "count": 4, "w": 2.05, "cat": "pesquisador_externo"}, {"name": "NERES, ADRYAN JHEFERSON DA SILVA", "count": 2, "w": 1.64, "cat": "egresso"}, {"name": "SOUSA, WAYNNER OLIVEIRA DE", "count": 2, "w": 1.22, "cat": "egresso"}, {"name": "FRANCO, KARYNE ABREU PEREIRA", "count": 1, "w": 0.91, "cat": "aluno_em_formacao"}, {"name": "GALDIOLI, GIOVANNA DIAS", "count": 1, "w": 0.91, "cat": "aluno_em_formacao"}, {"name": "Renan dos Santos Araújo", "count": 1, "w": 0.91, "cat": "professor_curso"}, {"name": "FIGUEIREDO, ANNA JÚLIA FERNANDES", "count": 1, "w": 0.82, "cat": "egresso"}, {"name": "SOUZA, KARINE FERREIRA DE", "count": 1, "w": 0.82, "cat": "egresso"}, {"name": "GEHM, LETÍCIA PEREIRA", "count": 1, "w": 0.55, "cat": "pesquisador_externo"}, {"name": "RIBOLLA, PAULO", "count": 2, "w": 0.53, "cat": "professor_unesp"}, {"name": "DOS SANTOS RODRIGUES, GABRIEL FELLYPE", "count": 1, "w": 0.41, "cat": "egresso"}], "edges": [["DA SILVA, PRISCILLA NICÁCIO", "ROCHA, IZABELLA CHRYSTINA", 8.59], ["DA SILVA, PRISCILLA NICÁCIO", "GEHM, LETÍCIA PEREIRA", 0.55], ["GEHM, LETÍCIA PEREIRA", "ROCHA, IZABELLA CHRYSTINA", 0.55], ["GUIMARÃES, SIMONE ELIZA FACIONI", "RIBEIRO, CLAUDIA DE MELLO", 0.34], ["GUIMARÃES, SIMONE ELIZA FACIONI", "RIBOLLA, PAULO", 0.44], ["FIGUEIREDO, ANNA JÚLIA FERNANDES", "ROCHA, IZABELLA CHRYSTINA", 0.82], ["FIGUEIREDO, ANNA JÚLIA FERNANDES", "SOUZA, KARINE FERREIRA DE", 0.82], ["ROCHA, IZABELLA CHRYSTINA", "SOUZA, KARINE FERREIRA DE", 0.82], ["DOS SANTOS RODRIGUES, GABRIEL FELLYPE", "RIBEIRO, CLAUDIA DE MELLO", 0.41], ["DUARTE, JOAO VITOR SILVA", "FRANCO, KARYNE ABREU PEREIRA", 0.91], ["DUARTE, JOAO VITOR SILVA", "GALDIOLI, GIOVANNA DIAS", 0.91], ["DUARTE, JOAO VITOR SILVA", "Paulo Roberto da Fonseca Filho", 0.91], ["DUARTE, JOAO VITOR SILVA", "Renan dos Santos Araújo", 0.91], ["FRANCO, KARYNE ABREU PEREIRA", "GALDIOLI, GIOVANNA DIAS", 0.91], ["FRANCO, KARYNE ABREU PEREIRA", "Paulo Roberto da Fonseca Filho", 0.91], ["FRANCO, KARYNE ABREU PEREIRA", "Renan dos Santos Araújo", 0.91], ["GALDIOLI, GIOVANNA DIAS", "Paulo Roberto da Fonseca Filho", 0.91], ["GALDIOLI, GIOVANNA DIAS", "Renan dos Santos Araújo", 0.91], ["Paulo Roberto da Fonseca Filho", "Renan dos Santos Araújo", 0.91], ["DA SILVA, PRISCILLA NICÁCIO", "Paulo Roberto da Fonseca Filho", 1.0], ["Paulo Roberto da Fonseca Filho", "ROCHA, IZABELLA CHRYSTINA", 1.0], ["DUARTE, JOAO VITOR SILVA", "RIBEIRO, CLAUDIA DE MELLO", 0.28], ["DUARTE, JOAO VITOR SILVA", "NERES, ADRYAN JHEFERSON DA SILVA", 0.82]]};
+const EGO_COLORS = {"professor_curso": "#003d7c", "egresso": "#c9960c", "professor_externo": "#2e7d32", "pesquisador_externo": "#2e7d32", "professor_icbs": "#00897b", "professor_icet": "#6a1b9a", "professor_ichs": "#c62828", "professor_ufmt": "#455a64", "pesquisador_ufmt": "#78909c", "professor_unesp": "#558b2f", "professor_unifesp": "#00695c", "professor_ufr": "#ef6c00", "professor_uncisal": "#ad1457", "professor_usp": "#0277bd", "professor_ufg": "#6d4c41", "professor_ifsp": "#283593", "professor_ufmg": "#8e24aa", "professor_unicamp": "#d81b60", "professor_ufscar": "#4527a0", "professor_univar": "#9e9d24", "professor_emescam": "#5c6bc0", "professor_uemg": "#8d6e63", "professor_ufla": "#0097a7", "professor_ufpr": "#33691e", "aluno_em_formacao": "#0288d1"};
+function drawEgoGraph(){
+  const canvas = document.getElementById('egoGraph');
+  if (!canvas) return;
+  const wrap = document.getElementById('egoGraphWrap');
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const cx = W/2, cy = H/2;
+  const nodes = EGO_DATA.nodes;
+  const maxC = Math.max(...nodes.map(n=>(n.w!=null?n.w:n.count)), 1);
+  const R_MAX = Math.min(W,H)/2 - 28;
+  const R_MIN = 48;
+  const positions = nodes.map((n, i) => {
+    const angle = (i / nodes.length) * Math.PI * 2 - Math.PI/2;
+    const closeness = Math.sqrt((n.w!=null?n.w:n.count)/maxC); // 1 = mais próximo (mais forte), 0 = mais distante
+    const dist = R_MAX - closeness * (R_MAX - R_MIN);
+    const r = closeness * 5 + 6;
+    return { x: cx + Math.cos(angle)*dist, y: cy + Math.sin(angle)*dist, r, n };
+  });
+  // edges (espessura e opacidade proporcionais ao número de colaborações com o professor)
+  positions.forEach(p => {
+    const w = p.n.count / maxC;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(p.x, p.y);
+    ctx.strokeStyle = 'rgba(0,61,124,' + (0.12 + 0.5*w) + ')';
+    ctx.lineWidth = 0.6 + 4*w;
+    ctx.stroke();
+  });
+  // coauthor-coauthor edges (chords)
+  const posByName = {};
+  positions.forEach(p => { posByName[p.n.name] = p; });
+  const maxW = Math.max(...(EGO_DATA.edges.map(e=>e[2])), 1);
+  (EGO_DATA.edges || []).forEach(([a, b, w]) => {
+    const pa = posByName[a], pb = posByName[b];
+    if (!pa || !pb) return;
+    ctx.beginPath(); ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y);
+    ctx.strokeStyle = 'rgba(120,120,130,' + (0.15 + 0.35*(w/maxW)) + ')';
+    ctx.lineWidth = 0.6 + 1.8*(w/maxW);
+    ctx.stroke();
+  });
+  // center node
+  ctx.beginPath(); ctx.arc(cx, cy, 16, 0, Math.PI*2);
+  ctx.fillStyle = '#003d7c'; ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 9px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  const initials = EGO_DATA.name.split(' ').filter(w=>w.length>2).slice(0,2).map(w=>w[0]).join('');
+  ctx.fillText(initials, cx, cy);
+  // coauthor nodes
+  positions.forEach(p => {
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+    ctx.fillStyle = EGO_COLORS[p.n.cat] || '#999';
+    ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+  });
+  // labels (short surname only, to reduce clutter)
+  ctx.font = '9px system-ui'; ctx.fillStyle = '#5a6a7e'; ctx.textAlign = 'center';
+  positions.forEach(p => {
+    const label = p.n.name.split(',')[0].split(' ')[0];
+    const ly = p.y > cy ? p.y + p.r + 10 : p.y - p.r - 5;
+    ctx.fillText(label, p.x, ly);
+  });
+  canvas.onmousemove = (ev) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = ev.clientX - rect.left, my = ev.clientY - rect.top;
+    const tip = document.getElementById('egoTooltip');
+    const hit = positions.find(p => Math.hypot(p.x-mx, p.y-my) <= p.r+3);
+    if (hit) {
+      tip.textContent = hit.n.name + ' — ' + hit.n.count + 'x';
+      tip.style.left = hit.x + 'px'; tip.style.top = hit.y + 'px'; tip.style.opacity = 1;
+    } else { tip.style.opacity = 0; }
+  };
+  canvas.onmouseleave = () => { document.getElementById('egoTooltip').style.opacity = 0; };
+}
+drawEgoGraph();
+window.addEventListener('resize', drawEgoGraph);
+
+</script>
+</body>
+</html>

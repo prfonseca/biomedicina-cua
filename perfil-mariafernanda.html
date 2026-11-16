@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="light-only">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="estilo.css">
+<script src="site.js" defer></script>
+<title>Maria Fernanda Spegiorin Salla Brune — Perfil do Docente — Biomedicina UFMT Araguaia</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#003d7c;--blue2:#0059b3;--gold:#c8960c;
+  --bg:#f4f6fa;--card:#fff;--text:#1a2333;--muted:#5a6a7e;--border:#dde3ec;
+  --sans:var(--font);--serif:var(--font-display);
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh}
+.wrap{max-width:980px;margin:0 auto;padding:28px 24px 56px}
+.profile-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;display:flex;gap:22px;margin-bottom:22px;box-shadow:0 1px 4px rgba(0,61,124,.05);flex-wrap:wrap}
+.profile-photo{width:104px;height:104px;border-radius:50%;object-fit:cover;flex-shrink:0;border:3px solid #fff;box-shadow:0 0 0 2px var(--border);background:#e8edf4}
+.profile-photo-err{width:104px;height:104px;border-radius:50%;flex-shrink:0;display:none;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--blue),var(--blue2));font-family:var(--serif);font-size:28px;font-weight:700;color:rgba(255,255,255,.92);box-shadow:0 0 0 2px var(--border)}
+.profile-main{flex:1;min-width:240px}
+.profile-name{font-family:var(--serif);font-size:1.5rem;font-weight:700;color:var(--blue);line-height:1.25}
+.profile-role{font-size:13px;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-top:4px}
+.profile-area{font-size:12.5px;color:var(--muted);margin-top:6px}
+.profile-aliases{margin-top:10px;font-size:11.5px;color:var(--muted);line-height:1.7}
+.profile-aliases b{color:#7a8fa8;font-weight:600;text-transform:uppercase;font-size:9.5px;letter-spacing:.06em;display:block;margin-bottom:4px}
+.alias-chip{display:inline-block;background:#f7f9fc;border:1px solid #e4eaf3;border-radius:5px;padding:1px 7px;margin:0 4px 4px 0;font-size:11px;color:#5a6a7e}
+.clinks{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.lico{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:7px;border:1px solid #e4eaf3;background:#f7f9fc;text-decoration:none;cursor:pointer;flex-shrink:0;position:relative;transition:all .15s}
+.lico:hover{background:var(--blue);border-color:var(--blue);transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,61,124,.2)}
+.lico:hover .si{stroke:#fff} .lico:hover .fi{fill:#fff} .lico:hover .ti{fill:#fff}
+.lico.off{opacity:.2;pointer-events:none}
+.lico svg{width:16px;height:16px}
+.lico::after{content:attr(title);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1a2333;color:#fff;font-size:10px;padding:3px 8px;border-radius:4px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;z-index:10}
+.lico:hover::after{opacity:1}
+.meta-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.meta-pill{flex:1;min-width:120px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 16px;
+  display:block;text-decoration:none;color:inherit;transition:border-color .15s,box-shadow .15s,transform .1s;position:relative}
+.meta-pill:hover{border-color:var(--blue);box-shadow:0 3px 10px rgba(0,61,124,.1);transform:translateY(-1px)}
+.meta-pill::after{content:'→';position:absolute;top:10px;right:12px;font-size:11px;color:var(--border);transition:color .15s}
+.meta-pill:hover::after{color:var(--blue)}
+.meta-pill .mv{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--blue);line-height:1}
+.meta-pill .ml{font-size:10.5px;color:var(--muted);margin-top:4px}
+.sec{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:18px}
+.sec-title{font-family:var(--serif);font-size:13.5px;font-weight:700;color:var(--blue);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.sec-title::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--border),transparent)}
+#chart-wrap{width:100%;height:230px;position:relative}
+#prodChart{width:100%;height:100%;display:block}
+.chart-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:11px;color:var(--muted)}
+.chart-legend span{display:flex;align-items:center;gap:5px}
+.chart-legend i{width:9px;height:9px;border-radius:2px;display:inline-block}
+.areas-list{display:flex;flex-wrap:wrap;gap:8px}
+.area-chip{background:#eef3fb;color:var(--blue);border:1px solid #d3e3f7;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:500}
+.coauthor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.coauthor-row{display:flex;justify-content:space-between;align-items:center;background:#fafbfd;border:1px solid var(--border);border-radius:7px;padding:7px 12px;font-size:12px}
+.coauthor-name{color:var(--text);font-weight:500}
+.coauthor-count{font-size:10.5px;background:var(--blue);color:#fff;border-radius:10px;padding:1px 8px;font-weight:600}
+.coauth-flex{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
+.coauth-list-col{flex:1 1 320px;min-width:280px}
+.coauth-graph-col{flex:1 1 280px;min-width:260px}
+#egoGraphWrap{width:100%;height:280px;position:relative;border:1px solid var(--border);border-radius:9px;background:#fafbfd}
+#egoGraph{width:100%;height:100%;display:block;cursor:default}
+.ego-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;font-size:10px;color:var(--muted)}
+.ego-legend span{display:flex;align-items:center;gap:4px}
+.ego-legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.ego-tooltip{position:absolute;background:#1a2333;color:#fff;font-size:11px;padding:4px 9px;border-radius:5px;
+  pointer-events:none;opacity:0;transition:opacity .1s;white-space:nowrap;transform:translate(-50%,-130%);z-index:5}
+.orient-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.orient-pill{flex:1;min-width:110px;background:#fafbfd;border:1px solid var(--border);border-radius:10px;padding:10px 14px;text-align:center}
+.orient-pill .ov{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--text)}
+.orient-pill .ol{font-size:9.5px;color:var(--muted);margin-top:2px;line-height:1.3}
+#orientChart-wrap{width:100%;height:200px;position:relative;margin-top:6px}
+#orientChart{width:100%;height:100%;display:block}
+.note{font-size:11px;color:#9aaab8;margin-top:6px;font-style:italic}
+.empty-note{font-size:13px;color:var(--muted);padding:10px 0}
+.proj-list{display:flex;flex-direction:column;gap:10px}
+.proj-item{border:1px solid var(--border);border-radius:9px;padding:12px 14px;background:#fafbfd}
+.proj-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.proj-title{font-weight:600;font-size:13px;color:var(--text);line-height:1.4;flex:1;min-width:200px}
+.proj-period{font-size:11px;color:var(--muted);white-space:nowrap;font-family:var(--serif)}
+.proj-badges{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap}
+.proj-badge{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;padding:2px 8px;border-radius:10px}
+.pb-pesquisa{background:#eef3fb;color:var(--blue)}
+.pb-extensao{background:#fdf3e3;color:#9a6a0a}
+.pb-andamento{background:#e8f5ee;color:#1a6640}
+.pb-concluido{background:#eef0f3;color:#5a6a7e}
+.pb-outro{background:#f4eaf7;color:#7a3a9a}
+.proj-desc{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.55}
+@media(max-width:600px){.profile-card{flex-direction:column;align-items:center;text-align:center}}
+</style>
+<style id="ponte-design">
+/* Ponte entre o CSS antigo da página e o sistema de design (estilo.css). Remover quando a página for redesenhada. */
+:root{--blue:var(--tint);--blue2:var(--tint);--gold:#8a6200;--text:var(--label);--muted:var(--label-3);
+  --card:var(--surface);--border:var(--separator);--bg:#f5f5f7;--sans:var(--font);--serif:var(--font-display)}
+body{font-family:var(--font);background:var(--bg);color:var(--label);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--font-display);letter-spacing:-.01em}
+button,input,select,textarea{font-family:var(--font)}
+@media (max-width:700px){table{display:block;max-width:100%;overflow-x:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="profile-card">
+    <div>
+      <img class="profile-photo" src="http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&amp;id=K4751926T9" alt="Dra. Maria Fernanda Spegiorin Salla Brune" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="profile-photo-err">MF</div>
+    </div>
+    <div class="profile-main">
+      <div class="profile-name">Dra. Maria Fernanda Spegiorin Salla Brune</div>
+      <div class="profile-role">Professora Titular</div>
+      <div class="profile-area">Bioquímica Clínica</div>
+      <div class="clinks"><a class="lico" href="https://plataforma-acacia.org/profile/maria-fernanda-spegiorin-salla-brune/" target="_blank" rel="noopener" title="Plataforma Acácia — genealogia acadêmica"><svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#2e7d46" class="fi"/><text x="10" y="13.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="7.5" font-weight="700" fill="#fff" class="ti">Ac</text></svg></a><a class="lico" href="http://lattes.cnpq.br/6490966175710971" target="_blank" rel="noopener" title="Currículo Lattes"><svg viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="16" height="16" rx="3" fill="#003d7c" class="fi"/><text x="10" y="14.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#fff" class="ti">L</text></svg></a><a class="lico" href="mailto:maria.brune@ufmt.br" target="_blank" rel="noopener" title="E-mail"><svg viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2" stroke="#5a6a7e" stroke-width="1.4" class="si" fill="none"/><path d="M2 7l8 5 8-5" stroke="#5a6a7e" stroke-width="1.4" class="si"/></svg></a><a class="lico off"  title="Google Acadêmico"><svg viewBox="0 0 20 20"><path d="M4.5 11.5L1 9 10 3l9 6-4.5 3C13.2 9.7 11.7 9 10 9s-3.2.7-4.5 2.5z" fill="#4285F4" class="fi"/><circle cx="10" cy="14.5" r="3.5" fill="#4285F4" class="fi"/></svg></a><a class="lico off"  title="ResearchGate"><svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#00CCBB" class="fi"/><text x="5.5" y="14" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#fff" class="ti">RG</text></svg></a><a class="lico off"  title="Academia.edu"><svg viewBox="0 0 20 20"><path d="M10 1.5L1.5 7v7l8.5 4.5L18.5 14V7L10 1.5zm0 2.8l3 5.5h-1.4l-.5-1H8.9l-.5 1H7L10 4.3zm0 1.9l-.9 2h1.8L10 6.2z" fill="#222" class="fi"/></svg></a><a class="lico off"  title="Publons"><svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#336699" class="fi"/><text x="10" y="14" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#fff" class="ti">P</text></svg></a><a class="lico" href="https://orcid.org/0000-0002-1822-0904" target="_blank" rel="noopener" title="ORCID"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#A6CE39" class="fi"/><text x="10" y="8.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="4.5" font-weight="700" fill="#fff" class="ti">ORCID</text><text x="10" y="14" text-anchor="middle" font-family="Arial,sans-serif" font-size="5.5" fill="#fff" class="ti">iD</text></svg></a><a class="lico off"  title="SciProfiles (MDPI)"><svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#10a5a0" class="fi"/><text x="10" y="13.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="7.5" font-weight="700" fill="#fff" class="ti">Sci</text></svg></a><a class="lico off"  title="ResearcherID / Web of Science"><svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#C1272D" class="fi"/><text x="10" y="9" text-anchor="middle" font-family="Arial,sans-serif" font-size="5" font-weight="700" fill="#fff" class="ti">Web of</text><text x="10" y="15" text-anchor="middle" font-family="Arial,sans-serif" font-size="5" font-weight="700" fill="#fff" class="ti">Science</text></svg></a><a class="lico off"  title="LinkedIn"><svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#0A66C2" class="fi"/><rect x="4" y="8" width="2.5" height="7" fill="#fff" class="fi"/><circle cx="5.25" cy="5.5" r="1.4" fill="#fff" class="fi"/><path d="M9 8h2.5v1.2c.4-.7 1.3-1.4 2.5-1.4 2.2 0 3 1.5 3 3.5V15h-2.5v-3.3c0-1-.3-1.7-1.2-1.7-.9 0-1.3.7-1.3 1.7V15H9V8z" fill="#fff" class="fi"/></svg></a></div>
+      <div class="profile-aliases"><b>Nomes de cita&ccedil;&atilde;o observados</b><span class="alias-chip">BRUNE, MARIA FERNANDA SPEGIORIN SALLA</span></div>
+    </div>
+  </div>
+
+  <div class="meta-row"><a class="meta-pill" href="producoes-biomedicina-ufmt.html?prof=Maria%20Fernanda%20Spegiorin%20Salla%20Brune&tab=producoes"><div class="mv">38</div><div class="ml">Produções totais</div></a><a class="meta-pill" href="producoes-biomedicina-ufmt.html?prof=Maria%20Fernanda%20Spegiorin%20Salla%20Brune&tab=producoes"><div class="mv">21</div><div class="ml">Artigos em periódicos</div></a><a class="meta-pill" href="producoes-biomedicina-ufmt.html?prof=Maria%20Fernanda%20Spegiorin%20Salla%20Brune&tab=producoes"><div class="mv">17</div><div class="ml">Trabalhos em anais</div></a><a class="meta-pill" href="producoes-biomedicina-ufmt.html?prof=Maria%20Fernanda%20Spegiorin%20Salla%20Brune&tab=producoes"><div class="mv">0</div><div class="ml">Livros e capítulos</div></a><a class="meta-pill" href="producoes-biomedicina-ufmt.html?prof=Maria%20Fernanda%20Spegiorin%20Salla%20Brune&tab=producoes"><div class="mv">5%</div><div class="ml">com DOI identificado</div></a><a class="meta-pill" href="producoes-biomedicina-ufmt.html?prof=Maria%20Fernanda%20Spegiorin%20Salla%20Brune&tab=producoes"><div class="mv">23</div><div class="ml">Anos de atividade</div></a><a class="meta-pill" href="producoes-biomedicina-ufmt.html?prof=Maria%20Fernanda%20Spegiorin%20Salla%20Brune&tab=projetos"><div class="mv">7</div><div class="ml">Projetos de pesquisa</div></a><a class="meta-pill" href="producoes-biomedicina-ufmt.html?prof=Maria%20Fernanda%20Spegiorin%20Salla%20Brune&tab=projetos"><div class="mv">16</div><div class="ml">Projetos de extensão</div></a></div>
+
+  <div class="sec">
+    <div class="sec-title">Produ&ccedil;&atilde;o bibliogr&aacute;fica por ano</div>
+    <div id="chart-wrap"><canvas id="prodChart"></canvas></div>
+    <div class="chart-legend"><span><i style="background:#003d7c"></i>Artigos em periódicos</span><span><i style="background:#c8960c"></i>Trabalhos em anais</span><span><i style="background:#4a9e8e"></i>Capítulos de livro</span><span><i style="background:#8a5fb0"></i>Livros</span></div>
+    <div class="note">Fonte: base de produ&ccedil;&otilde;es do projeto (cruzamento de Lattes). Clique nas caixas de m&eacute;tricas acima para ver a lista completa.</div>
+  </div>
+
+  <div class="sec"><div class="sec-title">Orientações e supervisões (77)</div><div class="orient-row"><div class="orient-pill"><div class="ov">2</div><div class="ol">Iniciação científica/tecnológica</div></div><div class="orient-pill"><div class="ov">41</div><div class="ol">Trabalho de conclusão de curso</div></div><div class="orient-pill"><div class="ov">34</div><div class="ol">Monitoria</div></div></div><div id="orientChart-wrap"><canvas id="orientChart"></canvas></div><div class="chart-legend"><span><i style="background:#5b4ea3"></i>Iniciação científica/tecnológica</span><span><i style="background:#0d7a6c"></i>Trabalho de conclusão de curso</span><span><i style="background:#1c8fc0"></i>Monitoria</span></div><div class="note">Fonte: Currículo Lattes.</div></div>
+
+  <div class="sec"><div class="sec-title">Disciplinas</div><div class="areas-list"><span class="area-chip">Bioquímica Clínica</span><span class="area-chip">Tópicos Especiais em Análises Clínicas (opt.)</span></div></div>
+
+  <div class="sec">
+    <div class="sec-title">Coautores e rede de colabora&ccedil;&atilde;o</div>
+    <div class="coauth-flex">
+      <div class="coauth-list-col"><div class="coauthor-grid"><div class="coauthor-row"><span class="coauthor-name">Maximilian Wilhelm Brune</span><span class="coauthor-count">6</span></div><div class="coauthor-row"><span class="coauthor-name">RIEGEL, F.</span><span class="coauthor-count">2</span></div><div class="coauthor-row"><span class="coauthor-name">FRANÇA, FABIO ALEXANDRE SILVA</span><span class="coauthor-count">2</span></div><div class="coauthor-row"><span class="coauthor-name">MORAES, E. L. L.</span><span class="coauthor-count">2</span></div><div class="coauthor-row"><span class="coauthor-name">MORAIS, C. V.</span><span class="coauthor-count">2</span></div><div class="coauthor-row"><span class="coauthor-name">NOGUEIRA, G. D.</span><span class="coauthor-count">2</span></div><div class="coauthor-row"><span class="coauthor-name">Paulo Roberto da Fonseca Filho</span><span class="coauthor-count">2</span></div><div class="coauthor-row"><span class="coauthor-name">ROCHA, E. M.</span><span class="coauthor-count">2</span></div><div class="coauthor-row"><span class="coauthor-name">SILVA, A. R. P.</span><span class="coauthor-count">2</span></div><div class="coauthor-row"><span class="coauthor-name">SILVA, VANESSA CARULINE ARAUJO DA</span><span class="coauthor-count">2</span></div><div class="coauthor-row"><span class="coauthor-name">SUDRE, C. C. A. S.</span><span class="coauthor-count">2</span></div><div class="coauthor-row"><span class="coauthor-name">BARROS, E. G.</span><span class="coauthor-count">4</span></div><div class="coauthor-row"><span class="coauthor-name">MOREIRA, M. A.</span><span class="coauthor-count">4</span></div><div class="coauthor-row"><span class="coauthor-name">PIOVESAN, Newton Denis</span><span class="coauthor-count">4</span></div><div class="coauthor-row"><span class="coauthor-name">LOUREIRO, LUANA CUTRIM</span><span class="coauthor-count">1</span></div><div class="coauthor-row"><span class="coauthor-name">RODRIGUES, M. K. G.</span><span class="coauthor-count">1</span></div></div></div>
+      <div class="coauth-graph-col">
+        <div id="egoGraphWrap"><canvas id="egoGraph"></canvas><div class="ego-tooltip" id="egoTooltip"></div></div>
+        <div class="ego-legend"><span><i style="background:#0288d1"></i>Aluno em formação</span><span><i style="background:#c9960c"></i>Egresso</span><span><i style="background:#78909c"></i>Pesquisador da UFMT</span><span><i style="background:#2e7d32"></i>Pesquisador externo</span><span><i style="background:#558b2f"></i>Professor UNESP</span><span><i style="background:#00897b"></i>Professor do ICBS</span><span><i style="background:#003d7c"></i>Professor do curso</span></div>
+        <div class="note">Quanto mais próximo do centro e mais espessa a linha, maior a colaboração com Maria. Linhas cinzas entre os pontos: colaboração entre os próprios coautores. São exibidos os 16 coautores classificados mais fortes (de 16 listados ao lado). A força de colaboração valoriza parcerias recentes (decaimento com meia-vida de 7 anos) e duradouras (bônus por anos ativos); os pendentes não aparecem no grafo.</div>
+      </div>
+    </div>
+  </div>
+<!--OCRA_SANKEY_START-->
+<div class="sec"><div class="sec-title">Fluxo de colabora&ccedil;&atilde;o: docente &rarr; trabalhos &rarr; colaboradores &rarr; institui&ccedil;&otilde;es</div><div style="width:100%;overflow-x:auto"><svg width="100%" style="height:auto;display:block" viewBox="0 0 1000 424" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,Segoe UI,sans-serif">
+<rect width="1000" height="424" fill="#fafbfd"/>
+<path d="M20.0,85.0 C160.0,85.0 160.0,67.0 300.0,67.0 L300.0,76.0 C160.0,76.0 160.0,94.0 20.0,94.0 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,94.0 C160.0,94.0 160.0,79.0 300.0,79.0 L300.0,88.1 C160.0,88.1 160.0,103.1 20.0,103.1 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,103.1 C160.0,103.1 160.0,91.1 300.0,91.1 L300.0,100.1 C160.0,100.1 160.0,112.1 20.0,112.1 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,112.1 C160.0,112.1 160.0,103.1 300.0,103.1 L300.0,112.1 C160.0,112.1 160.0,121.1 20.0,121.1 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,121.1 C160.0,121.1 160.0,115.1 300.0,115.1 L300.0,133.2 C160.0,133.2 160.0,139.2 20.0,139.2 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,139.2 C160.0,139.2 160.0,136.2 300.0,136.2 L300.0,163.3 C160.0,163.3 160.0,166.3 20.0,166.3 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,166.3 C160.0,166.3 160.0,166.3 300.0,166.3 L300.0,202.4 C160.0,202.4 160.0,202.4 20.0,202.4 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,202.4 C160.0,202.4 160.0,205.4 300.0,205.4 L300.0,241.5 C160.0,241.5 160.0,238.5 20.0,238.5 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,238.5 C160.0,238.5 160.0,244.5 300.0,244.5 L300.0,280.7 C160.0,280.7 160.0,274.7 20.0,274.7 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,274.7 C160.0,274.7 160.0,283.7 300.0,283.7 L300.0,310.8 C160.0,310.8 160.0,301.8 20.0,301.8 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,301.8 C160.0,301.8 160.0,313.8 300.0,313.8 L300.0,358.9 C160.0,358.9 160.0,346.9 20.0,346.9 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,346.9 C160.0,346.9 160.0,361.9 300.0,361.9 L300.0,371.0 C160.0,371.0 160.0,356.0 20.0,356.0 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M20.0,356.0 C160.0,356.0 160.0,374.0 300.0,374.0 L300.0,383.0 C160.0,383.0 160.0,365.0 20.0,365.0 Z" fill="#5b7aa8" fill-opacity="0.22"/>
+<path d="M312.0,67.0 C466.0,67.0 466.0,33.0 620.0,33.0 L620.0,42.0 C466.0,42.0 466.0,76.0 312.0,76.0 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,79.0 C466.0,79.0 466.0,42.0 620.0,42.0 L620.0,51.1 C466.0,51.1 466.0,88.1 312.0,88.1 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,91.1 C466.0,91.1 466.0,51.1 620.0,51.1 L620.0,60.1 C466.0,60.1 466.0,100.1 312.0,100.1 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,103.1 C466.0,103.1 466.0,60.1 620.0,60.1 L620.0,69.1 C466.0,69.1 466.0,112.1 312.0,112.1 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,115.1 C466.0,115.1 466.0,165.4 620.0,165.4 L620.0,174.4 C466.0,174.4 466.0,124.2 312.0,124.2 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,124.2 C466.0,124.2 466.0,191.5 620.0,191.5 L620.0,200.5 C466.0,200.5 466.0,133.2 312.0,133.2 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,136.2 C466.0,136.2 466.0,95.2 620.0,95.2 L620.0,104.2 C466.0,104.2 466.0,145.2 312.0,145.2 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,145.2 C466.0,145.2 466.0,130.3 620.0,130.3 L620.0,139.3 C466.0,139.3 466.0,154.3 312.0,154.3 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,154.3 C466.0,154.3 466.0,389.9 620.0,389.9 L620.0,398.9 C466.0,398.9 466.0,163.3 312.0,163.3 Z" fill="#558b2f" fill-opacity="0.3"/>
+<path d="M312.0,166.3 C466.0,166.3 466.0,104.2 620.0,104.2 L620.0,113.3 C466.0,113.3 466.0,175.3 312.0,175.3 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,175.3 C466.0,175.3 466.0,139.3 620.0,139.3 L620.0,148.4 C466.0,148.4 466.0,184.4 312.0,184.4 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,184.4 C466.0,184.4 466.0,243.6 620.0,243.6 L620.0,252.6 C466.0,252.6 466.0,193.4 312.0,193.4 Z" fill="#c9960c" fill-opacity="0.3"/>
+<path d="M312.0,193.4 C466.0,193.4 466.0,398.9 620.0,398.9 L620.0,408.0 C466.0,408.0 466.0,202.4 312.0,202.4 Z" fill="#558b2f" fill-opacity="0.3"/>
+<path d="M312.0,205.4 C466.0,205.4 466.0,113.3 620.0,113.3 L620.0,122.3 C466.0,122.3 466.0,214.5 312.0,214.5 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,214.5 C466.0,214.5 466.0,148.4 620.0,148.4 L620.0,157.4 C466.0,157.4 466.0,223.5 312.0,223.5 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,223.5 C466.0,223.5 466.0,252.6 620.0,252.6 L620.0,261.6 C466.0,261.6 466.0,232.5 312.0,232.5 Z" fill="#c9960c" fill-opacity="0.3"/>
+<path d="M312.0,232.5 C466.0,232.5 466.0,408.0 620.0,408.0 L620.0,417.0 C466.0,417.0 466.0,241.5 312.0,241.5 Z" fill="#558b2f" fill-opacity="0.3"/>
+<path d="M312.0,244.5 C466.0,244.5 466.0,69.1 620.0,69.1 L620.0,78.2 C466.0,78.2 466.0,253.6 312.0,253.6 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,253.6 C466.0,253.6 466.0,217.5 620.0,217.5 L620.0,226.5 C466.0,226.5 466.0,262.6 312.0,262.6 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,262.6 C466.0,262.6 466.0,269.6 620.0,269.6 L620.0,278.7 C466.0,278.7 466.0,271.6 312.0,271.6 Z" fill="#c9960c" fill-opacity="0.3"/>
+<path d="M312.0,271.6 C466.0,271.6 466.0,346.8 620.0,346.8 L620.0,355.8 C466.0,355.8 466.0,280.7 312.0,280.7 Z" fill="#78909c" fill-opacity="0.3"/>
+<path d="M312.0,283.7 C466.0,283.7 466.0,174.4 620.0,174.4 L620.0,183.5 C466.0,183.5 466.0,292.7 312.0,292.7 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,292.7 C466.0,292.7 466.0,200.5 620.0,200.5 L620.0,209.5 C466.0,209.5 466.0,301.7 312.0,301.7 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,301.7 C466.0,301.7 466.0,372.9 620.0,372.9 L620.0,381.9 C466.0,381.9 466.0,310.8 312.0,310.8 Z" fill="#00897b" fill-opacity="0.3"/>
+<path d="M312.0,313.8 C466.0,313.8 466.0,78.2 620.0,78.2 L620.0,87.2 C466.0,87.2 466.0,322.8 312.0,322.8 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,322.8 C466.0,322.8 466.0,226.5 620.0,226.5 L620.0,235.6 C466.0,235.6 466.0,331.8 312.0,331.8 Z" fill="#003d7c" fill-opacity="0.3"/>
+<path d="M312.0,331.8 C466.0,331.8 466.0,278.7 620.0,278.7 L620.0,287.7 C466.0,287.7 466.0,340.9 312.0,340.9 Z" fill="#c9960c" fill-opacity="0.3"/>
+<path d="M312.0,340.9 C466.0,340.9 466.0,329.8 620.0,329.8 L620.0,338.8 C466.0,338.8 466.0,349.9 312.0,349.9 Z" fill="#c9960c" fill-opacity="0.3"/>
+<path d="M312.0,349.9 C466.0,349.9 466.0,355.8 620.0,355.8 L620.0,364.9 C466.0,364.9 466.0,358.9 312.0,358.9 Z" fill="#78909c" fill-opacity="0.3"/>
+<path d="M312.0,361.9 C466.0,361.9 466.0,295.7 620.0,295.7 L620.0,304.7 C466.0,304.7 466.0,371.0 312.0,371.0 Z" fill="#c9960c" fill-opacity="0.3"/>
+<path d="M312.0,374.0 C466.0,374.0 466.0,312.7 620.0,312.7 L620.0,321.8 C466.0,321.8 466.0,383.0 312.0,383.0 Z" fill="#2e7d32" fill-opacity="0.3"/>
+<path d="M632.0,33.0 C806.0,33.0 806.0,67.0 980.0,67.0 L980.0,121.2 C806.0,121.2 806.0,87.2 632.0,87.2 Z" fill="#003d7c" fill-opacity="0.4"/>
+<path d="M632.0,95.2 C806.0,95.2 806.0,121.2 980.0,121.2 L980.0,148.3 C806.0,148.3 806.0,122.3 632.0,122.3 Z" fill="#003d7c" fill-opacity="0.4"/>
+<path d="M632.0,130.3 C806.0,130.3 806.0,148.3 980.0,148.3 L980.0,175.4 C806.0,175.4 806.0,157.4 632.0,157.4 Z" fill="#003d7c" fill-opacity="0.4"/>
+<path d="M632.0,165.4 C806.0,165.4 806.0,175.4 980.0,175.4 L980.0,193.5 C806.0,193.5 806.0,183.5 632.0,183.5 Z" fill="#003d7c" fill-opacity="0.4"/>
+<path d="M632.0,191.5 C806.0,191.5 806.0,193.5 980.0,193.5 L980.0,211.5 C806.0,211.5 806.0,209.5 632.0,209.5 Z" fill="#003d7c" fill-opacity="0.4"/>
+<path d="M632.0,217.5 C806.0,217.5 806.0,211.5 980.0,211.5 L980.0,229.6 C806.0,229.6 806.0,235.6 632.0,235.6 Z" fill="#003d7c" fill-opacity="0.4"/>
+<path d="M632.0,243.6 C806.0,243.6 806.0,241.6 980.0,241.6 L980.0,259.6 C806.0,259.6 806.0,261.6 632.0,261.6 Z" fill="#c9960c" fill-opacity="0.4"/>
+<path d="M632.0,269.6 C806.0,269.6 806.0,259.6 980.0,259.6 L980.0,277.7 C806.0,277.7 806.0,287.7 632.0,287.7 Z" fill="#c9960c" fill-opacity="0.4"/>
+<path d="M632.0,295.7 C806.0,295.7 806.0,277.7 980.0,277.7 L980.0,286.7 C806.0,286.7 806.0,304.7 632.0,304.7 Z" fill="#c9960c" fill-opacity="0.4"/>
+<path d="M632.0,312.7 C806.0,312.7 806.0,286.7 980.0,286.7 L980.0,295.8 C806.0,295.8 806.0,321.8 632.0,321.8 Z" fill="#2e7d32" fill-opacity="0.4"/>
+<path d="M632.0,329.8 C806.0,329.8 806.0,295.8 980.0,295.8 L980.0,304.8 C806.0,304.8 806.0,338.8 632.0,338.8 Z" fill="#c9960c" fill-opacity="0.4"/>
+<path d="M632.0,346.8 C806.0,346.8 806.0,316.8 980.0,316.8 L980.0,334.9 C806.0,334.9 806.0,364.9 632.0,364.9 Z" fill="#78909c" fill-opacity="0.4"/>
+<path d="M632.0,372.9 C806.0,372.9 806.0,334.9 980.0,334.9 L980.0,343.9 C806.0,343.9 806.0,381.9 632.0,381.9 Z" fill="#00897b" fill-opacity="0.4"/>
+<path d="M632.0,389.9 C806.0,389.9 806.0,355.9 980.0,355.9 L980.0,383.0 C806.0,383.0 806.0,417.0 632.0,417.0 Z" fill="#558b2f" fill-opacity="0.4"/>
+<rect x="8" y="85.0" width="12" height="280.0" rx="2" fill="#003d7c"><title>Maria Fernanda Spegiorin Salla Brune</title></rect>
+<text x="8" y="81.0" font-size="11" font-weight="700" fill="#003d7c">Maria</text>
+<rect x="300.0" y="67.0" width="12" height="9.0" rx="1.5" fill="#c2cad6"><title>Prevalência de doenças diagnosticadas pela triagem neonatal em uma região de Mato Grosso, Brasil (2023)</title></rect>
+<rect x="300.0" y="79.0" width="12" height="9.0" rx="1.5" fill="#c2cad6"><title>ANÁLISE DO PROCESSO DE TRIAGEM NEONATAL BIOLÓGICA NO ESTADO DE MATO GROSSO (2020)</title></rect>
+<rect x="300.0" y="91.1" width="12" height="9.0" rx="1.5" fill="#c2cad6"><title>A avaliação das notificações de acidentes com exposição à material biológico na região do Médio Araguaia/MT (2014)</title></rect>
+<rect x="300.0" y="103.1" width="12" height="9.0" rx="1.5" fill="#c2cad6"><title>Polypharmacy in the elderly: effects on liver and renal function (2011)</title></rect>
+<rect x="300.0" y="115.1" width="12" height="18.1" rx="1.5" fill="#c2cad6"><title>Human colostrum melatonin exhibits a day-night variation and modulates the activity of colostral phagocytes. (2013)</title></rect>
+<rect x="300.0" y="136.2" width="12" height="27.1" rx="1.5" fill="#c2cad6"><title>Efeito agudo do extrato aquoso de hibisco (Hibiscus sabdariffa L.) no mecanismo de hiperconcentração da alça renal em ratos diabéticos (2013)</title></rect>
+<rect x="300.0" y="166.3" width="12" height="36.1" rx="1.5" fill="#c2cad6"><title>Perfil agudo bioquímico nutricional de ratos diabéticos tratados com extrato aquoso de hibisco (Hibiscus sabdariffa L.) (2013)</title></rect>
+<rect x="300.0" y="205.4" width="12" height="36.1" rx="1.5" fill="#c2cad6"><title>Perfil agudo bioquímico e nutricional de ratos diabéticos tratados extrato aquoso de hibisco (Hibiscus sabdariffa L.) (2013)</title></rect>
+<rect x="300.0" y="244.5" width="12" height="36.1" rx="1.5" fill="#c2cad6"><title>Extensão?Doe sangue,doe vida?:salvando vidas e produzindo conhecimento (2005)</title></rect>
+<rect x="300.0" y="283.7" width="12" height="27.1" rx="1.5" fill="#c2cad6"><title>Maternal hypertension induces alterations in immunological factors of colostrum and human milk (2014)</title></rect>
+<rect x="300.0" y="313.8" width="12" height="45.2" rx="1.5" fill="#c2cad6"><title>Projeto &#x27;Doe Sangue, Doe Vida&#x27; (2025)</title></rect>
+<rect x="300.0" y="361.9" width="12" height="9.0" rx="1.5" fill="#c2cad6"><title>Cenário e perspectiva da triagem neonatal no Brasil (2024)</title></rect>
+<rect x="300.0" y="374.0" width="12" height="9.0" rx="1.5" fill="#c2cad6"><title>Alterações Bioquímicas relacionadas ao risco cardíaco em moradores do Lar da Providência, Aragarças - GO (2011)</title></rect>
+<rect x="620.0" y="33.0" width="12" height="54.2" rx="1.5" fill="#003d7c"><title>Maximilian Wilhelm Brune — 6 trabalho(s) · Professor do curso</title></rect>
+<text x="616.0" y="63.1" font-size="9.5" text-anchor="end" fill="#33475b">Maximilian</text>
+<rect x="620.0" y="95.2" width="12" height="27.1" rx="1.5" fill="#003d7c"><title>Gustavo Tadeu Volpato — 3 trabalho(s) · Professor do curso</title></rect>
+<text x="616.0" y="111.7" font-size="9.5" text-anchor="end" fill="#33475b">Gustavo</text>
+<rect x="620.0" y="130.3" width="12" height="27.1" rx="1.5" fill="#003d7c"><title>Kleber Eduardo de Campos — 3 trabalho(s) · Professor do curso</title></rect>
+<text x="616.0" y="146.8" font-size="9.5" text-anchor="end" fill="#33475b">Kleber</text>
+<rect x="620.0" y="165.4" width="12" height="18.1" rx="1.5" fill="#003d7c"><title>Adenilda Honorio-França — 2 trabalho(s) · Professor do curso</title></rect>
+<text x="616.0" y="177.4" font-size="9.5" text-anchor="end" fill="#33475b">Adenilda</text>
+<rect x="620.0" y="191.5" width="12" height="18.1" rx="1.5" fill="#003d7c"><title>Eduardo Luzía França — 2 trabalho(s) · Professor do curso</title></rect>
+<text x="616.0" y="203.5" font-size="9.5" text-anchor="end" fill="#33475b">Eduardo</text>
+<rect x="620.0" y="217.5" width="12" height="18.1" rx="1.5" fill="#003d7c"><title>Paulo Roberto da Fonseca Filho — 2 trabalho(s) · Professor do curso</title></rect>
+<text x="616.0" y="229.5" font-size="9.5" text-anchor="end" fill="#33475b">Paulo</text>
+<rect x="620.0" y="243.6" width="12" height="18.1" rx="1.5" fill="#c9960c"><title>MIRANDA, CAROLINA ABREU — 2 trabalho(s) · Egresso</title></rect>
+<text x="616.0" y="255.6" font-size="9.5" text-anchor="end" fill="#33475b">Miranda</text>
+<rect x="620.0" y="269.6" width="12" height="18.1" rx="1.5" fill="#c9960c"><title>SILVA, VANESSA CARULINE ARAUJO DA — 2 trabalho(s) · Egresso</title></rect>
+<text x="616.0" y="281.7" font-size="9.5" text-anchor="end" fill="#33475b">Silva</text>
+<rect x="620.0" y="295.7" width="12" height="9.0" rx="1.5" fill="#c9960c"><title>BARROS, ALANA BEZERRA — 1 trabalho(s) · Egresso</title></rect>
+<text x="616.0" y="303.2" font-size="9.5" text-anchor="end" fill="#33475b">Barros</text>
+<rect x="620.0" y="312.7" width="12" height="9.0" rx="1.5" fill="#2e7d32"><title>Fujimori, Mahmi — 1 trabalho(s) · Pesquisador externo</title></rect>
+<text x="616.0" y="320.3" font-size="9.5" text-anchor="end" fill="#33475b">Fujimori</text>
+<rect x="620.0" y="329.8" width="12" height="9.0" rx="1.5" fill="#c9960c"><title>LOUREIRO, LUANA CUTRIM — 1 trabalho(s) · Egresso</title></rect>
+<text x="616.0" y="337.3" font-size="9.5" text-anchor="end" fill="#33475b">Loureiro</text>
+<rect x="620.0" y="346.8" width="12" height="18.1" rx="1.5" fill="#78909c"><title>FRANÇA, FABIO ALEXANDRE SILVA — 2 trabalho(s) · Pesquisador da UFMT</title></rect>
+<text x="616.0" y="358.8" font-size="9.5" text-anchor="end" fill="#33475b">França</text>
+<rect x="620.0" y="372.9" width="12" height="9.0" rx="1.5" fill="#00897b"><title>MASSMANN, PATRÍCIA FERNANDES — 1 trabalho(s) · Professor do ICBS</title></rect>
+<text x="616.0" y="380.4" font-size="9.5" text-anchor="end" fill="#33475b">Massmann</text>
+<rect x="620.0" y="389.9" width="12" height="27.1" rx="1.5" fill="#558b2f"><title>DAMASCENO, DÉBORA CRISTINA — 3 trabalho(s) · Professor UNESP</title></rect>
+<text x="616.0" y="406.5" font-size="9.5" text-anchor="end" fill="#33475b">Damasceno</text>
+<rect x="980.0" y="67.0" width="12" height="162.6" rx="1.5" fill="#003d7c"><title>Biomedicina (UFMT Araguaia) — 18</title></rect>
+<text x="976.0" y="151.3" font-size="9.5" font-weight="600" text-anchor="end" fill="#33475b">Biomedicina (UFMT Araguaia)</text>
+<rect x="980.0" y="241.6" width="12" height="63.2" rx="1.5" fill="#b0bcc9"><title>Externo (sem vínculo) — 7</title></rect>
+<text x="976.0" y="276.2" font-size="9.5" font-weight="600" text-anchor="end" fill="#33475b">Externo (sem vínculo)</text>
+<rect x="980.0" y="316.8" width="12" height="27.1" rx="1.5" fill="#455a64"><title>UFMT — 3</title></rect>
+<text x="976.0" y="333.4" font-size="9.5" font-weight="600" text-anchor="end" fill="#33475b">UFMT</text>
+<rect x="980.0" y="355.9" width="12" height="27.1" rx="1.5" fill="#558b2f"><title>UNESP — 3</title></rect>
+<text x="976.0" y="372.5" font-size="9.5" font-weight="600" text-anchor="end" fill="#33475b">UNESP</text>
+<text x="8" y="14" font-size="9.5" font-weight="700" fill="#7a8794">DOCENTE</text>
+<text x="300" y="14" font-size="9.5" font-weight="700" fill="#7a8794">TRABALHOS</text>
+<text x="620" y="14" font-size="9.5" font-weight="700" fill="#7a8794" text-anchor="middle">COLABORADORES</text>
+<text x="992" y="14" font-size="9.5" font-weight="700" fill="#7a8794" text-anchor="end">INSTITUIÇÕES</text>
+</svg></div><div class="ego-legend"><b style="color:#33475b;font-weight:600">Colaboradores:</b><span><i style="background:#c9960c"></i>Egresso</span><span><i style="background:#78909c"></i>Pesquisador da UFMT</span><span><i style="background:#2e7d32"></i>Pesquisador externo</span><span><i style="background:#558b2f"></i>Professor UNESP</span><span><i style="background:#00897b"></i>Professor do ICBS</span><span><i style="background:#003d7c"></i>Professor do curso</span></div><div class="ego-legend" style="margin-top:5px"><b style="color:#33475b;font-weight:600">Instituições:</b><span><i style="background:#003d7c;border-radius:2px"></i>Biomedicina (UFMT Araguaia)</span><span><i style="background:#b0bcc9;border-radius:2px"></i>Externo (sem vínculo)</span><span><i style="background:#455a64;border-radius:2px"></i>UFMT</span><span><i style="background:#558b2f;border-radius:2px"></i>UNESP</span></div><div class="note">Fluxo da esquerda para a direita: o docente, os trabalhos, os principais colaboradores e as instituições de origem deles. Cada faixa vale 1 coautoria (trabalho×colaborador). São exibidos os 14 principais colaboradores (por nº de trabalhos com o docente) e os 13 trabalhos que mais os conectam. “Externo (sem vínculo)” reúne colaboradores sem instituição cadastrada. Passe o mouse sobre as barras para ver nomes e títulos.</div></div>
+<!--OCRA_SANKEY_END-->
+</div>
+<script>
+
+const CHART_DATA = {"years": [2003, 2004, 2005, 2007, 2008, 2011, 2013, 2014, 2018, 2020, 2021, 2023, 2024, 2025], "by_year": {"2003": {"anais": 1}, "2004": {"anais": 1}, "2005": {"anais": 1, "periodico": 2}, "2007": {"anais": 2}, "2008": {"anais": 1}, "2011": {"periodico": 4, "anais": 7}, "2013": {"periodico": 1, "anais": 3}, "2014": {"periodico": 4}, "2018": {"periodico": 2}, "2020": {"periodico": 2}, "2021": {"periodico": 2}, "2023": {"periodico": 2}, "2024": {"periodico": 2}, "2025": {"anais": 1}}};
+const TYPE_COLORS = {"periodico": "#003d7c", "anais": "#c8960c", "capitulo": "#4a9e8e", "livro": "#8a5fb0"};
+function drawChart(){
+  const canvas = document.getElementById('prodChart');
+  const wrap = document.getElementById('chart-wrap');
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const years = CHART_DATA.years;
+  const padL = 30, padB = 24, padT = 10, padR = 10;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const maxV = Math.max(...years.map(y => Object.values(CHART_DATA.by_year[y]).reduce((a,b)=>a+b,0)), 1);
+  const bw = plotW / years.length;
+  ctx.strokeStyle = '#eef1f6'; ctx.lineWidth = 1; ctx.font = '9px system-ui'; ctx.fillStyle = '#9aaab8';
+  for (let g = 0; g <= 4; g++) {
+    const yy = padT + plotH - (g/4)*plotH;
+    ctx.beginPath(); ctx.moveTo(padL, yy); ctx.lineTo(W-padR, yy); ctx.stroke();
+    ctx.fillText(Math.round(maxV*g/4), 2, yy+3);
+  }
+  years.forEach((y, i) => {
+    const d = CHART_DATA.by_year[y];
+    const x = padL + i*bw + bw*0.15;
+    const w = bw*0.7;
+    let yBase = padT + plotH;
+    ['periodico','anais','capitulo','livro'].forEach(key => {
+      const v = d[key] || 0;
+      const h = (v/maxV)*plotH;
+      ctx.fillStyle = TYPE_COLORS[key];
+      ctx.fillRect(x, yBase-h, w, h);
+      yBase -= h;
+    });
+    if (years.length <= 24 || i % 2 === 0) {
+      ctx.save();
+      ctx.fillStyle = '#7a8fa8'; ctx.font = '8.5px system-ui'; ctx.textAlign='center';
+      ctx.translate(x+w/2, H-6); ctx.fillText(y, 0, 0);
+      ctx.restore();
+    }
+  });
+}
+drawChart();
+window.addEventListener('resize', drawChart);
+
+const ORIENT_DATA = {"years": ["2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024"], "by_year": {"2007": {"tcc": 2, "ic": 2}, "2008": {"tcc": 4}, "2009": {"tcc": 3}, "2010": {"tcc": 1}, "2011": {"tcc": 3}, "2012": {"tcc": 4, "monitoria": 3}, "2013": {"tcc": 4, "monitoria": 5}, "2014": {"tcc": 2, "monitoria": 4}, "2015": {"monitoria": 3}, "2016": {"tcc": 4, "monitoria": 4}, "2017": {"tcc": 3, "monitoria": 5}, "2018": {"tcc": 1, "monitoria": 4}, "2019": {"tcc": 2, "monitoria": 3}, "2020": {"tcc": 1, "monitoria": 2}, "2021": {"monitoria": 1}, "2022": {"tcc": 5}, "2023": {"tcc": 1}, "2024": {"tcc": 1}}};
+const ORIENT_COLORS = {"posdoc": "#5a3825", "doutorado": "#c0392b", "mestrado": "#d68a1f", "ic": "#5b4ea3", "extensao": "#2e8b57", "tcc": "#0d7a6c", "monitoria": "#1c8fc0", "outro": "#9e9e9e"};
+const ORIENT_ORDER = ["posdoc", "doutorado", "mestrado", "ic", "extensao", "tcc", "monitoria", "outro"];
+function drawOrientChart(){
+  const canvas = document.getElementById('orientChart');
+  if (!canvas) return;
+  const wrap = document.getElementById('orientChart-wrap');
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const years = ORIENT_DATA.years;
+  const padL = 26, padB = 22, padT = 8, padR = 8;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const maxV = Math.max(...years.map(y => Object.values(ORIENT_DATA.by_year[y]).reduce((a,b)=>a+b,0)), 1);
+  const bw = plotW / years.length;
+  ctx.strokeStyle = '#eef1f6'; ctx.lineWidth = 1; ctx.font = '9px system-ui'; ctx.fillStyle = '#9aaab8';
+  for (let g = 0; g <= 4; g++) {
+    const yy = padT + plotH - (g/4)*plotH;
+    ctx.beginPath(); ctx.moveTo(padL, yy); ctx.lineTo(W-padR, yy); ctx.stroke();
+    ctx.fillText(Math.round(maxV*g/4), 2, yy+3);
+  }
+  years.forEach((y, i) => {
+    const d = ORIENT_DATA.by_year[y];
+    const x = padL + i*bw + bw*0.15;
+    const w = bw*0.7;
+    let yBase = padT + plotH;
+    ORIENT_ORDER.forEach(key => {
+      const v = d[key] || 0;
+      const h = (v/maxV)*plotH;
+      ctx.fillStyle = ORIENT_COLORS[key];
+      ctx.fillRect(x, yBase-h, w, h);
+      yBase -= h;
+    });
+    if (years.length <= 24 || i % 2 === 0) {
+      ctx.save();
+      ctx.fillStyle = '#7a8fa8'; ctx.font = '8.5px system-ui'; ctx.textAlign='center';
+      ctx.translate(x+w/2, H-6); ctx.fillText(y, 0, 0);
+      ctx.restore();
+    }
+  });
+}
+drawOrientChart();
+window.addEventListener('resize', drawOrientChart);
+
+const EGO_DATA = {"name": "Maria Fernanda Spegiorin Salla Brune", "nodes": [{"name": "Maximilian Wilhelm Brune", "count": 6, "w": 5.71, "cat": "professor_curso"}, {"name": "FRANÇA, FABIO ALEXANDRE SILVA", "count": 2, "w": 1.24, "cat": "pesquisador_ufmt"}, {"name": "Paulo Roberto da Fonseca Filho", "count": 2, "w": 1.24, "cat": "professor_curso"}, {"name": "SILVA, VANESSA CARULINE ARAUJO DA", "count": 2, "w": 1.24, "cat": "egresso"}, {"name": "LOUREIRO, LUANA CUTRIM", "count": 1, "w": 0.91, "cat": "egresso"}, {"name": "TONIAL, WANGRINE DE AVILA", "count": 1, "w": 0.91, "cat": "aluno_em_formacao"}, {"name": "DAMASCENO, DÉBORA CRISTINA", "count": 3, "w": 0.83, "cat": "professor_unesp"}, {"name": "Gustavo Tadeu Volpato", "count": 3, "w": 0.83, "cat": "professor_curso"}, {"name": "Kleber Eduardo de Campos", "count": 3, "w": 0.83, "cat": "professor_curso"}, {"name": "BARROS, ALANA BEZERRA", "count": 1, "w": 0.82, "cat": "egresso"}, {"name": "Adenilda Honorio-França", "count": 2, "w": 0.7, "cat": "professor_curso"}, {"name": "Eduardo Luzía França", "count": 2, "w": 0.7, "cat": "professor_curso"}, {"name": "MIRANDA, CAROLINA ABREU", "count": 2, "w": 0.55, "cat": "egresso"}, {"name": "MASSMANN, PATRÍCIA FERNANDES", "count": 1, "w": 0.3, "cat": "professor_icbs"}, {"name": "ROSA MARIA JACINTO VOLPATO", "count": 1, "w": 0.28, "cat": "pesquisador_externo"}, {"name": "Fujimori, Mahmi", "count": 1, "w": 0.23, "cat": "pesquisador_externo"}], "edges": [["Adenilda Honorio-França", "Eduardo Luzía França", 0.58], ["Adenilda Honorio-França", "ROSA MARIA JACINTO VOLPATO", 0.28], ["Eduardo Luzía França", "ROSA MARIA JACINTO VOLPATO", 0.28], ["Adenilda Honorio-França", "MASSMANN, PATRÍCIA FERNANDES", 0.3], ["Eduardo Luzía França", "MASSMANN, PATRÍCIA FERNANDES", 0.3], ["DAMASCENO, DÉBORA CRISTINA", "Gustavo Tadeu Volpato", 0.83], ["DAMASCENO, DÉBORA CRISTINA", "Kleber Eduardo de Campos", 0.83], ["Gustavo Tadeu Volpato", "Kleber Eduardo de Campos", 0.83], ["DAMASCENO, DÉBORA CRISTINA", "MIRANDA, CAROLINA ABREU", 0.55], ["Gustavo Tadeu Volpato", "MIRANDA, CAROLINA ABREU", 0.55], ["Kleber Eduardo de Campos", "MIRANDA, CAROLINA ABREU", 0.55], ["FRANÇA, FABIO ALEXANDRE SILVA", "Maximilian Wilhelm Brune", 1.03], ["FRANÇA, FABIO ALEXANDRE SILVA", "Paulo Roberto da Fonseca Filho", 1.03], ["FRANÇA, FABIO ALEXANDRE SILVA", "SILVA, VANESSA CARULINE ARAUJO DA", 1.03], ["Maximilian Wilhelm Brune", "Paulo Roberto da Fonseca Filho", 1.03], ["Maximilian Wilhelm Brune", "SILVA, VANESSA CARULINE ARAUJO DA", 1.03], ["Paulo Roberto da Fonseca Filho", "SILVA, VANESSA CARULINE ARAUJO DA", 1.03], ["FRANÇA, FABIO ALEXANDRE SILVA", "LOUREIRO, LUANA CUTRIM", 0.91], ["FRANÇA, FABIO ALEXANDRE SILVA", "TONIAL, WANGRINE DE AVILA", 0.91], ["LOUREIRO, LUANA CUTRIM", "Maximilian Wilhelm Brune", 0.91], ["LOUREIRO, LUANA CUTRIM", "Paulo Roberto da Fonseca Filho", 0.91], ["LOUREIRO, LUANA CUTRIM", "SILVA, VANESSA CARULINE ARAUJO DA", 0.91], ["LOUREIRO, LUANA CUTRIM", "TONIAL, WANGRINE DE AVILA", 0.91], ["Maximilian Wilhelm Brune", "TONIAL, WANGRINE DE AVILA", 0.91], ["Paulo Roberto da Fonseca Filho", "TONIAL, WANGRINE DE AVILA", 0.91], ["SILVA, VANESSA CARULINE ARAUJO DA", "TONIAL, WANGRINE DE AVILA", 0.91]]};
+const EGO_COLORS = {"professor_curso": "#003d7c", "egresso": "#c9960c", "professor_externo": "#2e7d32", "pesquisador_externo": "#2e7d32", "professor_icbs": "#00897b", "professor_icet": "#6a1b9a", "professor_ichs": "#c62828", "professor_ufmt": "#455a64", "pesquisador_ufmt": "#78909c", "professor_unesp": "#558b2f", "professor_unifesp": "#00695c", "professor_ufr": "#ef6c00", "professor_uncisal": "#ad1457", "professor_usp": "#0277bd", "professor_ufg": "#6d4c41", "professor_ifsp": "#283593", "professor_ufmg": "#8e24aa", "professor_unicamp": "#d81b60", "professor_ufscar": "#4527a0", "professor_univar": "#9e9d24", "professor_emescam": "#5c6bc0", "professor_uemg": "#8d6e63", "professor_ufla": "#0097a7", "professor_ufpr": "#33691e", "aluno_em_formacao": "#0288d1"};
+function drawEgoGraph(){
+  const canvas = document.getElementById('egoGraph');
+  if (!canvas) return;
+  const wrap = document.getElementById('egoGraphWrap');
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const cx = W/2, cy = H/2;
+  const nodes = EGO_DATA.nodes;
+  const maxC = Math.max(...nodes.map(n=>(n.w!=null?n.w:n.count)), 1);
+  const R_MAX = Math.min(W,H)/2 - 28;
+  const R_MIN = 48;
+  const positions = nodes.map((n, i) => {
+    const angle = (i / nodes.length) * Math.PI * 2 - Math.PI/2;
+    const closeness = Math.sqrt((n.w!=null?n.w:n.count)/maxC); // 1 = mais próximo (mais forte), 0 = mais distante
+    const dist = R_MAX - closeness * (R_MAX - R_MIN);
+    const r = closeness * 5 + 6;
+    return { x: cx + Math.cos(angle)*dist, y: cy + Math.sin(angle)*dist, r, n };
+  });
+  // edges (espessura e opacidade proporcionais ao número de colaborações com o professor)
+  positions.forEach(p => {
+    const w = p.n.count / maxC;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(p.x, p.y);
+    ctx.strokeStyle = 'rgba(0,61,124,' + (0.12 + 0.5*w) + ')';
+    ctx.lineWidth = 0.6 + 4*w;
+    ctx.stroke();
+  });
+  // coauthor-coauthor edges (chords)
+  const posByName = {};
+  positions.forEach(p => { posByName[p.n.name] = p; });
+  const maxW = Math.max(...(EGO_DATA.edges.map(e=>e[2])), 1);
+  (EGO_DATA.edges || []).forEach(([a, b, w]) => {
+    const pa = posByName[a], pb = posByName[b];
+    if (!pa || !pb) return;
+    ctx.beginPath(); ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y);
+    ctx.strokeStyle = 'rgba(120,120,130,' + (0.15 + 0.35*(w/maxW)) + ')';
+    ctx.lineWidth = 0.6 + 1.8*(w/maxW);
+    ctx.stroke();
+  });
+  // center node
+  ctx.beginPath(); ctx.arc(cx, cy, 16, 0, Math.PI*2);
+  ctx.fillStyle = '#003d7c'; ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 9px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  const initials = EGO_DATA.name.split(' ').filter(w=>w.length>2).slice(0,2).map(w=>w[0]).join('');
+  ctx.fillText(initials, cx, cy);
+  // coauthor nodes
+  positions.forEach(p => {
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+    ctx.fillStyle = EGO_COLORS[p.n.cat] || '#999';
+    ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+  });
+  // labels (short surname only, to reduce clutter)
+  ctx.font = '9px system-ui'; ctx.fillStyle = '#5a6a7e'; ctx.textAlign = 'center';
+  positions.forEach(p => {
+    const label = p.n.name.split(',')[0].split(' ')[0];
+    const ly = p.y > cy ? p.y + p.r + 10 : p.y - p.r - 5;
+    ctx.fillText(label, p.x, ly);
+  });
+  canvas.onmousemove = (ev) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = ev.clientX - rect.left, my = ev.clientY - rect.top;
+    const tip = document.getElementById('egoTooltip');
+    const hit = positions.find(p => Math.hypot(p.x-mx, p.y-my) <= p.r+3);
+    if (hit) {
+      tip.textContent = hit.n.name + ' — ' + hit.n.count + 'x';
+      tip.style.left = hit.x + 'px'; tip.style.top = hit.y + 'px'; tip.style.opacity = 1;
+    } else { tip.style.opacity = 0; }
+  };
+  canvas.onmouseleave = () => { document.getElementById('egoTooltip').style.opacity = 0; };
+}
+drawEgoGraph();
+window.addEventListener('resize', drawEgoGraph);
+
+</script>
+</body>
+</html>

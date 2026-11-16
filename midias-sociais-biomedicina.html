@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="light-only">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="estilo.css">
+<script src="site.js" defer></script>
+<title>Mídias Sociais — Biomedicina UFMT Araguaia</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f6fa;color:#1a2333}
+
+.wrap{max-width:1180px;margin:0 auto;padding:26px 20px 60px}
+h1{font-family:var(--font-display);color:#003d7c;font-size:1.7rem;margin-bottom:4px}
+.lead{color:#5a6a7e;font-size:.95rem;max-width:860px;line-height:1.55;margin-bottom:8px}
+.sec-title{font-family:var(--font-display);color:#003d7c;font-size:1.2rem;margin:30px 0 4px;display:flex;align-items:center;gap:10px}
+.sec-title .n{display:inline-flex;width:24px;height:24px;border-radius:50%;background:#003d7c;color:#fff;font-size:13px;font-weight:700;align-items:center;justify-content:center;font-family:-apple-system,sans-serif}
+.sec-sub{color:#8a97a6;font-size:.82rem;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+
+.card{background:#fff;border:1px solid #dde3ec;border-radius:14px;padding:16px 16px 14px;display:flex;flex-direction:column;gap:10px;transition:box-shadow .15s,transform .15s}
+.card:hover{box-shadow:0 8px 22px rgba(20,50,90,.10);transform:translateY(-2px)}
+.ctop{display:flex;align-items:center;gap:12px}
+.logo{width:52px;height:52px;border-radius:14px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.05rem;letter-spacing:.02em;font-family:var(--font-display)}
+.cname{font-size:1.02rem;font-weight:700;color:#14263c;line-height:1.2}
+.csub{font-size:11.5px;color:#7a8794;margin-top:2px;line-height:1.35}
+.crow{font-size:12.5px;color:#5a6a7e;line-height:1.4}
+.crow b{color:#3a4a5c;font-weight:600}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px}
+.badge.on{background:#e6f4ea;color:#1a7a3c}
+.badge.off{background:#fbe9e9;color:#b03b3b}
+.badge.na{background:#eef1f5;color:#7a8794}
+.badge .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px;border-top:1px solid #eef1f5;padding-top:10px}
+.lico{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:9px;border:1px solid #e3e8ef;color:#5a6a7e;transition:background .12s,border-color .12s,color .12s}
+.lico:hover{background:#f2f7ff;border-color:#b9d3f0;color:#003d7c}
+.lico svg{width:17px;height:17px}
+.foot{margin-top:26px;font-size:12px;color:#8a97a6;line-height:1.5;border-top:1px solid #dde3ec;padding-top:12px}
+</style>
+<style id="ponte-design">
+/* Ponte entre o CSS antigo da página e o sistema de design (estilo.css). Remover quando a página for redesenhada. */
+:root{--blue:var(--tint);--blue2:var(--tint);--gold:#8a6200;--text:var(--label);--muted:var(--label-3);
+  --card:var(--surface);--border:var(--separator);--bg:#f5f5f7;--sans:var(--font);--serif:var(--font-display)}
+body{font-family:var(--font);background:var(--bg);color:var(--label);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--font-display);letter-spacing:-.01em}
+button,input,select,textarea{font-family:var(--font)}
+@media (max-width:700px){table{display:block;max-width:100%;overflow-x:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Mídias Sociais &mdash; laboratórios, grupos e projetos</h1>
+  <p class="lead">Perfis, canais e sites dos laboratórios, grupos de pesquisa e projetos de pesquisa e extensão ligados ao curso de Biomedicina da UFMT Araguaia.</p>
+  <div id="root"></div>
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+const ICONS = {
+  site:{t:'Site',svg:'<svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.3" stroke="currentColor" stroke-width="1.5"/><path d="M2.7 10h14.6M10 2.7c2.2 2 3.4 4.7 3.4 7.3S12.2 15.3 10 17.3C7.8 15.3 6.6 12.6 6.6 10 6.6 7.4 7.8 4.7 10 2.7z" stroke="currentColor" stroke-width="1.5"/></svg>'},
+  instagram:{t:'Instagram',svg:'<svg viewBox="0 0 20 20" fill="none"><rect x="2.5" y="2.5" width="15" height="15" rx="4.5" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="3.6" stroke="currentColor" stroke-width="1.5"/><circle cx="14.3" cy="5.7" r="1" fill="currentColor"/></svg>'},
+  youtube:{t:'YouTube',svg:'<svg viewBox="0 0 20 20" fill="none"><rect x="1.7" y="4.3" width="16.6" height="11.4" rx="3.4" stroke="currentColor" stroke-width="1.5"/><path d="M8.4 7.6l4.2 2.4-4.2 2.4V7.6z" fill="currentColor"/></svg>'},
+  tiktok:{t:'TikTok',svg:'<svg viewBox="0 0 20 20" fill="none"><path d="M11.4 2.5v8.7a2.6 2.6 0 1 1-2.1-2.55" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.4 4.2c.5 1.7 1.9 2.9 3.7 3.1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'}
+};
+const ORDER = ['site','instagram','instagram2','youtube','tiktok'];
+
+const GROUPS = [
+  {n:1, title:'Laboratórios e grupos de pesquisa', sub:'Estruturas de pesquisa vinculadas ao curso.'},
+  {n:2, title:'Projetos de pesquisa', sub:'Iniciativas de investigação científica.'},
+  {n:3, title:'Projetos de extensão', sub:'Ações de extensão e divulgação científica.'}
+];
+
+const ITEMS = [
+  {g:1, nome:'FISIOTOX', sub:'Laboratório de Fisiologia de Sistemas e Toxicologia Reprodutiva',
+   resp:['Kleber Eduardo de Campos','Gustavo Tadeu Volpato','Madileine Francely Américo'], status:'ativo',
+   mono:'FX', color:'#0d5c5a',
+   links:{site:'https://www.fisiotox.com.br', instagram:'https://www.instagram.com/lab.fisiotox/'}},
+  {g:1, nome:'BioVasc HistoLab', sub:'Laboratório', resp:[], status:'ativo', mono:'BV', color:'#8a2f5f',
+   links:{instagram:'https://www.instagram.com/biovasc_histolab/'}},
+  {g:1, nome:'LAHRA', sub:'Laboratório / grupo de pesquisa', resp:['Sérgio Marcelino de Oliveira'], status:'ativo', mono:'LH', color:'#1a6640',
+   links:{instagram:'https://www.instagram.com/lahraufmt'}},
+  {g:1, nome:'LACROM', sub:'Laboratório / grupo de pesquisa', resp:[], status:'ativo', mono:'LC', color:'#0059b3',
+   links:{instagram:'https://www.instagram.com/lacrom_ufmt/'}},
+  {g:1, nome:'Laboratório de Imunomodulação', sub:'Laboratório de pesquisa (UFMT/CUA)',
+   resp:['Adenilda Honorio-França','Eduardo Luzía França'],
+   linhas:['Imunologia da Relação Materno Infantil','Cronoimunomodulação'],
+   status:'ativo', mono:'IM', color:'#7a3b8f',
+   links:{instagram:'https://www.instagram.com/labimuno_ufmtcua/'}},
+  {g:1, nome:'LABRO', sub:'Laboratório de Análises Bromatológicas (UFMT/CUA)',
+   resp:['Karina da Silva Chaves'], status:'ativo', mono:'LB', color:'#8a6d1f',
+   links:{instagram:'https://www.instagram.com/labro_ufmtcua/'}},
+  {g:3, nome:'LAECS', sub:'Projeto de extensão', resp:['Ana Paula Morbio'], status:'ativo', mono:'LE', color:'#7a5500',
+   links:{instagram:'https://www.instagram.com/laecs_ufmt/', youtube:'https://www.youtube.com/@laecs_ufmt'}},
+  {g:1, nome:'CPMUA', sub:'Centro / unidade UFMT Araguaia', resp:[], status:'ativo', mono:'CP', color:'#003d7c',
+   links:{site:'https://www.ufmt.br/unidade/cpmua', instagram:'https://www.instagram.com/cpmuaufmt/'}},
+
+  {g:3, nome:'Clima e Saúde', sub:'Projeto de extensão', resp:[], status:'ativo', mono:'CS', color:'#0e7c8b',
+   links:{instagram:'https://www.instagram.com/climaesaude.ufmt/'}},
+  {g:3, nome:'ImagemMédica.com', sub:'Projeto de extensão', resp:['Paulo Roberto da Fonseca Filho'], status:'ativo', mono:'IM', color:'#185fa5',
+   links:{site:'https://www.imagemmedica.com', instagram:'https://www.instagram.com/imagemmedica_com/'}},
+
+  {g:3, nome:'Biomedicina nas Redes', sub:'Projeto de extensão / comunicação', resp:['Paulo Roberto da Fonseca Filho'], status:'ativo', mono:'BR', color:'#c8960c',
+   links:{instagram:'https://www.instagram.com/biomedicina.ufmt/', instagram2:'https://www.instagram.com/biomedicinanasredes/'}},
+  {g:3, nome:'Doe Sangue, Doe Vida', sub:'Projeto de extensão', resp:['Maximilian Wilhelm Brune'], status:'ativo', mono:'DS', color:'#b03b3b',
+   links:{instagram:'https://www.instagram.com/doesangue.cua/'}},
+  {g:3, nome:'Histologia em Cena', sub:'Projeto de extensão / divulgação', resp:['Renan dos Santos Araújo'], status:'ativo', mono:'HC', color:'#6a2fa3',
+   links:{instagram:'https://www.instagram.com/histologiaemcena/', youtube:'https://www.youtube.com/@HistologiaEmCenaUFMT', tiktok:'https://www.tiktok.com/@histologia.em.cena'}},
+  {g:3, nome:'Parasito em Foco', sub:'Projeto de extensão / divulgação', resp:['Thais Leal Silva'], status:'ativo', mono:'PF', color:'#2b6b48',
+   links:{instagram:'https://www.instagram.com/parasitoemfoco2025/', tiktok:'https://www.tiktok.com/@parasitoemfoco2025'}},
+  {g:3, nome:'AQuA — A Química do Aprendizado', sub:'Projeto de extensão', resp:['Ludier Kesser Santos Silva'], status:'ativo', mono:'AQ', color:'#1f7a8c',
+   links:{instagram:'https://www.instagram.com/aqua.extensao/'}}
+];
+
+function statusBadge(s){
+  if(s==='ativo') return '<span class="badge on"><span class="dot"></span>Ativo</span>';
+  if(s==='inativo') return '<span class="badge off"><span class="dot"></span>Inativo</span>';
+  return '<span class="badge na"><span class="dot"></span>A confirmar</span>';
+}
+function respHtml(r){
+  if(!r || !r.length) return '<span class="crow"><b>Responsável:</b> <span style="color:#a9b4c0">a confirmar</span></span>';
+  const lbl = r.length>1 ? 'Responsáveis' : 'Responsável';
+  return `<span class="crow"><b>${lbl}:</b> ${r.join(', ')}</span>`;
+}
+function linhasHtml(l){
+  if(!l || !l.length) return '';
+  const lbl = l.length>1 ? 'Linhas de pesquisa' : 'Linha de pesquisa';
+  return `<span class="crow"><b>${lbl}:</b> ${l.join('; ')}</span>`;
+}
+function linksHtml(links){
+  const keyMap={instagram2:'instagram'};
+  const parts=ORDER.filter(k=>links[k]).map(k=>{
+    const ic=ICONS[keyMap[k]||k];
+    return `<a class="lico" href="${links[k]}" target="_blank" rel="noopener" title="${ic.t}">${ic.svg}</a>`;
+  });
+  return `<div class="links">${parts.join('')}</div>`;
+}
+function card(it){
+  return `<div class="card">
+    <div class="ctop">
+      <div class="logo" style="background:${it.color}">${it.mono}</div>
+      <div>
+        <div class="cname">${it.nome}</div>
+        <div class="csub">${it.sub||''}</div>
+      </div>
+    </div>
+    ${respHtml(it.resp)}
+    ${linhasHtml(it.linhas)}
+    <div>${statusBadge(it.status)}</div>
+    ${linksHtml(it.links)}
+  </div>`;
+}
+
+const root=document.getElementById('root');
+root.innerHTML = GROUPS.map(gr=>{
+  const items=ITEMS.filter(i=>i.g===gr.n);
+  if(!items.length) return '';
+  return `<div class="sec-title"><span class="n">${gr.n}</span>${gr.title}</div>
+    <div class="sec-sub">${gr.sub}</div>
+    <div class="grid">${items.map(card).join('')}</div>`;
+}).join('');
+
+document.getElementById('foot').innerHTML =
+  `${ITEMS.length} itens &middot; ${ITEMS.filter(i=>i.g===1).length} laboratórios/grupos &middot; ${ITEMS.filter(i=>i.g===2).length} projetos de pesquisa &middot; ${ITEMS.filter(i=>i.g===3).length} projetos de extensão.`;
+</script>
+</body>
+</html>

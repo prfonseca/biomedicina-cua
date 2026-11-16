@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="light-only">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="estilo.css">
+<script src="site.js" defer></script>
+<title>Orienta&ccedil;&otilde;es e Supervis&otilde;es &mdash; Biomedicina UFMT Araguaia</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#003d7c;--blue2:#0059b3;--gold:#c8960c;
+  --bg:#f4f6fa;--card:#fff;--text:#1a2333;--muted:#5a6a7e;--border:#dde3ec;
+  --sans:var(--font);--serif:var(--font-display);
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh}
+.wrap{max-width:1240px;margin:0 auto;padding:28px 24px 56px}
+h1{font-family:var(--serif);font-size:1.7rem;color:var(--blue);margin-bottom:6px}
+.subtitle{font-size:13.5px;color:var(--muted);margin-bottom:18px;max-width:920px;line-height:1.5}
+.subtitle b{color:var(--text)}
+.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.stat-pill{flex:1;min-width:120px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px 16px}
+.stat-pill .sv{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--blue);line-height:1}
+.stat-pill .sl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:4px;line-height:1.3}
+.charts-row{display:flex;flex-direction:column;gap:20px;margin-bottom:22px}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 22px}
+.chart-card h2{font-family:var(--serif);font-size:14px;color:var(--blue);margin-bottom:4px}
+.chart-card .sub{font-size:11.5px;color:var(--muted);margin-bottom:12px;line-height:1.5}
+#chartByYear-wrap{width:100%;height:340px;position:relative}
+#chartByProf-wrap{width:100%;height:340px;position:relative;overflow-x:auto}
+canvas{display:block}
+.chart-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:10.5px;color:var(--muted)}
+.chart-legend span{display:flex;align-items:center;gap:5px}
+.chart-legend i{width:9px;height:9px;border-radius:2px;display:inline-block}
+.note{font-size:10.5px;color:#9aaab8;margin-top:8px;font-style:italic}
+.tbl-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 22px;overflow-x:auto}
+.tbl-card h2{font-family:var(--serif);font-size:14px;color:var(--blue);margin-bottom:4px}
+.tbl-card .sub{font-size:11.5px;color:var(--muted);margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}
+th{text-align:center;font-size:9.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);padding:6px 8px;border-bottom:2px solid var(--border)}
+th:first-child{text-align:left}
+td{padding:7px 8px;border-bottom:1px solid #f0f2f6;text-align:center}
+td:first-child{text-align:left}
+td.num{font-family:var(--serif);color:var(--blue);font-weight:600;position:relative}
+tr:hover td{background:#fafbfd}
+a.proflink{color:var(--blue);text-decoration:none;font-weight:600}
+a.proflink:hover{text-decoration:underline}
+.medal{font-size:11px;margin-left:3px}
+.trophy{font-size:12px;margin-right:4px;padding:1px 4px;border-radius:4px;display:inline-block}
+.trophy-0{background:#fff3cc}
+.trophy-1{background:#eceff1}
+.trophy-2{background:#fde4d0}
+.tooltip{position:absolute;background:#1a2333;color:#fff;font-size:11px;padding:5px 10px;border-radius:5px;
+  pointer-events:none;opacity:0;transition:opacity .1s;white-space:nowrap;z-index:5}
+</style>
+<style id="ponte-design">
+/* Ponte entre o CSS antigo da página e o sistema de design (estilo.css). Remover quando a página for redesenhada. */
+:root{--blue:var(--tint);--blue2:var(--tint);--gold:#8a6200;--text:var(--label);--muted:var(--label-3);
+  --card:var(--surface);--border:var(--separator);--bg:#f5f5f7;--sans:var(--font);--serif:var(--font-display)}
+body{font-family:var(--font);background:var(--bg);color:var(--label);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--font-display);letter-spacing:-.01em}
+button,input,select,textarea{font-family:var(--font)}
+@media (max-width:700px){table{display:block;max-width:100%;overflow-x:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Orienta&ccedil;&otilde;es e Supervis&otilde;es</h1>
+  <p class="subtitle">Trabalhos de conclus&atilde;o de curso, inicia&ccedil;&atilde;o cient&iacute;fica/tecnol&oacute;gica, extens&atilde;o, monitoria, mestrado, doutorado, supervis&atilde;o de p&oacute;s-doutorado e outras naturezas conclu&iacute;das pelo corpo docente do curso, extra&iacute;das dos Curr&iacute;culos Lattes. <b>Hierarquia de n&iacute;vel</b> (da mais alta para a mais b&aacute;sica): p&oacute;s-doutorado &gt; doutorado &gt; mestrado &gt; inicia&ccedil;&atilde;o &gt; extens&atilde;o &gt; TCC &gt; monitoria &gt; outras naturezas.</p>
+
+  <div class="stats-row" id="stats-row"></div>
+
+  <div class="charts-row">
+    <div class="chart-card">
+      <h2>Orienta&ccedil;&otilde;es totais por ano</h2>
+      <p class="sub">Soma de todos os docentes com Lattes processado, empilhada por modalidade (ordem de n&iacute;vel).</p>
+      <div id="chartByYear-wrap"><canvas id="chartByYear"></canvas><div class="tooltip" id="tooltipYear"></div></div>
+      <div class="chart-legend" id="legendYear"></div>
+    </div>
+    <div class="chart-card">
+      <h2>Orienta&ccedil;&otilde;es por professor</h2>
+      <p class="sub">Total de cada docente, empilhado por modalidade. Clique numa barra para abrir o perfil do professor.</p>
+      <div id="chartByProf-wrap"><canvas id="chartByProf"></canvas><div class="tooltip" id="tooltipProf"></div></div>
+      <div class="chart-legend" id="legendProf"></div>
+      <p class="note" id="coverageNote"></p>
+    </div>
+  </div>
+
+  <div class="tbl-card">
+    <h2>Detalhamento por professor</h2>
+    <p class="sub">&#129351;&#129352;&#129353; nas colunas indicam o 1&ordm;, 2&ordm; e 3&ordm; colocados naquela modalidade. &#127942; na coluna Total indica o 1&ordm;, 2&ordm; e 3&ordm; colocados no total geral.</p>
+    <table>
+      <thead><tr><th>Professor</th><th>P&oacute;s-doc</th><th>Doutorado</th><th>Mestrado</th><th>Inicia&ccedil;&atilde;o</th><th>Extens&atilde;o</th><th>TCC</th><th>Monitoria</th><th>Outras</th><th>Total</th></tr></thead>
+      <tbody id="tbl-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const ORIENT_BY_PROF = {"Karina da Silva Chaves": {"by_year_type": {"2025": {"mestrado": 1, "ic": 3}, "2024": {"tcc": 1}, "2023": {"tcc": 3, "ic": 1}, "2022": {"tcc": 1, "ic": 1}, "2021": {"tcc": 3}, "2020": {"tcc": 1}, "2019": {"tcc": 2, "ic": 2}, "2018": {"tcc": 2}, "2017": {"tcc": 1, "ic": 1}}, "totals": {"mestrado": 1, "tcc": 14, "ic": 8}}, "Carlos Kusano Bucalen Ferrari": {"by_year_type": {"2014": {"mestrado": 1, "tcc": 4}, "2013": {"mestrado": 1, "tcc": 7}, "2011": {"mestrado": 1, "tcc": 4}, "2007": {"outro": 1}, "1998": {"outro": 1}, "2021": {"tcc": 1}, "2020": {"tcc": 2}, "2010": {"tcc": 3}, "2009": {"tcc": 6}, "2003": {"tcc": 4}, "2001": {"tcc": 1}, "2015": {"ic": 4}}, "totals": {"mestrado": 3, "outro": 2, "tcc": 32, "ic": 4}}, "Satie Katagiri": {"by_year_type": {"2024": {"tcc": 1}, "2023": {"tcc": 1}, "2022": {"tcc": 1}, "2020": {"tcc": 1}, "2019": {"tcc": 1}, "2014": {"tcc": 3}, "2013": {"tcc": 1}}, "totals": {"tcc": 9}}, "Eliane Aparecida Suchara": {"by_year_type": {"2016": {"mestrado": 1, "tcc": 5, "monitoria": 2}, "2013": {"mestrado": 1, "tcc": 2, "ic": 2, "monitoria": 5}, "2023": {"tcc": 2}, "2022": {"tcc": 1, "monitoria": 1}, "2021": {"tcc": 4, "monitoria": 1}, "2020": {"tcc": 1, "monitoria": 1}, "2018": {"tcc": 1, "monitoria": 2}, "2017": {"tcc": 4, "ic": 1, "monitoria": 3}, "2015": {"tcc": 5, "ic": 1, "monitoria": 2}, "2014": {"tcc": 7, "ic": 3, "monitoria": 3}, "2011": {"tcc": 2, "ic": 2}, "2010": {"tcc": 4, "ic": 1}, "2009": {"tcc": 3, "ic": 3}, "2019": {"monitoria": 1}}, "totals": {"mestrado": 2, "tcc": 41, "ic": 13, "monitoria": 21}}, "Eduardo Luzía França": {"by_year_type": {"2026": {"mestrado": 1}, "2025": {"mestrado": 2}, "2024": {"mestrado": 2, "doutorado": 1, "ic": 2}, "2023": {"mestrado": 1, "ic": 1}, "2022": {"mestrado": 4}, "2021": {"mestrado": 3, "doutorado": 1}, "2020": {"mestrado": 1, "ic": 3}, "2019": {"mestrado": 1, "ic": 4}, "2018": {"mestrado": 5, "doutorado": 2, "ic": 3}, "2017": {"mestrado": 3, "doutorado": 1, "outro": 1, "ic": 1}, "2016": {"mestrado": 4}, "2015": {"mestrado": 3, "doutorado": 3, "ic": 1}, "2014": {"mestrado": 7, "outro": 1}, "2013": {"mestrado": 6}, "2012": {"mestrado": 6, "tcc": 1}, "2011": {"mestrado": 2, "tcc": 4, "ic": 2, "monitoria": 1}, "2006": {"outro": 8, "ic": 1}, "2005": {"outro": 1, "tcc": 12, "ic": 2}, "2010": {"tcc": 1, "ic": 3}, "2009": {"tcc": 8, "ic": 2}, "2008": {"tcc": 7, "ic": 3}, "2004": {"tcc": 7, "ic": 2}, "2007": {"ic": 3}}, "totals": {"mestrado": 51, "doutorado": 8, "outro": 11, "tcc": 40, "ic": 33, "monitoria": 1}}, "Danny Laura Gomes Fagundes": {"by_year_type": {"2023": {"mestrado": 1}, "2022": {"mestrado": 2}, "2021": {"mestrado": 2}, "2017": {"mestrado": 1, "tcc": 3, "ic": 3}, "2019": {"tcc": 2, "ic": 1}, "2018": {"tcc": 2}, "2016": {"tcc": 1}}, "totals": {"mestrado": 6, "tcc": 8, "ic": 4}}, "Fabiana Morandi Jordão": {"by_year_type": {"2025": {"tcc": 1}, "2024": {"tcc": 1}, "2022": {"tcc": 4}, "2021": {"tcc": 2, "ic": 2}, "2017": {"tcc": 2, "ic": 2, "monitoria": 4}, "2016": {"tcc": 3, "ic": 3, "monitoria": 1}, "2015": {"tcc": 2, "monitoria": 4}, "2014": {"tcc": 3, "ic": 1, "monitoria": 2}, "2019": {"ic": 3, "monitoria": 7}, "2013": {"monitoria": 1}}, "totals": {"tcc": 18, "ic": 11, "monitoria": 19}}, "Maximilian Wilhelm Brune": {"by_year_type": {"2012": {"tcc": 1}, "2011": {"monitoria": 2}}, "totals": {"tcc": 1, "monitoria": 2}}, "Thais Leal Silva": {"by_year_type": {"2026": {"tcc": 2}, "2024": {"tcc": 4}, "2023": {"tcc": 7}, "2017": {"tcc": 2}, "2025": {"monitoria": 2}, "2022": {"monitoria": 3}, "2021": {"monitoria": 5}}, "totals": {"tcc": 15, "monitoria": 10}}, "Gustavo Tadeu Volpato": {"by_year_type": {"2026": {"mestrado": 1}, "2025": {"mestrado": 1, "doutorado": 1, "tcc": 2}, "2024": {"mestrado": 1, "outro": 1, "tcc": 3, "ic": 3, "monitoria": 2}, "2023": {"mestrado": 1, "tcc": 1, "ic": 3, "monitoria": 4}, "2022": {"mestrado": 1, "doutorado": 2, "tcc": 2, "ic": 2, "monitoria": 3}, "2020": {"mestrado": 2, "tcc": 2, "ic": 2, "monitoria": 1}, "2019": {"mestrado": 2, "doutorado": 2, "tcc": 4, "ic": 3, "monitoria": 4}, "2018": {"mestrado": 2, "tcc": 2, "ic": 4, "monitoria": 4}, "2017": {"mestrado": 2, "tcc": 2, "ic": 2, "monitoria": 2}, "2015": {"mestrado": 4, "doutorado": 2, "tcc": 3, "ic": 5, "monitoria": 4}, "2014": {"mestrado": 1, "tcc": 6, "ic": 4, "monitoria": 5}, "2013": {"mestrado": 2, "ic": 4, "monitoria": 4}, "1999": {"outro": 1, "ic": 2}, "2021": {"tcc": 1, "ic": 4}, "2016": {"tcc": 3, "ic": 2, "monitoria": 2}, "2012": {"tcc": 3, "ic": 1, "monitoria": 3}, "2011": {"tcc": 1, "ic": 2, "monitoria": 1}, "2010": {"tcc": 2, "ic": 2, "monitoria": 2}, "2008": {"tcc": 3, "ic": 1}, "2007": {"tcc": 1, "ic": 4}, "2005": {"ic": 2}, "1998": {"ic": 1}}, "totals": {"mestrado": 20, "doutorado": 7, "outro": 2, "tcc": 41, "ic": 53, "monitoria": 41}}, "Flávia Lucia David": {"by_year_type": {"2004": {"outro": 1, "tcc": 6, "ic": 5}, "2019": {"tcc": 1, "ic": 1}, "2017": {"tcc": 1, "ic": 2}, "2014": {"tcc": 3, "ic": 1}, "2013": {"tcc": 6, "ic": 2}, "2012": {"tcc": 2, "ic": 3}, "2011": {"tcc": 7}, "2010": {"tcc": 5}, "2008": {"tcc": 3, "ic": 5}, "2007": {"tcc": 2, "ic": 4}, "2006": {"tcc": 6, "ic": 3}, "2005": {"tcc": 4, "ic": 6}, "2003": {"tcc": 5, "ic": 1, "monitoria": 4}, "2002": {"tcc": 4, "ic": 1}}, "totals": {"outro": 1, "tcc": 55, "ic": 34, "monitoria": 4}}, "Adenilda Honorio-França": {"by_year_type": {"2026": {"mestrado": 3, "ic": 1}, "2025": {"mestrado": 1, "ic": 2}, "2024": {"mestrado": 3, "ic": 2}, "2023": {"mestrado": 3, "doutorado": 1, "tcc": 1, "ic": 3}, "2022": {"mestrado": 2, "tcc": 1, "ic": 2}, "2021": {"mestrado": 4, "outro": 1, "tcc": 2, "ic": 1}, "2020": {"mestrado": 1, "tcc": 3, "ic": 4}, "2019": {"mestrado": 3, "tcc": 3, "ic": 3}, "2018": {"mestrado": 4, "doutorado": 2, "tcc": 2, "ic": 3}, "2017": {"mestrado": 3, "doutorado": 1, "tcc": 1, "ic": 1}, "2016": {"mestrado": 2, "doutorado": 1, "tcc": 1, "ic": 1}, "2015": {"mestrado": 2, "doutorado": 4, "outro": 1, "tcc": 1}, "2014": {"mestrado": 3, "doutorado": 1, "tcc": 2, "ic": 2}, "2013": {"mestrado": 6}, "2012": {"mestrado": 5}, "2011": {"mestrado": 2, "tcc": 1}, "2006": {"mestrado": 1, "outro": 2, "tcc": 2, "ic": 1}, "2009": {"doutorado": 1, "tcc": 8, "ic": 1}, "2005": {"outro": 1, "tcc": 9, "ic": 1}, "2010": {"tcc": 4}, "2008": {"tcc": 7, "ic": 4}, "2007": {"tcc": 1, "ic": 1}, "2004": {"tcc": 8}}, "totals": {"mestrado": 48, "doutorado": 11, "outro": 5, "tcc": 57, "ic": 33}}, "Paulo Roberto da Fonseca Filho": {"by_year_type": {"2025": {"tcc": 3}, "2024": {"tcc": 3}, "2023": {"tcc": 9, "monitoria": 4}, "2022": {"tcc": 6}, "2021": {"tcc": 2, "monitoria": 4}, "2019": {"tcc": 2}, "2017": {"tcc": 1}, "2016": {"tcc": 3, "monitoria": 2}, "2014": {"tcc": 1, "ic": 3}, "2013": {"tcc": 5}, "2012": {"tcc": 5, "ic": 1}, "2011": {"tcc": 1, "ic": 4}, "2009": {"tcc": 1, "ic": 1}, "2010": {"ic": 1}, "2020": {"monitoria": 2}}, "totals": {"tcc": 42, "ic": 10, "monitoria": 12}}, "Luana dos Anjos Ramos": {"by_year_type": {"2022": {"mestrado": 1, "tcc": 1, "ic": 3, "extensao": 1}, "2021": {"mestrado": 1, "tcc": 1}, "2020": {"tcc": 1, "ic": 2, "extensao": 1}, "2019": {"tcc": 1, "extensao": 1}, "2018": {"tcc": 2, "monitoria": 2}, "2017": {"tcc": 2, "ic": 2, "monitoria": 2}, "2012": {"tcc": 2, "monitoria": 1}, "2011": {"tcc": 1, "monitoria": 4}, "2016": {"ic": 1, "monitoria": 2}, "2015": {"ic": 2, "monitoria": 2}, "2014": {"monitoria": 3, "extensao": 2}, "2013": {"monitoria": 2, "extensao": 2}}, "totals": {"mestrado": 2, "tcc": 11, "ic": 10, "extensao": 7, "monitoria": 18}}, "Ana Paula Morbio": {"by_year_type": {"2015": {"tcc": 4}, "2012": {"tcc": 1}, "2011": {"tcc": 1}, "2010": {"tcc": 5}, "2009": {"tcc": 9}, "2008": {"tcc": 2}}, "totals": {"tcc": 22}}, "Renan dos Santos Araújo": {"by_year_type": {"2023": {"mestrado": 1, "monitoria": 3}, "2024": {"tcc": 1, "monitoria": 1}, "2015": {"tcc": 1}, "2025": {"ic": 3, "monitoria": 3}}, "totals": {"mestrado": 1, "tcc": 2, "ic": 3, "monitoria": 7}}, "Ludier Kesser Santos Silva": {"by_year_type": {"2018": {"mestrado": 1, "tcc": 2, "ic": 1}, "2019": {"tcc": 3}, "2017": {"tcc": 1, "ic": 4}, "2020": {"ic": 1}, "2015": {"ic": 1}, "2014": {"monitoria": 2}, "2013": {"monitoria": 5}, "2012": {"monitoria": 3}}, "totals": {"mestrado": 1, "tcc": 6, "ic": 7, "monitoria": 10}}, "Madileine Francely Américo": {"by_year_type": {"2025": {"mestrado": 2, "ic": 1}, "2023": {"mestrado": 1, "ic": 1}, "2022": {"mestrado": 2, "doutorado": 1, "ic": 1}, "2020": {"mestrado": 1}, "2019": {"mestrado": 1, "doutorado": 2, "tcc": 1, "ic": 1}, "2018": {"mestrado": 1, "doutorado": 1, "tcc": 1}, "2017": {"mestrado": 1, "ic": 1}, "2016": {"mestrado": 1, "tcc": 2}, "2015": {"mestrado": 1, "doutorado": 1, "tcc": 4, "ic": 1}, "2014": {"mestrado": 1, "tcc": 3}, "2013": {"mestrado": 1, "tcc": 1, "ic": 2}, "2008": {"mestrado": 1, "tcc": 1}, "2012": {"tcc": 2}, "2011": {"tcc": 1, "ic": 1}, "2024": {"ic": 1}, "2021": {"ic": 1}, "2010": {"ic": 1}}, "totals": {"mestrado": 14, "doutorado": 5, "tcc": 16, "ic": 12}}, "Maria Fernanda Spegiorin Salla Brune": {"by_year_type": {"2024": {"tcc": 1}, "2023": {"tcc": 1}, "2022": {"tcc": 5}, "2020": {"tcc": 1, "monitoria": 2}, "2019": {"tcc": 2, "monitoria": 3}, "2018": {"tcc": 1, "monitoria": 4}, "2017": {"tcc": 3, "monitoria": 5}, "2016": {"tcc": 4, "monitoria": 4}, "2014": {"tcc": 2, "monitoria": 4}, "2013": {"tcc": 4, "monitoria": 5}, "2012": {"tcc": 4, "monitoria": 3}, "2011": {"tcc": 3}, "2010": {"tcc": 1}, "2009": {"tcc": 3}, "2008": {"tcc": 4}, "2007": {"tcc": 2, "ic": 2}, "2021": {"monitoria": 1}, "2015": {"monitoria": 3}}, "totals": {"tcc": 41, "ic": 2, "monitoria": 34}}, "Kleber Eduardo de Campos": {"by_year_type": {"2024": {"mestrado": 1, "tcc": 2, "ic": 2, "monitoria": 3}, "2022": {"mestrado": 1, "tcc": 4, "monitoria": 3}, "2020": {"mestrado": 1, "tcc": 4, "ic": 3, "monitoria": 3}, "2019": {"mestrado": 1, "ic": 3, "monitoria": 3}, "2018": {"mestrado": 1, "tcc": 1, "ic": 3, "monitoria": 3}, "2017": {"mestrado": 2, "tcc": 3, "ic": 5, "monitoria": 4}, "2016": {"mestrado": 3, "tcc": 7, "ic": 6, "monitoria": 3}, "2015": {"mestrado": 3, "tcc": 4, "monitoria": 2}, "2013": {"mestrado": 1, "tcc": 4, "ic": 4}, "2012": {"mestrado": 1, "tcc": 1, "ic": 4, "monitoria": 1}, "2026": {"tcc": 1}, "2025": {"tcc": 2, "ic": 2, "monitoria": 3}, "2023": {"tcc": 4, "ic": 2, "monitoria": 3}, "2021": {"tcc": 5, "monitoria": 2}, "2014": {"tcc": 3, "ic": 4, "monitoria": 1}, "2005": {"ic": 2}, "2011": {"monitoria": 1}}, "totals": {"mestrado": 15, "tcc": 45, "ic": 40, "monitoria": 35}}, "Paula Cristina de Souza Souto": {"by_year_type": {"2022": {"mestrado": 1, "ic": 2}, "2020": {"mestrado": 4, "tcc": 1, "monitoria": 1}, "2019": {"mestrado": 2, "tcc": 1, "monitoria": 3}, "2018": {"mestrado": 2, "tcc": 1, "ic": 1}, "2015": {"mestrado": 2, "tcc": 2}, "2014": {"mestrado": 5, "tcc": 1}, "2013": {"mestrado": 2, "ic": 1}, "2012": {"mestrado": 1, "ic": 1}, "2011": {"mestrado": 1, "ic": 2}, "2004": {"outro": 2}, "2017": {"tcc": 1, "ic": 1}, "2008": {"tcc": 1, "ic": 3}, "2007": {"tcc": 5, "ic": 7}, "2006": {"tcc": 1}, "2005": {"tcc": 4}, "2021": {"ic": 1}, "2016": {"ic": 1}, "2009": {"ic": 2}}, "totals": {"mestrado": 20, "outro": 2, "tcc": 18, "ic": 22, "monitoria": 4}}};
+const ID_BY_NAME = {"Adenilda Honorio-França": "Adenilda", "Ana Paula Morbio": "AnaPaula", "Carlos Kusano Bucalen Ferrari": "Carlos", "Danny Laura Gomes Fagundes": "Danny", "Eduardo Luzía França": "Eduardo", "Eliane Aparecida Suchara": "Eliane", "Fabiana Morandi Jordão": "Fabiana", "Flávia Lucia David": "Flavia", "Gustavo Tadeu Volpato": "Gustavo", "Karina da Silva Chaves": "Karina", "Kleber Eduardo de Campos": "Kleber", "Luana dos Anjos Ramos": "Luana", "Ludier Kesser Santos Silva": "Ludier", "Madileine Francely Américo": "Madileine", "Maria Fernanda Spegiorin Salla Brune": "MariaFernanda", "Maximilian Wilhelm Brune": "Maximilian", "Paula Cristina de Souza Souto": "Paula", "Paulo Roberto da Fonseca Filho": "Paulo", "Renan dos Santos Araújo": "Renan", "Thais Leal Silva": "Thais", "Satie Katagiri": "Satie"};
+const ORIENT_COLORS = {"posdoc": "#5a3825", "doutorado": "#c0392b", "mestrado": "#d68a1f", "ic": "#5b4ea3", "extensao": "#2e8b57", "tcc": "#0d7a6c", "monitoria": "#1c8fc0", "outro": "#9e9e9e"};
+const ORIENT_LABELS = {"posdoc": "Supervisão de pós-doutorado", "doutorado": "Doutorado", "mestrado": "Mestrado", "ic": "Iniciação científica/tecnológica", "extensao": "Extensão", "tcc": "Trabalho de conclusão de curso", "monitoria": "Monitoria", "outro": "Outras naturezas"};
+const ORIENT_ORDER = ["posdoc", "doutorado", "mestrado", "ic", "extensao", "tcc", "monitoria", "outro"];
+const TOTAL_DOCENTES = 21;
+const MEDALS = ['\u{1F947}','\u{1F948}','\u{1F949}'];
+</script>
+<script>
+function shortName(full){
+  const parts = full.split(' ').filter(w => w.length > 2);
+  return parts.slice(0,2).join(' ');
+}
+
+function renderStats(){
+  const totals = {};
+  Object.values(ORIENT_BY_PROF).forEach(d => {
+    Object.entries(d.totals).forEach(([k,v]) => { totals[k] = (totals[k]||0) + v; });
+  });
+  const totalGeral = Object.values(totals).reduce((a,b)=>a+b,0);
+  const row = document.getElementById('stats-row');
+  const pills = [[totalGeral,'Total geral']].concat(ORIENT_ORDER.filter(k=>totals[k]>0).map(k=>[totals[k], ORIENT_LABELS[k]]));
+  row.innerHTML = pills.map(([v,l]) => `<div class="stat-pill"><div class="sv">${v}</div><div class="sl">${l}</div></div>`).join('');
+  const nProfs = Object.keys(ORIENT_BY_PROF).length;
+  document.getElementById('coverageNote').textContent = `Curr\u00edculo Lattes processado para ${nProfs} de ${TOTAL_DOCENTES} docentes.`;
+}
+
+function drawChartByYear(){
+  const byYear = {};
+  Object.values(ORIENT_BY_PROF).forEach(d => {
+    Object.entries(d.by_year_type).forEach(([y, types]) => {
+      byYear[y] = byYear[y] || {};
+      Object.entries(types).forEach(([k,v]) => { byYear[y][k] = (byYear[y][k]||0) + v; });
+    });
+  });
+  const years = Object.keys(byYear).sort();
+  const canvas = document.getElementById('chartByYear');
+  const wrap = document.getElementById('chartByYear-wrap');
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const padL = 32, padB = 28, padT = 10, padR = 10;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const maxV = Math.max(...years.map(y => Object.values(byYear[y]).reduce((a,b)=>a+b,0)), 1);
+  const bw = plotW / years.length;
+  ctx.strokeStyle = '#eef1f6'; ctx.lineWidth = 1; ctx.font = '9px system-ui'; ctx.fillStyle = '#9aaab8';
+  for (let g = 0; g <= 4; g++) {
+    const yy = padT + plotH - (g/4)*plotH;
+    ctx.beginPath(); ctx.moveTo(padL, yy); ctx.lineTo(W-padR, yy); ctx.stroke();
+    ctx.fillText(Math.round(maxV*g/4), 2, yy+3);
+  }
+  const bars = [];
+  years.forEach((y, i) => {
+    const d = byYear[y];
+    const x = padL + i*bw + bw*0.12;
+    const w = bw*0.76;
+    let yBase = padT + plotH;
+    [...ORIENT_ORDER].reverse().forEach(key => {
+      const v = d[key] || 0;
+      if (!v) return;
+      const h = (v/maxV)*plotH;
+      ctx.fillStyle = ORIENT_COLORS[key];
+      ctx.fillRect(x, yBase-h, w, h);
+      bars.push({x, y: yBase-h, w, h, key, v, year: y});
+      yBase -= h;
+    });
+    if (years.length <= 30 || i % 2 === 0) {
+      ctx.save();
+      ctx.fillStyle = '#7a8fa8'; ctx.font = '8.5px system-ui'; ctx.textAlign='center';
+      ctx.translate(x+w/2, H-8); ctx.fillText(y, 0, 0);
+      ctx.restore();
+    }
+  });
+  const tooltip = document.getElementById('tooltipYear');
+  canvas.onmousemove = (ev) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = ev.clientX - rect.left, my = ev.clientY - rect.top;
+    const hit = bars.find(b => mx>=b.x && mx<=b.x+b.w && my>=b.y && my<=b.y+b.h);
+    if (hit) {
+      tooltip.textContent = `${hit.year} \u2014 ${ORIENT_LABELS[hit.key]}: ${hit.v}`;
+      tooltip.style.left = (mx+8)+'px'; tooltip.style.top = (my-8)+'px'; tooltip.style.opacity = 1;
+    } else { tooltip.style.opacity = 0; }
+  };
+  canvas.onmouseleave = () => { tooltip.style.opacity = 0; };
+
+  const legend = document.getElementById('legendYear');
+  const present = new Set(); years.forEach(y => Object.keys(byYear[y]).forEach(k => present.add(k)));
+  legend.innerHTML = ORIENT_ORDER.filter(k=>present.has(k)).map(k =>
+    `<span><i style="background:${ORIENT_COLORS[k]}"></i>${ORIENT_LABELS[k]}</span>`).join('');
+}
+
+function drawChartByProf(){
+  const profs = Object.entries(ORIENT_BY_PROF).map(([name, d]) => {
+    const total = Object.values(d.totals).reduce((a,b)=>a+b,0);
+    return {name, totals: d.totals, total};
+  }).sort((a,b) => b.total - a.total);
+
+  const canvas = document.getElementById('chartByProf');
+  const wrap = document.getElementById('chartByProf-wrap');
+  const minBarSlot = 46;
+  const W = Math.max(wrap.clientWidth, profs.length * minBarSlot + 40);
+  const H = wrap.clientHeight;
+  canvas.width = W; canvas.height = H;
+  canvas.style.width = W+'px';
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const padL = 32, padB = 64, padT = 10, padR = 10;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const maxV = Math.max(...profs.map(p => p.total), 1);
+  const bw = plotW / profs.length;
+  ctx.strokeStyle = '#eef1f6'; ctx.lineWidth = 1; ctx.font = '9px system-ui'; ctx.fillStyle = '#9aaab8';
+  for (let g = 0; g <= 4; g++) {
+    const yy = padT + plotH - (g/4)*plotH;
+    ctx.beginPath(); ctx.moveTo(padL, yy); ctx.lineTo(W-padR, yy); ctx.stroke();
+    ctx.fillText(Math.round(maxV*g/4), 2, yy+3);
+  }
+  const bars = [];
+  profs.forEach((p, i) => {
+    const x = padL + i*bw + bw*0.15;
+    const w = bw*0.7;
+    let yBase = padT + plotH;
+    [...ORIENT_ORDER].reverse().forEach(key => {
+      const v = p.totals[key] || 0;
+      if (!v) return;
+      const h = (v/maxV)*plotH;
+      ctx.fillStyle = ORIENT_COLORS[key];
+      ctx.fillRect(x, yBase-h, w, h);
+      bars.push({x, y: yBase-h, w, h, key, v, prof: p.name});
+      yBase -= h;
+    });
+    bars.push({x, y: padT, w, h: plotH, prof: p.name, isWhole:true});
+    ctx.save();
+    ctx.fillStyle = '#5a6a7e'; ctx.font = '9px system-ui'; ctx.textAlign='right';
+    ctx.translate(x+w/2, H-10);
+    ctx.rotate(Math.PI/4);
+    ctx.fillText(shortName(p.name), 0, 0);
+    ctx.restore();
+  });
+  const tooltip = document.getElementById('tooltipProf');
+  canvas.onmousemove = (ev) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = ev.clientX - rect.left, my = ev.clientY - rect.top;
+    const hit = bars.find(b => !b.isWhole && mx>=b.x && mx<=b.x+b.w && my>=b.y && my<=b.y+b.h);
+    if (hit) {
+      tooltip.textContent = `${hit.prof} \u2014 ${ORIENT_LABELS[hit.key]}: ${hit.v}`;
+      tooltip.style.left = (mx+8)+'px'; tooltip.style.top = (my-8)+'px'; tooltip.style.opacity = 1;
+      canvas.style.cursor = 'pointer';
+    } else { tooltip.style.opacity = 0; canvas.style.cursor = 'default'; }
+  };
+  canvas.onmouseleave = () => { tooltip.style.opacity = 0; };
+  canvas.onclick = (ev) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = ev.clientX - rect.left, my = ev.clientY - rect.top;
+    const hit = bars.find(b => mx>=b.x && mx<=b.x+b.w && my>=padT && my<=padT+plotH);
+    if (hit) {
+      const id = ID_BY_NAME[hit.prof];
+      if (id) window.location.href = `perfil-${id.toLowerCase()}.html`;
+    }
+  };
+
+  const legend = document.getElementById('legendProf');
+  const present = new Set(); profs.forEach(p => Object.keys(p.totals).forEach(k => present.add(k)));
+  legend.innerHTML = ORIENT_ORDER.filter(k=>present.has(k)).map(k =>
+    `<span><i style="background:${ORIENT_COLORS[k]}"></i>${ORIENT_LABELS[k]}</span>`).join('');
+}
+
+function renderTable(){
+  const profs = Object.entries(ORIENT_BY_PROF).map(([name, d]) => {
+    const total = Object.values(d.totals).reduce((a,b)=>a+b,0);
+    return {name, totals: d.totals, total};
+  });
+
+  // ranking por categoria (top 3 de cada coluna recebem medalha)
+  const medalByCatProf = {}; // "cat|profName" -> indice da medalha (0,1,2)
+  ORIENT_ORDER.forEach(cat => {
+    const ranked = profs.filter(p => (p.totals[cat]||0) > 0)
+      .sort((a,b) => (b.totals[cat]||0) - (a.totals[cat]||0));
+    ranked.slice(0,3).forEach((p,i) => { medalByCatProf[cat+'|'+p.name] = i; });
+  });
+
+  // ranking geral (top 3 do total recebem troféu)
+  const rankedTotal = [...profs].sort((a,b) => b.total - a.total);
+  const trophyByProf = {};
+  rankedTotal.slice(0,3).forEach((p,i) => { trophyByProf[p.name] = i; });
+
+  const sortedForDisplay = rankedTotal;
+  const tbody = document.getElementById('tbl-body');
+  tbody.innerHTML = sortedForDisplay.map(p => {
+    const id = ID_BY_NAME[p.name];
+    const link = id ? `<a class="proflink" href="perfil-${id.toLowerCase()}.html">${p.name}</a>` : p.name;
+    const cells = ORIENT_ORDER.map(cat => {
+      const v = p.totals[cat] || 0;
+      const medalIdx = medalByCatProf[cat+'|'+p.name];
+      const medal = (medalIdx !== undefined) ? `<span class="medal">${MEDALS[medalIdx]}</span>` : '';
+      return `<td class="num">${v || '\u2014'}${medal}</td>`;
+    }).join('');
+    const trophyIdx = trophyByProf[p.name];
+    const trophy = (trophyIdx !== undefined) ? `<span class="trophy trophy-${trophyIdx}">\u{1F3C6}</span>` : '';
+    return `<tr><td>${link}</td>${cells}<td class="num">${trophy}<strong>${p.total}</strong></td></tr>`;
+  }).join('');
+}
+
+renderStats();
+drawChartByYear();
+drawChartByProf();
+renderTable();
+window.addEventListener('resize', () => { drawChartByYear(); drawChartByProf(); });
+</script>
+
+<!-- ================= BOSQUE ACADÊMICO ================= -->
+<style>
+#bosque-section{max-width:1180px;margin:48px auto 8px;padding:0 18px}
+#bosque-section .bosque-head h2{font-family:var(--serif,Georgia,serif);color:var(--blue,#003d7c);font-size:1.5rem;margin-bottom:6px}
+#bosque-section .bosque-sub{color:var(--muted,#5a6a7e);font-size:.95rem;max-width:900px;line-height:1.5}
+.bosque-legend{display:flex;flex-wrap:wrap;gap:10px 18px;margin:14px 0 10px;font-size:.82rem;color:#38505f}
+.bosque-legend span{display:inline-flex;align-items:center;gap:5px}
+.bosque-forest{position:relative;width:100%;height:560px;border:1px solid var(--border,#dde3ec);border-radius:16px;overflow:hidden;
+  background:linear-gradient(#eaf3fb 0%,#dfeef7 42%,#e9f3e2 43%,#d7ecc4 78%,#c7e2ad 100%);
+  box-shadow:inset 0 -30px 60px rgba(80,120,60,.10)}
+.bosque-forest::after{content:"";position:absolute;left:0;right:0;bottom:0;height:44%;
+  background:radial-gradient(120% 60% at 50% 120%,rgba(120,160,90,.28),transparent 70%);pointer-events:none}
+.tree{position:absolute;transform:translate(-50%,-100%);cursor:pointer;transition:transform .16s ease, filter .16s ease;
+  transform-origin:bottom center;text-decoration:none;filter:drop-shadow(0 4px 3px rgba(30,50,20,.18))}
+.tree:hover{filter:drop-shadow(0 8px 7px rgba(30,50,20,.30)) brightness(1.05);z-index:999 !important}
+.tree.nolink{cursor:default}
+.tree .sp{position:absolute;top:-2px;left:50%;transform:translate(-50%,-100%);font-size:14px;pointer-events:none;
+  opacity:0;transition:opacity .16s}
+.tree:hover .sp{opacity:1}
+.bosque-tip{position:fixed;z-index:1000;pointer-events:none;max-width:280px;background:#0f2233;color:#eef4fb;
+  border:1px solid #21445f;border-radius:10px;padding:10px 12px;font-size:.82rem;line-height:1.45;
+  box-shadow:0 10px 26px rgba(0,0,0,.32);opacity:0;transition:opacity .12s;transform:translateY(2px)}
+.bosque-tip.on{opacity:1}
+.bosque-tip .tt-name{font-family:var(--serif,Georgia,serif);font-weight:700;font-size:.95rem;color:#fff;margin-bottom:2px}
+.bosque-tip .tt-area{color:#bcd4e6;margin-bottom:6px}
+.bosque-tip .tt-sp{margin-bottom:6px}
+.bosque-tip .tt-grid{display:grid;grid-template-columns:auto auto;gap:2px 14px}
+.bosque-tip .tt-grid b{color:#ffd98a;font-weight:700}
+.bosque-tip .tt-go{margin-top:7px;color:#8fd0ff;font-size:.76rem}
+.bosque-foot{font-size:.78rem;color:var(--muted,#5a6a7e);margin:8px 2px 0}
+</style>
+
+<div id="bosque-section">
+  <div class="bosque-head">
+    <h2>🌳 Bosque Acadêmico &mdash; genealogia dos docentes</h2>
+    <p class="bosque-sub">Cada docente do curso &eacute; uma <b>&aacute;rvore brasileira</b> cujo <b>porte</b> reflete sua descend&ecirc;ncia acad&ecirc;mica (orientandos e gera&ccedil;&otilde;es). Passe o mouse sobre uma &aacute;rvore para ver os detalhes e <b>clique</b> para abrir o perfil na <b>Plataforma Ac&aacute;cia</b>.</p>
+  </div>
+  <div class="bosque-legend" id="bosque-legend"></div>
+  <div class="bosque-forest" id="bosque-forest"></div>
+  <p class="bosque-foot">Fonte: Plataforma Ac&aacute;cia (plataforma-acacia.org) + registros de orienta&ccedil;&atilde;o do painel. Porte proporcional &agrave; descend&ecirc;ncia (DS).</p>
+</div>
+
+<script>
+(function(){
+  const TREES = [{"id": "Eduardo", "name": "Eduardo Luzía França", "area": "Imunologia", "especie": "Jacarandá", "emoji": "🌸", "DS": 96, "FC": 65, "FT": 4, "G": 2, "leaves": 85, "flowers": 61, "roots": 4, "url": "https://plataforma-acacia.org/profile/eduardo-luzia-franca/"}, {"id": "Adenilda", "name": "Adenilda Honorio-França", "area": "Imunologia", "especie": "Jacarandá", "emoji": "🌸", "DS": 80, "FC": 59, "FT": 6, "G": 2, "leaves": 95, "flowers": 53, "roots": 2, "url": "https://plataforma-acacia.org/profile/adenilda-cristina-honorio-franca/"}, {"id": "Gustavo", "name": "Gustavo Tadeu Volpato", "area": "Morfologia", "especie": "Jatobá", "emoji": "🌳", "DS": 28, "FC": 22, "FT": 4, "G": 2, "leaves": 137, "flowers": 18, "roots": 3, "url": "https://plataforma-acacia.org/profile/gustavo-tadeu-volpato/"}, {"id": "Madileine", "name": "Madileine Francely Américo", "area": "Fisiologia", "especie": "Jatobá", "emoji": "🌳", "DS": 27, "FC": 20, "FT": 4, "G": 2, "leaves": 28, "flowers": 16, "roots": 2, "url": "https://plataforma-acacia.org/profile/madileine-francely-americo/"}, {"id": "Paula", "name": "Paula Cristina de Souza Souto", "area": "Imunologia", "especie": "Ipê", "emoji": "🌸", "DS": 24, "FC": 20, "FT": 1, "G": 2, "leaves": 46, "flowers": 19, "roots": 1, "url": "https://plataforma-acacia.org/profile/paula-cristina-de-souza-souto/"}, {"id": "Kleber", "name": "Kleber Eduardo de Campos", "area": "Fisiologia", "especie": "Ipê", "emoji": "🌸", "DS": 16, "FC": 15, "FT": 1, "G": 2, "leaves": 120, "flowers": 14, "roots": 1, "url": "https://plataforma-acacia.org/profile/kleber-eduardo-de-campos/"}, {"id": "Danny", "name": "Danny Laura Gomes Fagundes", "area": "Parasitologia", "especie": "Araucária", "emoji": "🌲", "DS": 0, "FC": 0, "FT": 0, "G": 0, "leaves": 12, "flowers": 0, "roots": 1, "url": "https://plataforma-acacia.org/profile/danny-laura-gomes-fagundes1/"}, {"id": "Luana", "name": "Luana dos Anjos Ramos", "area": "Morfologia/Parasitologia", "especie": "Cajueiro", "emoji": "🌰", "DS": 2, "FC": 2, "FT": 0, "G": 1, "leaves": 46, "flowers": 2, "roots": 3, "url": "https://plataforma-acacia.org/profile/luana-dos-anjos-ramos/"}, {"id": "Carlos", "name": "Carlos Kusano Bucalen Ferrari", "area": "Saúde Coletiva", "especie": "Cajueiro", "emoji": "🌰", "DS": 2, "FC": 2, "FT": 0, "G": 1, "leaves": 38, "flowers": 2, "roots": 1, "url": "https://plataforma-acacia.org/profile/carlos-kusano-bucalen-ferrari/"}, {"id": "Ludier", "name": "Ludier Kesser Santos Silva", "area": "Bioquímica", "especie": "Cajueiro", "emoji": "🌰", "DS": 1, "FC": 1, "FT": 0, "G": 1, "leaves": 23, "flowers": 1, "roots": 3, "url": "https://plataforma-acacia.org/profile/ludier-kesser-santos-silva/"}, {"id": "Fabiana", "name": "Fabiana Morandi Jordão", "area": "Parasitologia", "especie": "Cajueiro", "emoji": "🌰", "DS": 0, "FC": 0, "FT": 0, "G": 0, "leaves": 48, "flowers": 0, "roots": 1, "url": "https://plataforma-acacia.org/profile/fabiana-morandi-jordao/"}, {"id": "Thais", "name": "Thais Leal Silva", "area": "Fisiologia", "especie": "Cajueiro", "emoji": "🌰", "DS": 0, "FC": 0, "FT": 0, "G": 0, "leaves": 25, "flowers": 0, "roots": 3, "url": "https://plataforma-acacia.org/profile/thais-leal-silva/"}, {"id": "AnaPaula", "name": "Ana Paula Morbio", "area": "Angiologia", "especie": "Cajueiro", "emoji": "🌰", "DS": 0, "FC": 0, "FT": 0, "G": 0, "leaves": 22, "flowers": 0, "roots": 1, "url": "https://plataforma-acacia.org/profile/ana-paula-morbio/"}, {"id": "Karina", "name": "Karina da Silva Chaves", "area": "Microbiologia", "especie": "Cajueiro", "emoji": "🌰", "DS": 0, "FC": 0, "FT": 0, "G": 0, "leaves": 22, "flowers": 0, "roots": 0, "url": "https://plataforma-acacia.org/profile/karina-da-silva-chaves1/"}, {"id": "Eliane", "name": "Eliane Aparecida Suchara", "area": "Farmácia/Toxicologia", "especie": "Figueira", "emoji": "🌳", "DS": 2, "FC": 2, "FT": 0, "G": 1, "leaves": 75, "flowers": 2, "roots": 2, "url": "https://plataforma-acacia.org/profile/eliane-aparecida-suchara/"}, {"id": "Flavia", "name": "Flávia Lucia David", "area": "Farmacologia", "especie": "Figueira", "emoji": "🌳", "DS": 0, "FC": 0, "FT": 0, "G": 0, "leaves": 94, "flowers": 0, "roots": 2, "url": "https://plataforma-acacia.org/profile/flavia-lucia-david/"}, {"id": "MariaFernanda", "name": "Maria Fernanda Spegiorin Salla Brune", "area": "Bioquímica Clínica", "especie": "Figueira", "emoji": "🌳", "DS": 0, "FC": 0, "FT": 0, "G": 0, "leaves": 77, "flowers": 0, "roots": 2, "url": "https://plataforma-acacia.org/profile/maria-fernanda-spegiorin-salla-brune/"}, {"id": "Paulo", "name": "Paulo Roberto da Fonseca Filho", "area": "Biofísica", "especie": "Figueira", "emoji": "🌳", "DS": 0, "FC": 0, "FT": 0, "G": 0, "leaves": 64, "flowers": 0, "roots": 1, "url": "https://plataforma-acacia.org/profile/paulo-roberto-da-fonseca-filho/"}, {"id": "Renan", "name": "Renan dos Santos Araújo", "area": "Biologia Celular", "especie": "Pequizeiro", "emoji": "🌳", "DS": 1, "FC": 1, "FT": 0, "G": 1, "leaves": 12, "flowers": 1, "roots": 4, "url": "https://plataforma-acacia.org/profile/renan-dos-santos-araujo/"}, {"id": "Satie", "name": "Satie Katagiri", "area": "Medicina Veterinária", "especie": "Pequizeiro", "emoji": "🌳", "DS": 0, "FC": 0, "FT": 0, "G": 0, "leaves": 9, "flowers": 0, "roots": 1, "url": "https://plataforma-acacia.org/profile/satie-katagiri/"}, {"id": "Maximilian", "name": "Maximilian Wilhelm Brune", "area": "Imagenologia", "especie": "Muda", "emoji": "🌱", "DS": 0, "FC": 0, "FT": 0, "G": 0, "leaves": 3, "flowers": 0, "roots": 3, "url": "https://plataforma-acacia.org/profile/maximilian-wilhelm-brune1/"}];
+  const forest = document.getElementById('bosque-forest');
+  const tip = document.createElement('div'); tip.className='bosque-tip'; document.body.appendChild(tip);
+
+  // seeded RNG (mulberry32) for stable "random" layout
+  function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296;};}
+  const rnd = mulberry32(20260721);
+
+  const maxDS = Math.max(...TREES.map(t=>t.DS||0), 1);
+
+  // area -> canopy hue (greens/olives)
+  const areas=[...new Set(TREES.map(t=>t.area))];
+  function hueFor(area){const i=areas.indexOf(area);return 95 + (i*23)%70;} // 95..165
+
+  function treeSVG(t, size){
+    const h=size, w=size*0.82;
+    const hue=hueFor(t.area);
+    const c1=`hsl(${hue} 42% 38%)`, c2=`hsl(${hue} 46% 47%)`, c3=`hsl(${hue} 40% 30%)`;
+    const trunkW=Math.max(5,size*0.10), trunkH=size*0.34;
+    const cx=w/2, groundY=h-1;
+    // canopy radius scales with size
+    const R=size*0.34;
+    // flower blossoms
+    let blossoms='';
+    if(t.flowers>0){
+      const n=Math.min(7, 2+Math.round(t.flowers/12));
+      const fr=mulberry32(t.name.length*97+t.FC);
+      for(let i=0;i<n;i++){
+        const a=fr()*Math.PI*2, rr=R*(0.35+fr()*0.6);
+        const px=cx+Math.cos(a)*rr, py=(h-trunkH-R)+Math.sin(a)*rr*0.9;
+        blossoms+=`<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="${(size*0.045).toFixed(1)}" fill="#f4a6c6"/>`;
+      }
+    }
+    const cyTop=h-trunkH-R;
+    return `<svg width="${w.toFixed(0)}" height="${h.toFixed(0)}" viewBox="0 0 ${w.toFixed(0)} ${h.toFixed(0)}" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="${cx.toFixed(1)}" cy="${(groundY-1).toFixed(1)}" rx="${(w*0.34).toFixed(1)}" ry="${(size*0.05).toFixed(1)}" fill="rgba(40,60,25,.18)"/>
+      <rect x="${(cx-trunkW/2).toFixed(1)}" y="${(h-trunkH).toFixed(1)}" width="${trunkW.toFixed(1)}" height="${trunkH.toFixed(1)}" rx="${(trunkW*0.4).toFixed(1)}" fill="#7a5230"/>
+      <circle cx="${(cx-R*0.55).toFixed(1)}" cy="${(cyTop+R*0.25).toFixed(1)}" r="${(R*0.72).toFixed(1)}" fill="${c1}"/>
+      <circle cx="${(cx+R*0.55).toFixed(1)}" cy="${(cyTop+R*0.25).toFixed(1)}" r="${(R*0.72).toFixed(1)}" fill="${c3}"/>
+      <circle cx="${cx.toFixed(1)}" cy="${cyTop.toFixed(1)}" r="${R.toFixed(1)}" fill="${c2}"/>
+      ${blossoms}
+    </svg>`;
+  }
+
+  // grid-jitter placement (painter order: top rows first / smaller-back)
+  const cols=6, rows=4;
+  const cells=[];
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++)cells.push({r,c});
+  // shuffle cells seeded
+  for(let i=cells.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[cells[i],cells[j]]=[cells[j],cells[i]];}
+
+  // order trees big->small so big ones get placed; then assign to cells
+  const order=[...TREES].sort((a,b)=>(b.DS||0)-(a.DS||0));
+  const placed=order.map((t,i)=>{
+    const cell=cells[i%cells.length];
+    const x=( (cell.c+0.5)/cols + (rnd()-0.5)*0.11 )*100;
+    const y=( 0.30 + (cell.r/(rows-1))*0.66 + (rnd()-0.5)*0.06 )*100; // 30%..96%
+    return {t, x:Math.max(4,Math.min(96,x)), y:Math.max(30,Math.min(97,y))};
+  });
+  // draw back (top) to front (bottom)
+  placed.sort((a,b)=>a.y-b.y);
+
+  placed.forEach(p=>{
+    const t=p.t;
+    const depth=(p.y-30)/67;                 // 0 back .. 1 front
+    const sizeBase=52 + Math.sqrt((t.DS||0)/maxDS)*70;   // by descendência
+    const size=Math.round(sizeBase*(0.8+depth*0.5));      // front bigger
+    const el=document.createElement(t.url?'a':'div');
+    el.className='tree'+(t.url?'':' nolink');
+    if(t.url){el.href=t.url;el.target='_blank';el.rel='noopener';}
+    el.style.left=p.x+'%'; el.style.top=p.y+'%';
+    el.style.zIndex=Math.round(p.y*10);
+    el.innerHTML=treeSVG(t,size)+`<span class="sp">${t.emoji||''}</span>`;
+    const td=t.url?'<div class="tt-go">🔗 Clique para abrir na Plataforma Acácia</div>':'<div class="tt-go" style="color:#9fb3c4">Perfil na Acácia não disponível</div>';
+    el.addEventListener('mouseenter',()=>{
+      tip.innerHTML=`<div class="tt-name">${t.name}</div>`+
+        `<div class="tt-area">${t.area||''}</div>`+
+        `<div class="tt-sp">${t.emoji||''} <b>${t.especie||''}</b></div>`+
+        `<div class="tt-grid">`+
+          `<span>Descendência</span><b>${t.DS}</b>`+
+          `<span>Fecundidade</span><b>${t.FC}</b>`+
+          `<span>Fertilidade</span><b>${t.FT}</b>`+
+          `<span>Gerações</span><b>${t.G}</b>`+
+        `</div>`+tit(t)+td;
+      tip.classList.add('on');
+    });
+    el.addEventListener('mousemove',(e)=>{
+      let x=e.clientX+16, y=e.clientY+16;
+      const r=tip.getBoundingClientRect();
+      if(x+r.width>window.innerWidth-8)x=e.clientX-r.width-16;
+      if(y+r.height>window.innerHeight-8)y=e.clientY-r.height-16;
+      tip.style.left=x+'px'; tip.style.top=y+'px';
+    });
+    el.addEventListener('mouseleave',()=>tip.classList.remove('on'));
+    forest.appendChild(el);
+  });
+  function tit(t){ return ''; }
+
+  // legend: species present
+  const specs={}; TREES.forEach(t=>{if(t.especie)specs[t.especie]=t.emoji;});
+  document.getElementById('bosque-legend').innerHTML =
+    Object.entries(specs).map(([s,e])=>`<span>${e} ${s}</span>`).join('') +
+    `<span style="color:#8a97a6">· ${TREES.length} docentes</span>`;
+})();
+</script>
+<!-- ================= /BOSQUE ACADÊMICO ================= -->
+
+</body>
+</html>

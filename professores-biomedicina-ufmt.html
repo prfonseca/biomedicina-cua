@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Professores — Biomedicina UFMT Araguaia</title>
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="estilo.css">
+<script src="site.js" defer></script>
+<style>
+/* Específico desta página — usa apenas os tokens de estilo.css */
+.toolbar { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); flex-wrap: wrap; margin-bottom: var(--s5); }
+.toolbar .caption { font-variant-numeric: tabular-nums; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--s4); }
+@media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+
+.prof { display: flex; flex-direction: column; overflow: hidden; transition: box-shadow .25s var(--ease), transform .25s var(--ease); }
+.prof:hover { box-shadow: var(--shadow-2); transform: translateY(-2px); }
+.prof[hidden] { display: none; }
+
+.prof__top { display: flex; gap: var(--s4); padding: var(--s5) var(--s5) var(--s4); color: inherit; }
+.prof__top:hover { color: inherit; }
+.avatar { width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0; position: relative; overflow: hidden; background: var(--fill); }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.avatar__ini {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 22px; font-weight: 600; letter-spacing: .02em;
+  color: var(--label-2); background: var(--fill);
+}
+.avatar img + .avatar__ini { display: none; }
+.avatar.is-fallback img { display: none; }
+.avatar.is-fallback .avatar__ini { display: flex; }
+
+.prof__rank { font-size: var(--fs-caption); font-weight: 600; color: var(--label-3); margin-bottom: 2px; display: flex; align-items: center; gap: 6px; }
+.prof[data-rk="titular"]   .prof__rank .dot { background: var(--gold); }
+.prof[data-rk="associado"] .prof__rank .dot { background: var(--tint); }
+.prof[data-rk="adjunto"]   .prof__rank .dot { background: var(--teal); }
+.prof__name { font-family: var(--font-display); font-size: var(--fs-headline); line-height: var(--lh-headline); font-weight: 600; letter-spacing: -.01em; margin: 0 0 6px; color: var(--label); }
+.prof__area { font-size: var(--fs-callout); color: var(--label-2); margin: 0 0 6px; }
+.prof__deg { font-size: var(--fs-footnote); color: var(--label-3); line-height: 1.45; margin: 0; }
+
+.prof__discs { padding: 0 var(--s5) var(--s4); flex: 1; }
+.prof__discs h3 { font-size: var(--fs-caption); font-weight: 600; color: var(--label-3); margin: 0 0 var(--s2); }
+.prof__discs .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.prof__foot {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s3);
+  padding: var(--s3) var(--s5); border-top: 1px solid var(--separator); background: var(--surface-2);
+}
+.links { display: flex; gap: 6px; flex-wrap: wrap; }
+.lico {
+  width: 32px; height: 32px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center;
+  background: var(--surface); border: 1px solid var(--separator); transition: border-color .2s var(--ease), transform .2s var(--ease);
+}
+.lico:hover { border-color: var(--separator-2); transform: translateY(-1px); }
+.lico svg { width: 17px; height: 17px; }
+@media (prefers-color-scheme: dark) { :root:not(.is-embed) .lico .si { stroke: var(--label-2); } }
+@media (pointer: coarse) { .lico { width: 40px; height: 40px; } }
+
+.empty { padding: var(--s7) var(--s5); text-align: center; color: var(--label-3); }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="page-header">
+    <p class="page-eyebrow">Corpo docente permanente</p>
+    <h1 class="page-title">Professores</h1>
+    <p class="page-lede">21 professores doutores, com formação em instituições como USP, UNICAMP, UNESP e UFMG, atuando da Imunologia à Imagenologia.</p>
+    <details class="disclosure">
+      <summary>Sobre o corpo docente</summary>
+      <div class="disclosure__body">
+        <p>O curso de Biomedicina do Campus Universitário do Araguaia conta com um corpo docente permanente composto por 21 professores doutores, sendo 14 lotados diretamente no curso e os demais vinculados a outros cursos e institutos do campus, que contribuem de forma permanente com atividades de ensino e orientação.</p>
+        <p>Juntos, esses profissionais reúnem formação em instituições de referência nacional — USP, UNICAMP, UNESP, UFMG, UFV, UFSCAR e UFSC —, atuando em áreas que vão da Imunologia e Bioquímica à Parasitologia, Imagenologia e Biologia Molecular. A seguir, os perfis dos docentes, com especialidades, titulações, disciplinas ministradas e dados de contato e produção científica.</p>
+      </div>
+    </details>
+  </header>
+
+  <div class="toolbar">
+    <div class="segmented" role="group" aria-label="Filtrar por cargo" id="seg"></div>
+    <span class="caption" id="contagem" aria-live="polite"></span>
+  </div>
+
+  <div class="grid" id="grid"></div>
+  <p class="empty" id="vazio" hidden>Nenhum professor nesta categoria.</p>
+
+</main>
+
+<script>
+/* ── Fotos ── */
+const FOTO = {
+  Adenilda:     "http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4799728A7",
+  AnaPaula:     "http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4778696J1",
+  Carlos:       "http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4799612H8",
+  Danny:        "http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4243538D2",
+  Eduardo:      "http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4704425Y2",
+  Eliane:       "https://cms.ufmt.br/files/page_images/1670435097.png",
+  Fabiana:      "http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4525591E7",
+  Flavia:       "http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4763500A6",
+  Gustavo:      "http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4767296A0",
+  Karina:       "http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4261708U0",
+  Kleber:       "http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4764758H4",
+  Luana:        "http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4746077U0",
+  Ludier:       "http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4778248T0",
+  Madileine:    "http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4762155D4",
+  MariaFernanda:"http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4751926T9",
+  Maximilian:   "http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4458175P6",
+  Paula:        "http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4770675U5",
+  Paulo:        "http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4759375D6",
+  Renan:        "http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4475777Y5",
+  Thais:        "https://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4301571U3",
+  Satie:        "http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4758689P3"
+};
+
+/* ── Dados dos professores ── */
+const PROFS = [
+  { id:"Adenilda", nome:"Adenilda Honorio-França", tit:"Dra.", cargo:"Professora Titular", rk:"titular",
+    grad:"Biomedicina (UNESP, 1992)", dout:"Doutorado em Imunologia, USP, 1998",
+    area:"Imunologia e Análises Clínicas",
+    disc:["Hematologia Clínica","Imunologia Clínica","Estágio Supervisionado I"],
+    la:"http://lattes.cnpq.br/1037328323116064", em:"adenilda@ufmt.br",
+    sc:"https://scholar.google.com/citations?user=b3PJ_lwAAAAJ&hl=pt-BR&oi=ao",
+    rg:"https://www.researchgate.net/profile/Adenilda-Honorio-Franca",
+    or:"https://orcid.org/0000-0002-0452-9804" },
+
+  { id:"AnaPaula", nome:"Ana Paula Morbio", tit:"Dra.", cargo:"Professora Associada", rk:"associado",
+    grad:"Biomedicina (UNESP, 2002)", dout:"Doutorado em Bases Gerais da Cirurgia, UNESP, 2011",
+    area:"Isquemia, Reperfusão e Trombose",
+    disc:["Angiologia e Cardiologia","Genética Humana","Metodologia e Redação Científica","Sociologia e Antropologia"],
+    la:"http://lattes.cnpq.br/9976347874807159", em:"ana.morbio@ufmt.br",
+    or:"https://orcid.org/0000-0002-1348-8354" },
+
+  { id:"Carlos", nome:"Carlos Kusano Bucalen Ferrari", tit:"Dr.", cargo:"Professor Associado", rk:"associado",
+    grad:"Biomedicina (UNESP, 1993)", dout:"Doutorado em Nutrição em Saúde Pública, USP, 2002",
+    area:"Saúde Pública — Epidemiologia",
+    disc:["Epidemiologia","Saúde Pública","Tecnologias de Informação em Saúde Pública"],
+    la:"http://lattes.cnpq.br/9778999871896539", em:"carlos.ferrari@ufmt.br",
+    sc:"https://scholar.google.com/citations?hl=pt-BR&user=IaYRp-LULWcC",
+    rg:"https://www.researchgate.net/profile/Carlos-Ferrari",
+    or:"https://orcid.org/0000-0001-9325-1260", li:"https://www.linkedin.com/in/carlos-ferrari-66985943/" },
+
+  { id:"Danny", nome:"Danny Laura Gomes Fagundes", tit:"Dra.", cargo:"Professora Associada", rk:"associado",
+    grad:"Farmácia (UFMT, 2010)", dout:"Doutorado em Ginecologia, Obstetrícia e Mastologia, UNESP, 2014",
+    area:"Parasitologia Clínica",
+    disc:["Parasitologia Clínica"],
+    la:"http://lattes.cnpq.br/6871314744513521", em:"danny.triches@ufmt.br",
+    rg:"https://www.researchgate.net/profile/Danny-Fagundes-2",
+    or:"https://orcid.org/0000-0002-9971-1288" },
+
+  { id:"Eduardo", nome:"Eduardo Luzía França", tit:"Dr.", cargo:"Professor Titular", rk:"titular",
+    grad:"Biomedicina (UNESP, 1994)", dout:"Doutorado em Imunologia, USP, 2002",
+    area:"Citologia, Biologia Celular, Imunofisiologia",
+    disc:["Citologia Clínica","Estágio Supervisionado I","Patologia"],
+    la:"http://lattes.cnpq.br/3786649407711566", em:"eduardo.franca@ufmt.br",
+    sc:"https://scholar.google.com/citations?hl=pt-BR&user=UvV02uwAAAAJ",
+    rg:"https://www.researchgate.net/profile/Eduardo-Franca-2",
+    or:"https://orcid.org/0000-0002-1854-5397" },
+
+  { id:"Eliane", nome:"Eliane Aparecida Suchara", tit:"Dra.", cargo:"Professora Titular", rk:"titular",
+    grad:"Farmácia (UFSC, 2000)", dout:"Doutorado em Química Analítica, UFSC, 2007",
+    area:"Toxicologia",
+    disc:["Toxicologia","Análises Toxicológicas (opt.)"],
+    la:"http://lattes.cnpq.br/4504937180147524", em:"eliane.suchara@ufmt.br",
+    rg:"https://www.researchgate.net/profile/Eliane-Suchara",
+    or:"https://orcid.org/0000-0001-6225-3300" },
+
+  { id:"Fabiana", nome:"Fabiana Morandi Jordão", tit:"Dra.", cargo:"Professora Associada", rk:"associado",
+    grad:"Biomedicina (UNIMAR, 2003)", dout:"Doutorado em Parasitologia, USP, 2012",
+    area:"Microbiologia e Parasitologia",
+    disc:["Biossegurança e Primeiros Socorros","Estágio Supervisionado II","Microbiologia Clínica"],
+    la:"http://lattes.cnpq.br/7752905681664082", em:"fabiana.jordao@ufmt.br" },
+
+  { id:"Flavia", nome:"Flávia Lucia David", tit:"Dra.", cargo:"Professora Associada", rk:"associado",
+    grad:"Farmácia (USF, 1995)", dout:"Doutorado em Farmacologia, USP, 2001",
+    area:"Farmacologia",
+    disc:["Farmacologia I"],
+    la:"http://lattes.cnpq.br/7615102786293302", em:"flavia.david@ufmt.br",
+    rg:"https://www.researchgate.net/profile/Flavia_David",
+    or:"https://orcid.org/0000-0003-4388-4611" },
+
+  { id:"Gustavo", si:"https://www.fisiotox.com.br", nome:"Gustavo Tadeu Volpato", tit:"Dr.", cargo:"Professor Titular", rk:"titular",
+    grad:"Biomedicina (UNESP, 1997)", dout:"Doutorado em Ginecologia e Obstetrícia, UNESP, 2004",
+    area:"Embriologia",
+    disc:["Estágio Supervisionado I","Histologia","Embriologia","Embriologia Médica (opt.)"],
+    la:"http://lattes.cnpq.br/8276825973471698", em:"gustavo.volpato@ufmt.br",
+    sc:"https://scholar.google.com/citations?user=PzDCvPkAAAAJ&hl=pt-BR&oi=ao",
+    rg:"https://www.researchgate.net/profile/Gustavo-Volpato",
+    or:"https://orcid.org/0000-0002-4753-3264" },
+
+  { id:"Karina", nome:"Karina da Silva Chaves", tit:"Dra.", cargo:"Professora Associada", rk:"associado",
+    grad:"Ciência e Tecnologia de Laticínios (UFV, 2007)", dout:"Doutorado em Tecnologia de Alimentos, UNICAMP, 2014",
+    area:"Microbiologia",
+    disc:["Microbiologia Geral"],
+    la:"http://lattes.cnpq.br/1961940138335959", em:"karina.chaves@ufmt.br",
+    sc:"https://scholar.google.com/citations?hl=pt-BR&user=mXjcNHcAAAAJ",
+    rg:"https://www.researchgate.net/profile/Karina-Chaves-6",
+    or:"https://orcid.org/0000-0002-7454-898X" },
+
+  { id:"Kleber", si:"https://www.fisiotox.com.br", nome:"Kleber Eduardo de Campos", tit:"Dr.", cargo:"Professor Associado", rk:"associado",
+    grad:"Ciências Biológicas (UNESP, 1999) e Biomedicina (UNESP, 2001)", dout:"Doutorado em Ginecologia e Obstetrícia, UNESP, 2005",
+    area:"Bioquímica e Fisiologia Humana",
+    disc:["Bioética","Bioquímica","Botânica Médica (opt.)","Fisiologia Humana I"],
+    la:"http://lattes.cnpq.br/6939343303863367", em:"kleber.campos@ufmt.br",
+    sc:"https://scholar.google.com/citations?hl=pt-BR&user=vD3K_h8AAAAJ",
+    or:"https://orcid.org/0000-0001-6847-4577" },
+
+  { id:"Luana", nome:"Luana dos Anjos Ramos", tit:"Dra.", cargo:"Professora Associada", rk:"associado",
+    grad:"Fisioterapia (FSL, 1998)", dout:"Doutorado em Parasitologia, UFMG, 2015",
+    area:"Anatomia e Acupuntura",
+    disc:["Anatomia Humana","Anatomia Topográfica","Acupuntura","Neurobiologia"],
+    la:"http://lattes.cnpq.br/6674750361624537", em:"luana.ramos@ufmt.br",
+    sc:"https://scholar.google.com/citations?hl=pt-BR&user=RyIG4VEAAAAJ",
+    rg:"https://www.researchgate.net/profile/Luana-Dos-Anjos-Ramos",
+    or:"https://orcid.org/0000-0002-2754-7722", li:"https://www.linkedin.com/in/luana-anjos-ramos-5458b930/" },
+
+  { id:"Ludier", nome:"Ludier Kesser Santos Silva", tit:"Dra.", cargo:"Professora Associada", rk:"associado",
+    grad:"Farmácia (UFMT, 2004)", dout:"Doutorado em Bioquímica e Biologia Molecular, UFSCAR, 2012",
+    area:"Biologia Molecular",
+    disc:["Biologia Molecular Aplicada à Saúde","Estágio Supervisionado I","Farmacologia I","Fundamentos de Química I","Química Orgânica I"],
+    la:"http://lattes.cnpq.br/6696141539393072", em:"ludier.silva@ufmt.br",
+    or:"https://orcid.org/0009-0009-3666-1576" },
+
+  { id:"Madileine", si:"https://www.fisiotox.com.br", nome:"Madileine Francely Américo", tit:"Dra.", cargo:"Professora Associada", rk:"associado",
+    grad:"Biomedicina (UNESP, 2001)", dout:"Doutorado em Fisiologia, USP, 2008",
+    area:"Biofísica e Fisiologia",
+    disc:["Estágio Supervisionado I","Fisiologia Humana II","Introdução às Ciências Biomédicas","Trabalho de Curso"],
+    la:"http://lattes.cnpq.br/4097128727139521", em:"madileine.americo@ufmt.br",
+    sc:"https://scholar.google.com/citations?user=ahDbe9wAAAAJ&hl=pt-BR&oi=sra",
+    rg:"https://www.researchgate.net/profile/Madileine-Americo",
+    or:"https://orcid.org/0000-0001-8474-3765" },
+
+  { id:"MariaFernanda", nome:"Maria Fernanda Spegiorin Salla Brune", tit:"Dra.", cargo:"Professora Titular", rk:"titular",
+    grad:"Farmácia (UEL, 1998)", dout:"Doutorado em Bioquímica Agrícola, UFV, 2005",
+    area:"Bioquímica Clínica",
+    disc:["Bioquímica Clínica","Tópicos Especiais em Análises Clínicas (opt.)"],
+    la:"http://lattes.cnpq.br/6490966175710971", em:"maria.brune@ufmt.br",
+    or:"https://orcid.org/0000-0002-1822-0904" },
+
+  { id:"Maximilian", nome:"Maximilian Wilhelm Brune", tit:"Dr.", cargo:"Professor Associado", rk:"associado",
+    grad:"Odontologia (UNINCOR, 1999)", dout:"Doutorado em Parasitologia, UFMG, 2015",
+    area:"Imagenologia",
+    disc:["Imagenologia","Radiobiologia e Radioterapia","Estágio Supervisionado II"],
+    la:"http://lattes.cnpq.br/0281243147156534", em:"maximilian.brune@ufmt.br",
+    or:"https://orcid.org/0000-0001-9136-6873", li:"https://www.linkedin.com/in/max-brune-3b8817122/" },
+
+  { id:"Paula", nome:"Paula Cristina de Souza Souto", tit:"Dra.", cargo:"Professora Titular", rk:"titular",
+    grad:"Biomedicina (UNICAMP, 1999)", dout:"Doutorado em Genética e Biologia Molecular, UNICAMP, 2006",
+    area:"Imunologia, Análises Clínicas e Microbiologia",
+    disc:["Imunologia","Trabalho de Curso"],
+    la:"http://lattes.cnpq.br/2161765071682282", em:"paula.souto@ufmt.br",
+    sc:"https://scholar.google.com/citations?hl=pt-BR&user=4eY6uCwAAAAJ",
+    or:"https://orcid.org/0000-0002-1397-9612" },
+
+  { id:"Paulo", si:"https://www.paulofonseca.pro.br", nome:"Paulo Roberto da Fonseca Filho", tit:"Dr.", cargo:"Professor Associado", rk:"associado",
+    grad:"Física Médica (UNESP, 2007)", dout:"Doutorado em Biologia Geral e Aplicada, UNESP, 2014",
+    area:"Física e Imagens Médicas",
+    disc:["Biofísica de Instrumentação Médica","Estatística Geral","Fundamentos de Física","Fundamentos de Matemática","Informática Básica (opt.)","Princípios Físicos da Imagem Radiológica"],
+    la:"http://lattes.cnpq.br/2893682941511355", em:"paulofonseca@ufmt.br",
+    sc:"https://scholar.google.com/citations?hl=pt-BR&user=eLPoW0kAAAAJ",
+    rg:"https://www.researchgate.net/profile/Paulo-Fonseca-7",
+    ac:"https://ufmt.academia.edu/PauloFonseca",
+    pu:"https://publons.com/researcher/2745808/paulo-r-fonseca/",
+    or:"https://orcid.org/0000-0003-0016-5350",
+    ri:"https://www.webofscience.com/wos/author/record/C-4807-2012",
+    li:"https://www.linkedin.com/in/prfonseca" },
+
+  { id:"Renan", nome:"Renan dos Santos Araújo", tit:"Dr.", cargo:"Professor Adjunto", rk:"adjunto",
+    grad:"Ciências Biológicas (UFPI, 2011)", dout:"Doutorado em Biologia Celular e Estrutura, UFV, 2019",
+    area:"Biologia Celular",
+    disc:["Biologia Celular e Molecular"],
+    la:"http://lattes.cnpq.br/5098010655639692", em:"renan.araujo1@ufmt.br",
+    rg:"https://www.researchgate.net/profile/Renan-Dos-Santos-Araujo",
+    or:"https://orcid.org/0000-0002-8868-2012" },
+
+  { id:"Thais", nome:"Thais Leal Silva", tit:"Dra.", cargo:"Professora Adjunta", rk:"adjunto",
+    grad:"Biomedicina (UFMT, 2014)", dout:"Doutorado em Infectologia e Medicina Tropical, UFMG, 2021",
+    area:"Parasitologia e Imunologia",
+    disc:["Administração Laboratorial","Biofísica","Fundamentos de Estética","Parasitologia"],
+    la:"http://lattes.cnpq.br/0729056429666240", em:"thais.silva11@ufmt.br",
+    sc:"https://scholar.google.com/citations?user=GBj7f4cAAAAJ", li:"https://www.linkedin.com/in/tha%C3%ADs-leal-35b950217/" },
+
+  { id:"Satie", nome:"Satie Katagiri", tit:"Dra.", cargo:"Professora Associada", rk:"associado",
+    grad:"Medicina Veterinária (UFMT, 2003)", dout:"Doutorado em Medicina Veterinária, UNESP, 2009",
+    area:"Parasitologia Veterinária",
+    disc:["Saúde e Ambiente: Doenças Infecciosas Emergentes (opt.)"],
+    la:"http://lattes.cnpq.br/0449243259487450", em:"satievet@gmail.com",
+    or:"https://orcid.org/0000-0002-7812-2396" }
+];
+
+/* ── SVG icons ── */
+const ICON = {
+  si: { title:"Site pessoal",
+    svg:`<svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.3" stroke="#0d5c5a" stroke-width="1.4" class="si"/><path d="M2.7 10h14.6M10 2.7c2.2 2 3.4 4.7 3.4 7.3S12.2 15.3 10 17.3C7.8 15.3 6.6 12.6 6.6 10S7.8 4.7 10 2.7z" stroke="#0d5c5a" stroke-width="1.4" class="si"/></svg>` },
+  la: { title:"Currículo Lattes",
+    svg:`<svg viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="16" height="16" rx="3" fill="#003d7c" class="fi"/><text x="10" y="14.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#fff" class="ti">L</text></svg>` },
+  em: { title:"E-mail",
+    svg:`<svg viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2" stroke="#5a6a7e" stroke-width="1.4" class="si" fill="none"/><path d="M2 7l8 5 8-5" stroke="#5a6a7e" stroke-width="1.4" class="si"/></svg>` },
+  sc: { title:"Google Acadêmico",
+    svg:`<svg viewBox="0 0 20 20"><path d="M4.5 11.5L1 9 10 3l9 6-4.5 3C13.2 9.7 11.7 9 10 9s-3.2.7-4.5 2.5z" fill="#4285F4" class="fi"/><circle cx="10" cy="14.5" r="3.5" fill="#4285F4" class="fi"/></svg>` },
+  rg: { title:"ResearchGate",
+    svg:`<svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#00CCBB" class="fi"/><text x="5.5" y="14" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#fff" class="ti">RG</text></svg>` },
+  ac: { title:"Academia.edu",
+    svg:`<svg viewBox="0 0 20 20"><path d="M10 1.5L1.5 7v7l8.5 4.5L18.5 14V7L10 1.5zm0 2.8l3 5.5h-1.4l-.5-1H8.9l-.5 1H7L10 4.3zm0 1.9l-.9 2h1.8L10 6.2z" fill="#222" class="fi"/></svg>` },
+  pu: { title:"Publons",
+    svg:`<svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#336699" class="fi"/><text x="10" y="14" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#fff" class="ti">P</text></svg>` },
+  or: { title:"ORCID",
+    svg:`<svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#A6CE39" class="fi"/><text x="10" y="8.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="4.5" font-weight="700" fill="#fff" class="ti">ORCID</text><text x="10" y="14" text-anchor="middle" font-family="Arial,sans-serif" font-size="5.5" fill="#fff" class="ti">iD</text></svg>` },
+  ri: { title:"ResearcherID / Web of Science",
+    svg:`<svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#C1272D" class="fi"/><text x="10" y="9" text-anchor="middle" font-family="Arial,sans-serif" font-size="5" font-weight="700" fill="#fff" class="ti">Web of</text><text x="10" y="15" text-anchor="middle" font-family="Arial,sans-serif" font-size="5" font-weight="700" fill="#fff" class="ti">Science</text></svg>` },
+  li: { title:"LinkedIn",
+    svg:`<svg viewBox="0 0 20 20"><rect width="20" height="20" rx="3" fill="#0A66C2" class="fi"/><rect x="4" y="8" width="2.5" height="7" fill="#fff" class="fi"/><circle cx="5.25" cy="5.5" r="1.4" fill="#fff" class="fi"/><path d="M9 8h2.5v1.2c.4-.7 1.3-1.4 2.5-1.4 2.2 0 3 1.5 3 3.5V15h-2.5v-3.3c0-1-.3-1.7-1.2-1.7-.9 0-1.3.7-1.3 1.7V15H9V8z" fill="#fff" class="fi"/></svg>` }
+};
+
+/* Link order for all professors */
+const LINK_ORDER = ['la','em','sc','rg','ac','pu','or','ri','li','si'];
+
+const ini = n => n.split(' ').filter((_,i,a)=>i===0||i===a.length-1).map(w=>w[0]).join('');
+const perfilUrl = p => `perfil-${p.id.toLowerCase()}.html`;
+
+function makeCard(p) {
+  const tags = p.disc.map(d => `<span class="tag">${d}</span>`).join('');
+  const links = LINK_ORDER.filter(k => p[k]).map(k => {
+    const href = k === 'em' ? 'mailto:' + p[k] : p[k];
+    const ext = k === 'em' ? '' : ' target="_blank" rel="noopener"';
+    return `<a class="lico" href="${href}"${ext} title="${ICON[k].title}" aria-label="${ICON[k].title} de ${p.tit} ${p.nome}">${ICON[k].svg}</a>`;
+  }).join('');
+
+  return `<article class="card prof" data-rk="${p.rk}">
+    <a class="prof__top" href="${perfilUrl(p)}">
+      <div class="avatar">
+        <img src="${FOTO[p.id]}" alt="" loading="lazy" onerror="this.parentNode.classList.add('is-fallback')">
+        <span class="avatar__ini" aria-hidden="true">${ini(p.nome)}</span>
+      </div>
+      <div>
+        <div class="prof__rank"><span class="dot"></span>${p.cargo}</div>
+        <h2 class="prof__name">${p.tit} ${p.nome}</h2>
+        <p class="prof__area">${p.area}</p>
+        <p class="prof__deg">${p.dout}<br>Graduação em ${p.grad}</p>
+      </div>
+    </a>
+    <div class="prof__discs">
+      <h3>Disciplinas no curso</h3>
+      <div class="tags">${tags}</div>
+    </div>
+    <div class="prof__foot">
+      <div class="links">${links}</div>
+      <a class="chevron-link" href="${perfilUrl(p)}" aria-label="Ver perfil de ${p.tit} ${p.nome}">Perfil</a>
+    </div>
+  </article>`;
+}
+
+document.getElementById('grid').innerHTML = PROFS.map(makeCard).join('');
+
+/* Controle segmentado com contagem — substitui os 4 cartões de totais + filtros */
+const SEGS = [['', 'Todos'], ['titular', 'Titulares'], ['associado', 'Associados'], ['adjunto', 'Adjuntos']];
+const conta = rk => PROFS.filter(p => !rk || p.rk === rk).length;
+const seg = document.getElementById('seg');
+seg.innerHTML = SEGS.map(([rk, nome]) =>
+  `<button type="button" data-rk="${rk}" aria-pressed="${rk === '' }">${nome}<span class="count">${conta(rk)}</span></button>`
+).join('');
+
+function filtrar(rk) {
+  seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.rk === rk)));
+  let n = 0;
+  document.querySelectorAll('.prof').forEach(c => {
+    const show = !rk || c.dataset.rk === rk;
+    c.hidden = !show; if (show) n++;
+  });
+  document.getElementById('contagem').textContent = n === 1 ? '1 professor' : `${n} professores`;
+  document.getElementById('vazio').hidden = n > 0;
+}
+seg.addEventListener('click', e => { const b = e.target.closest('button'); if (b) filtrar(b.dataset.rk); });
+filtrar('');
+</script>
+</body>
+</html>

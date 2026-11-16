@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indicadores — Biomedicina UFMT Araguaia</title>
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="estilo.css">
+<script src="site.js" defer></script>
+<script src="dados-resumo.js"></script>
+<script src="viz.js"></script>
+<style>
+.stats { margin-bottom: var(--s2); }
+.panel { padding: var(--s5); }
+.panel + .panel { margin-top: var(--s4); }
+.panel__head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--s4); flex-wrap: wrap; margin-bottom: var(--s4); }
+.panel__head h3 { font-family: var(--font-display); font-size: var(--fs-headline); font-weight: 600; margin: 0; letter-spacing: -.01em; }
+.panel__head p { margin: 2px 0 0; font-size: var(--fs-footnote); color: var(--label-3); max-width: 60ch; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s4); }
+.two .panel + .panel { margin-top: 0; }
+@media (max-width: 960px) { .two { grid-template-columns: 1fr; } .two .panel + .panel { margin-top: 0; } }
+@media (max-width: 600px) { .panel { padding: var(--s4); } }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="page-header">
+    <p class="page-eyebrow">Indicadores</p>
+    <h1 class="page-title">A produção do curso em números</h1>
+    <p class="page-lede">Evolução da produção científica e das orientações dos 21 professores permanentes, segundo os Currículos Lattes.</p>
+    <details class="disclosure">
+      <summary>Como ler estes números</summary>
+      <div class="disclosure__body">
+        <p>Os totais reúnem a produção de toda a carreira registrada no Lattes de cada docente, inclusive antes do ingresso na UFMT. Use o seletor "Desde 2009" para ver apenas o período de existência do curso.</p>
+        <p>Uma produção com vários docentes do curso conta uma vez no total geral e uma vez para cada docente nos gráficos por professor. Detalhes em <a href="metodologia-biomedicina.html">Metodologia</a>.</p>
+      </div>
+    </details>
+  </header>
+
+  <section aria-labelledby="t-resumo">
+    <h2 class="visually-hidden" id="t-resumo">Resumo</h2>
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <section class="section" aria-labelledby="t-prod">
+    <h2 class="section-title" id="t-prod">Produção científica</h2>
+    <article class="card panel">
+      <div class="panel__head">
+        <div><h3>Produções por ano</h3><p>Artigos, trabalhos em anais, capítulos e livros. Passe o cursor ou o foco do teclado sobre uma barra para ver os valores. O ano corrente é parcial.</p></div>
+        <div class="segmented" role="group" aria-label="Período" id="seg-periodo">
+          <button type="button" data-p="2009" aria-pressed="true">Desde 2009</button>
+          <button type="button" data-p="all" aria-pressed="false">Toda a carreira</button>
+        </div>
+      </div>
+      <div id="g-prod-ano"></div>
+    </article>
+    <article class="card panel">
+      <div class="panel__head"><div><h3>Produções por docente</h3><p>Toda a carreira. Clique em um nome para abrir o perfil.</p></div></div>
+      <div id="g-prod-doc"></div>
+    </article>
+  </section>
+
+  <section class="section" aria-labelledby="t-ori">
+    <h2 class="section-title" id="t-ori">Formação</h2>
+    <article class="card panel">
+      <div class="panel__head"><div><h3>Orientações concluídas por ano</h3><p>Pós-graduação reúne mestrado, doutorado e pós-doutorado; outras inclui extensão e demais naturezas. O ano corrente é parcial.</p></div></div>
+      <div id="g-ori-ano"></div>
+    </article>
+    <div class="two" style="margin-top: var(--s4)">
+      <article class="card panel">
+        <div class="panel__head"><div><h3>Orientações por docente</h3><p>Toda a carreira.</p></div></div>
+        <div id="g-ori-doc"></div>
+      </article>
+      <article class="card panel">
+        <div class="panel__head"><div><h3>Egressos por turma de ingresso</h3><p>Quantos egressos de cada turma já aparecem como coautores em produções dos docentes.</p></div></div>
+        <div id="g-egr"></div>
+      </article>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  const R = RESUMO, f = Viz.fmt, P = R.producoes;
+
+  /* Nome curto e perfil de cada docente */
+  const PERFIL = { adenilda:'adenilda', ana:'anapaula', carlos:'carlos', danny:'danny', eduardo:'eduardo', eliane:'eliane',
+    fabiana:'fabiana', flavia:'flavia', gustavo:'gustavo', karina:'karina', kleber:'kleber', luana:'luana', ludier:'ludier',
+    madileine:'madileine', maria:'mariafernanda', maximilian:'maximilian', paula:'paula', paulo:'paulo', renan:'renan',
+    satie:'satie', thais:'thais' };
+  const sem = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const perfil = nome => { const id = PERFIL[sem(nome.split(' ')[0])]; return id ? `perfil-${id}.html` : null; };
+  const curto = nome => {
+    const p = nome.split(' '); let ult = p[p.length - 1];
+    if (/^(Filho|Júnior|Junior|Neto|Sobrinho)$/.test(ult)) ult = p[p.length - 2] + ' ' + ult;
+    return (p[0] === 'Ana' || p[0] === 'Maria' ? p[0] + ' ' + p[1] : p[0]) + ' ' + ult;
+  };
+
+  /* Resumo */
+  const pct = (a, b) => Math.round(100 * a / b) + '%';
+  const stats = [
+    [f(P.total), 'produções científicas'],
+    [f(P.porTipo.artigo), 'artigos em periódicos'],
+    [pct(P.artigosJCR, P.artigos), 'dos artigos em revistas com fator de impacto (JCR)'],
+    [f(P.citacoes), 'citações registradas no CrossRef'],
+    [f(R.projetos.total), `projetos (${f(R.projetos.porTipo.pesquisa || 0)} de pesquisa, ${f(R.projetos.porTipo.extensao || 0)} de extensão)`],
+    [f(R.orientacoes.total), 'orientações concluídas']
+  ];
+  const sb = document.getElementById('stats');
+  stats.forEach(([v, l]) => {
+    const d = document.createElement('div'); d.className = 'card stat';
+    d.innerHTML = '<div class="stat__value"></div><div class="stat__label"></div>';
+    d.children[0].textContent = v; d.children[1].textContent = l; sb.appendChild(d);
+  });
+
+  /* Produções por ano */
+  const SERIES_PROD = [
+    { chave: 'artigo', nome: 'Artigos', cor: '--c1' },
+    { chave: 'anais', nome: 'Trabalhos em anais', cor: '--c2' },
+    { chave: 'capitulo', nome: 'Capítulos', cor: '--c3' },
+    { chave: 'livro', nome: 'Livros', cor: '--c4' }
+  ];
+  const anoAtual = new Date().getFullYear();
+  let periodo = '2009';
+  const gAno = document.getElementById('g-prod-ano');
+  function desenhaAno() {
+    const anos = Object.keys(P.porAno).map(Number).filter(a => a <= anoAtual && (periodo === 'all' || a >= 2009)).sort((a, b) => a - b);
+    Viz.barrasEmpilhadas(gAno, {
+      categorias: anos.map(String), altura: 280, descricao: 'Produções por ano e tipo',
+      series: SERIES_PROD.map(s => ({ nome: s.nome, cor: s.cor, valores: anos.map(a => (P.porAno[a] || {})[s.chave] || 0) }))
+    });
+  }
+  Viz.responsivo(gAno, desenhaAno);
+  document.getElementById('seg-periodo').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    periodo = b.dataset.p;
+    e.currentTarget.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    desenhaAno();
+  });
+
+  /* Produções por docente */
+  const gDoc = document.getElementById('g-prod-doc');
+  Viz.responsivo(gDoc, () => Viz.barrasHorizontais(gDoc, {
+    descricao: 'Produções por docente', series: SERIES_PROD,
+    linhas: Object.entries(P.porProf).map(([n, v]) => ({ rotulo: curto(n), valores: v, href: perfil(n) }))
+  }));
+
+  /* Orientações: agrupa naturezas em 5 grupos */
+  const GRUPO = { tcc: 'tcc', ic: 'ic', monitoria: 'monitoria', mestrado: 'pos', doutorado: 'pos', posdoc: 'pos', extensao: 'outras', outro: 'outras' };
+  const SERIES_ORI = [
+    { chave: 'tcc', nome: 'TCC', cor: '--c1' },
+    { chave: 'ic', nome: 'Iniciação científica', cor: '--c2' },
+    { chave: 'monitoria', nome: 'Monitoria', cor: '--c3' },
+    { chave: 'pos', nome: 'Pós-graduação', cor: '--c4' },
+    { chave: 'outras', nome: 'Outras', cor: '--c5' }
+  ];
+  const agrupa = obj => { const o = {}; for (const [t, n] of Object.entries(obj || {})) { const g = GRUPO[t] || 'outras'; o[g] = (o[g] || 0) + n; } return o; };
+  const oAnos = Object.keys(R.orientacoes.porAno).map(Number).filter(a => a <= anoAtual).sort((a, b) => a - b);
+  const gOA = document.getElementById('g-ori-ano');
+  Viz.responsivo(gOA, () => Viz.barrasEmpilhadas(gOA, {
+    categorias: oAnos.map(String), altura: 260, descricao: 'Orientações concluídas por ano e natureza',
+    series: SERIES_ORI.map(s => ({ nome: s.nome, cor: s.cor, valores: oAnos.map(a => agrupa(R.orientacoes.porAno[a])[s.chave] || 0) }))
+  }));
+
+  /* Orientações por docente (total) */
+  const gOD = document.getElementById('g-ori-doc');
+  Viz.responsivo(gOD, () => Viz.barrasHorizontais(gOD, {
+    descricao: 'Orientações por docente', series: [{ chave: 't', nome: 'Orientações', cor: '--c1' }],
+    linhas: Object.entries(R.orientacoes.porProf).map(([n, t]) => ({ rotulo: curto(n), valores: { t }, href: perfil(n) }))
+  }));
+
+  /* Egressos por turma */
+  const gE = document.getElementById('g-egr');
+  const T = R.egressos.turmas;
+  Viz.responsivo(gE, () => Viz.barrasEmpilhadas(gE, {
+    categorias: T.map(t => t.turma), altura: 260, rotuloCategoria: 'Turma', descricao: 'Egressos por turma de ingresso',
+    series: [
+      { nome: 'Coautores em produções', cor: '--c1', valores: T.map(t => t.coautores) },
+      { nome: 'Demais egressos', cor: '--c2', valores: T.map(t => t.total - t.coautores) }
+    ]
+  }));
+})();
+</script>
+</body>
+</html>
